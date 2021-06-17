@@ -1,0 +1,103 @@
+﻿@model PalletLoading.ViewModels.ContainerDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1 style="text-align:center">Details - @Model.Container.Name</h1>
+
+<div>
+    <div align="center" style="padding:50px 300px 50px 300px">
+        <div align="left">
+            @Html.DisplayNameFor(model => Model.Type.Name)
+            <span style="float:right">
+                @Html.DisplayFor(model => Model.Type.Name)
+            </span>
+        </div>
+
+        <div align="left">
+            Country
+            <span style="float:right">
+                @Html.DisplayFor(model => Model.Country.Name)
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<h3 style="text-align:center">Pallets</h3>
+
+@{
+    var lengthContainer = Model.Container.NoOfColumns;
+    var widthContainer = Model.Container.NoOfRows;
+    var totalLayer = lengthContainer * widthContainer;
+    var palletsAux = Model.Pallets;
+}
+
+<br />
+
+<table border="1" class="table-bordered" style="border:2px solid; border-right-style:dotted; width: 100%; height: 100%; text-align: center; align-content: center;">
+    <tbody>
+        @{
+            @for (int row = 0; row < widthContainer; row++)
+            {
+                var heightCustom = 100;
+        <tr style="width:200px; height:@heightCustom.ToString()px; vertical-align: top">
+            @for (int col = 0; col < lengthContainer; col++)
+            {
+                string idPallet = row.ToString() + "," + col.ToString();
+                var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
+
+                if (currentPallets != null)
+                {
+                    <td style="width:200px; height:200px; text-align:center">
+                        @foreach (var palet in currentPallets)
+                        {
+                            <input type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom.ToString()px; text-align:center" class="detailsBtn btn-info">
+                        }
+                    </td>
+                }
+            }
+        </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<br />
+
+<table class="table-bordered" border="1" style="width:600px; height:300px; border:2px solid" align="center">
+    <tr>
+        <div align="center">
+        <td style="background-color: antiquewhite; text-align: center; padding: 50px 100px 50px 100px">
+            @{
+                if (Model.Pallet != null)
+                {
+                    <div align="left">
+                        @Html.DisplayNameFor(model => model.Pallet.Name)
+                        <span style="float:right">@Html.DisplayFor(model => model.Pallet.Name)</span>
+                    </div>
+
+                    <br />
+
+                    <div align="left">
+                        @Html.DisplayNameFor(model => model.Pallet.OrderNo)
+                        <span style="float:right">@Html.DisplayFor(model => model.Pallet.OrderNo)</span>
+                    </div>
+                }
+            }
+        </td>
+        </div>
+    </tr>
+</table>
+
+@section Scripts {
+    <script>
+    $(".detailsBtn").click(function () {
+        var palletId = this.id;
+        var idContainer = $('#container').val();
+        var path = '@Url.Action("Details")' + "?id=" + idContainer + "&pallet=" + palletId;
+        window.location.href = path;
+    });
+    </script>
+}

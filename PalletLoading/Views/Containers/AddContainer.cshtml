@@ -1,0 +1,42 @@
+﻿@model PalletLoading.Models.Container
+
+<h1 style="text-align:center">New report</h1>
+
+
+<div class="d-flex justify-content-center">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" id="containerName" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Country" class="control-label"></label>
+                <select asp-for="CountryId" class="form-control" asp-items="ViewBag.CountryId" id="selectedCountry"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContainerType" class="control-label"></label>
+                <select asp-for="TypeId" class="form-control" asp-items="ViewBag.TypeId" id="selectedType"></select>
+            </div>
+            <div class="form-group" style="text-align:right">
+                <input type="button" value="Next" class="btn btn-success" id="nextBtn" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+    $("#nextBtn").click(function () {
+
+        var type = $('#selectedType').val();
+        var name = $('#containerName').val();
+        var country = $('#selectedCountry').val();
+
+        var path = '@Url.Action("Create")' + '?type=' + type + "&containerName=" + name + '&country=' + country;
+        window.location.href = path;
+    });
+    </script>
+}

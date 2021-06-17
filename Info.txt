@@ -1,0 +1,24 @@
+- IC250P - legatura MAP cu paletii scanati
+- de adaugat greutatea (din alta tabela)
+
+-IC180 spares
+
+paleti euro 1200x800 MM
+paleti MCC 1140x840 MM
+Paleti world 1150x1150 MM
+
+prelata - 13.6 x 2.48 x 2.68
+container 40HQ - 12 x 2.35 x 2.71
+container 20 - 5.9 x 2.34 x 2.38
+
+Campuri paleti:
+-sales part
+-serial no
+-qty
+-pallet no
+-weight
+-loading date
+-loading time
+
+*consignee code (tara)
+*conainer no

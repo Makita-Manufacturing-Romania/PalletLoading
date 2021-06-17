@@ -1,0 +1,60 @@
+﻿@model PalletLoading.Models.Container
+
+@{
+    ViewData["Title"] = "Create";
+}
+<h1 style="text-align:center">New report</h1>
+
+<hr />
+
+<div style="text-align:center">
+    <canvas id="myCanvas" width=@ViewBag.length height=@ViewBag.width
+            style="border:1px solid #d3d3d3; background-color:#994d00;">
+    </canvas>
+</div>
+
+<div class="d-flex justify-content-center">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+@*            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <select asp-for="PalletId" class="form-control" asp-items="ViewBag.PalletId"></select>
+            </div>
+            <div class="form-group" style="text-align:right">
+                <input type="submit" value="Add" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+    var leftPalletX1 = 10;
+    var leftPalletY1 = 10;
+    var leftPalletX2 = 100;
+    var leftPalletY2 = 100;
+    var rightPalletX1 = 10;
+    var rightPalletY1 = 120;
+    var rightPalletX2 = 100;
+    var rightPalletY2 = 100;
+
+
+    ctx.beginPath();
+    ctx.rect(leftPalletX1, leftPalletY1, leftPalletX2, leftPalletY2);
+    ctx.rect(rightPalletX1, rightPalletY1, rightPalletX2, rightPalletY2);
+    ctx.fillStyle = '#8c8c8c';
+    ctx.fill();
+    ctx.stroke();
+
+</script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

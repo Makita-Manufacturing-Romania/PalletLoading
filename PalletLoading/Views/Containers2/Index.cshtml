@@ -1,0 +1,114 @@
+﻿@model PalletLoading.ViewModels.ContainerIndexViewModel
+
+@{ 
+    ViewData["Title"] = "Container list";
+}
+<h1 style="text-align:center">Container list</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Country
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var container in Model.Container)
+        {
+            @foreach (var type in Model.ContainerType)
+            {
+                foreach (var country in Model.Countries)
+                {
+                    if (container.TypeId == type.Id && container.CountryId == country.Id)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => container.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => type.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => country.Name)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@container.Id">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@container.Id">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@container.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        }
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+@*@model IEnumerable<PalletLoading.Models.Container>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TypeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Country)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TypeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Country.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>*@
