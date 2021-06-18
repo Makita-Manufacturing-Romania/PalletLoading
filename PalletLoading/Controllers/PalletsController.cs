@@ -67,7 +67,7 @@ namespace PalletLoading.Controllers
             ViewData["PalletId"] = new SelectList(_context.PalletTypes, "Id", "Name");
             TempData["containerId"] = id.ToString();
 
-            var container = _context.Containers.First(x => x.Id == id);
+            var container = _context.Containers.Include(c=>c.Country).First(x => x.Id == id);
             List<Pallet> pallets = _context.Pallets.Where(x => x.Container2Id == container.Id).ToList();
             ContainerType type = _context.ContainerTypes.First(x => x.Id == container.TypeId);
 
@@ -80,6 +80,30 @@ namespace PalletLoading.Controllers
 
             return View(viewModel);
         }
+
+        public IActionResult GetPallets(string country, string container,int containerId)
+        {
+            var listPalletsMap = _context.ImportData.Where(c => c.consignee_code.Equals(country) && c.container_no.Equals(container)).OrderBy(c=>c.loading_time).ToList();
+            var listPalletsApp = _context.Pallets.Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
+            var mvcp = new List<ModelViewCreatePallet>();
+            int i = 0;
+            for( ; i < listPalletsApp.Count; i++)
+            {
+                listPalletsApp[i].PalletImportDataId = listPalletsMap[i].id;
+                var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMap = listPalletsMap[i] };
+                mvcp.Add(tempMVID);
+            }
+            for(; i < listPalletsMap.Count; i++)
+            {
+                var tempMVID = new ModelViewCreatePallet { OrderNoApp = -1, PalletMap = listPalletsMap[i] };
+                mvcp.Add(tempMVID);
+            }
+            _context.UpdateRange(listPalletsApp);
+
+
+            return Json(new { listPallets = mvcp });
+        }
+
 
         // POST: Pallets/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.

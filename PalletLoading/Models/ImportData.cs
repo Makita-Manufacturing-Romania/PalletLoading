@@ -8,6 +8,8 @@ namespace PalletLoading.Models
 {
     public class ImportData
     {
+        [Key]
+        public int id { get; set; }
         [StringLength(25)]
         public string container_no { get; set; }
         [StringLength(3)]
@@ -22,6 +24,6 @@ namespace PalletLoading.Models
         public decimal weight  { get; set; }
         public decimal loading_date { get; set; }
         public decimal loading_time { get; set; }
-
+        public virtual Pallet Pallet { get; set; }
     }
 }

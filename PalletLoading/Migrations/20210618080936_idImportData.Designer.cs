@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PalletLoading.Data;
 
 namespace PalletLoading.Migrations
 {
     [DbContext(typeof(PalletLoadingContext))]
-    partial class PalletLoadingContextModelSnapshot : ModelSnapshot
+    [Migration("20210618080936_idImportData")]
+    partial class idImportData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -164,9 +166,6 @@ namespace PalletLoading.Migrations
                     b.Property<int>("OrderNo")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PalletImportDataId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("PalletTypeId")
                         .HasColumnType("int");
 
@@ -177,10 +176,6 @@ namespace PalletLoading.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PalletImportDataId")
-                        .IsUnique()
-                        .HasFilter("[PalletImportDataId] IS NOT NULL");
 
                     b.HasIndex("PalletTypeId");
 
@@ -234,15 +229,9 @@ namespace PalletLoading.Migrations
 
             modelBuilder.Entity("PalletLoading.Models.Pallet", b =>
                 {
-                    b.HasOne("PalletLoading.Models.ImportData", "PalletImportData")
-                        .WithOne("Pallet")
-                        .HasForeignKey("PalletLoading.Models.Pallet", "PalletImportDataId");
-
                     b.HasOne("PalletLoading.Models.PalletType", "PalletType")
                         .WithMany("Pallets")
                         .HasForeignKey("PalletTypeId");
-
-                    b.Navigation("PalletImportData");
 
                     b.Navigation("PalletType");
                 });
@@ -255,11 +244,6 @@ namespace PalletLoading.Migrations
             modelBuilder.Entity("PalletLoading.Models.Countries", b =>
                 {
                     b.Navigation("Containers");
-                });
-
-            modelBuilder.Entity("PalletLoading.Models.ImportData", b =>
-                {
-                    b.Navigation("Pallet");
                 });
 
             modelBuilder.Entity("PalletLoading.Models.Pallet", b =>

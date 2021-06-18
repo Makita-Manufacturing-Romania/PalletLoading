@@ -13,15 +13,15 @@ namespace PalletLoading.Data
             : base(options)
         {
         }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder
-                .Entity<ImportData>(
-                    eb =>
-                    {
-                        eb.HasNoKey();
-                    });
-        }
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder
+        //        .Entity<ImportData>(
+        //            eb =>
+        //            {
+        //                eb.HasNoKey();
+        //            });
+        //}
         public DbSet<PalletLoading.Models.Pallet> Pallets { get; set; }
 
         public DbSet<PalletLoading.Models.Container> Containers { get; set; }
