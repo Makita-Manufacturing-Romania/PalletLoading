@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PalletLoading.Data;
 
 namespace PalletLoading.Migrations
 {
     [DbContext(typeof(PalletLoadingContext))]
-    partial class PalletLoadingContextModelSnapshot : ModelSnapshot
+    [Migration("20210617135328_newTable_ImportData")]
+    partial class newTable_ImportData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,27 +112,27 @@ namespace PalletLoading.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
-                    b.Property<decimal>("loading_date")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("loading_date")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("loading_time")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("loading_time")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("pallet_no")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("pallet_no")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("picking_qty")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("picking_qty")
+                        .HasColumnType("int");
 
                     b.Property<string>("salse_part")
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
-                    b.Property<decimal>("serial_from")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("serial_from")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("serial_to")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("serial_to")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("weight")
                         .HasColumnType("decimal(18,2)");

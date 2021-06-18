@@ -22,3 +22,17 @@ Campuri paleti:
 
 *consignee code (tara)
 *conainer no
+
+        //Campuri utile:
+        /*
+            -sales part
+            -serial no
+            -qty
+            -pallet no
+            -weight
+            -loading date
+            -loading time
+
+            *consignee code (tara)
+            *conainer no
+         */
