@@ -18,6 +18,8 @@ namespace PalletLoading.Models
         public int OrderNo { get; set; }
         public int? Row  { get; set; }
         public int? Column { get; set; }
+        public int? PalletImportDataId { get; set; }
+        public virtual ImportData PalletImportData { get; set; }
 
         //Campuri utile:
         /*
