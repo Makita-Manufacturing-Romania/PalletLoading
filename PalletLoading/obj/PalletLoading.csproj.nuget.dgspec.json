@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj": {}
+    "C:\\Users\\r.cioroba\\Source\\Repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj": {}
   },
   "projects": {
-    "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj": {
+    "C:\\Users\\r.cioroba\\Source\\Repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
+        "projectUniqueName": "C:\\Users\\r.cioroba\\Source\\Repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
         "projectName": "PalletLoading",
-        "projectPath": "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
+        "projectPath": "C:\\Users\\r.cioroba\\Source\\Repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
         "packagesPath": "C:\\Users\\r.cioroba\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\obj\\",
+        "outputPath": "C:\\Users\\r.cioroba\\Source\\Repos\\PalletLoading\\PalletLoading\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
