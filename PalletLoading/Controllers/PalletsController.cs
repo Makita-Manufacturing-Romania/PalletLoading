@@ -158,6 +158,35 @@ namespace PalletLoading.Controllers
             return View(pallet);
         }
         
+        public ActionResult SwitchPallets(string idContainer, string draggedPallet, string droppedPallet)
+        {
+            int containerId = Convert.ToInt32(idContainer);
+
+            int idDragged = Convert.ToInt32(draggedPallet);
+            int idDropped = Convert.ToInt32(droppedPallet);
+
+            Pallet dragged = _context.Pallets.First(x => x.Id == idDragged);
+            Pallet dropped = _context.Pallets.First(x => x.Id == idDropped);
+
+/*            _context.Pallets.Remove(dragged);
+            _context.Pallets.Remove(dropped);
+            _context.SaveChanges();*/
+            Pallet palletAux = new Pallet();
+            palletAux = dropped;
+            dropped = dragged;
+            dragged = palletAux;
+/*
+            Pallet one = new Pallet();
+            Pallet two = new Pallet();
+            one = dropped;
+            two = dragged;
+
+            _context.Pallets.Add(one);
+            _context.Pallets.Add(two);*/
+            _context.SaveChanges();
+            return RedirectToAction("Create", new { id = containerId });
+        }
+
         public ActionResult AddPallet(string idContainer, string position, string palletName)
         {
             int containerId = Convert.ToInt32(idContainer);

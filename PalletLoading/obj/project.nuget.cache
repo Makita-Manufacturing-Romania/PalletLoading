@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "u6limAvzQv2xn8PTS+BhyvrB5iWI+7B1+QxwSxijTejz/2/opzIpXjJqhykukIp/jjlP/ChU1ooKPlIWSoryeg==",
+  "dgSpecHash": "4IFpMWavhYw+qymRE+0k15kI0laih8o+dH2I9cuH1edyMnV0Bdz5csV/2dhBhpkd0fWNU3KizO1zJqluKSvWoQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\r.cioroba\\Source\\Repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
+  "projectFilePath": "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\r.cioroba\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\r.cioroba\\.nuget\\packages\\microsoft.aspnetcore.html.abstractions\\2.2.0\\microsoft.aspnetcore.html.abstractions.2.2.0.nupkg.sha512",
