@@ -12,6 +12,9 @@
 
     var totalLayer = lengthContainer * widthContainer;
     var palletsAux = Model.Pallets;
+
+    var containerName = Model.Container.Name;
+    var countryName = Model.Container.Country.Abbreviation;
 }
 
 <br />
@@ -112,6 +115,11 @@
     </form>
 </div>
 
+<input type="button" value="Sincronizare paleti" class="btn btn-dark" id="sincData" />
+<div id="tableSection">
+
+</div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
@@ -140,6 +148,41 @@
         var path = '@Url.Action("AddRow")' + "?idContainer=" + idContainer;
         window.location.href = path;
     });
+
+    $("#sincData").click(function () {
+        var idContainer = $('#container').val();
+        var containerName = "@containerName";
+        var countryName = "@countryName";
+        $.ajax({
+            url: "/Pallets/GetPallets",
+
+            data: {
+                country: ''+countryName, container: ''+containerName, containerId: idContainer
+            },
+
+            cache: false,
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (data) {
+                //console.log(data)
+                var noPallets = data.listPallets.length;
+                var tableTxt = "<table class='table' style='margin-top:25px;'><tr><th>Order no</th><th>Sales part</th><th>Pallet no</th><th>Serial from</th><th>Serial to</th><th>Quantity</th><th>Weight</th></tr>"
+                for (var i = 0; i < noPallets; i++) {
+                    var orderNo = data.listPallets[i].orderNoApp;
+                    if (orderNo == -1) orderNo = "N/A"
+                    tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>" 
+                        + "<td>" + data.listPallets[i].palletMap.salse_part +"</td>"
+                        + "<td>" + data.listPallets[i].palletMap.pallet_no +"</td>"
+                        + "<td>" + data.listPallets[i].palletMap.serial_from +"</td>"
+                        + "<td>" + data.listPallets[i].palletMap.serial_to +"</td>"
+                        + "<td>" + data.listPallets[i].palletMap.picking_qty +"</td>"
+                        + "<td>" + data.listPallets[i].palletMap.weight +"</td></tr>"
+                }
+                tableTxt = tableTxt + "</table>"
+                $("#tableSection").append(tableTxt);
+            }
+        });
+    })
 
     $("#removeRow").click(function () {
     var idContainer = $('#container').val();
