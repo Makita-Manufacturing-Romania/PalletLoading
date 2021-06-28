@@ -18,7 +18,17 @@
 }
 
 <br />
-<h5 style="text-align:right">Max pallets per layer: @totalLayer</h5>
+<div class="container" >
+    <div class="col-lg-6" style="float:right;">
+        <h5 style="text-align:right">Max pallets per layer: @totalLayer</h5>
+    </div>
+    <div class="col-lg-6">
+        <h5>Country: @countryName</h5>
+        <h5>Container: @containerName</h5>
+    </div>
+
+
+</div>
 <br />
 
 <input type="hidden" value="@Model.Container.Id" id="container" />
@@ -164,13 +174,13 @@
             contentType: "application/json;charset=UTF-8",
             dataType: "json",
             success: function (data) {
-                //console.log(data)
+                console.log(data)
                 var noPallets = data.listPallets.length;
                 var tableTxt = "<table class='table' style='margin-top:25px;'><tr><th>Order no</th><th>Sales part</th><th>Pallet no</th><th>Serial from</th><th>Serial to</th><th>Quantity</th><th>Weight</th></tr>"
                 for (var i = 0; i < noPallets; i++) {
                     var orderNo = data.listPallets[i].orderNoApp;
                     if (orderNo == -1) orderNo = "N/A"
-                    tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>" 
+                    tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
                         + "<td>" + data.listPallets[i].palletMap.salse_part +"</td>"
                         + "<td>" + data.listPallets[i].palletMap.pallet_no +"</td>"
                         + "<td>" + data.listPallets[i].palletMap.serial_from +"</td>"
@@ -179,6 +189,7 @@
                         + "<td>" + data.listPallets[i].palletMap.weight +"</td></tr>"
                 }
                 tableTxt = tableTxt + "</table>"
+                $("#tableSection").empty();
                 $("#tableSection").append(tableTxt);
             }
         });

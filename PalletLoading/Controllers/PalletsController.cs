@@ -90,16 +90,19 @@ namespace PalletLoading.Controllers
             for( ; i < listPalletsApp.Count; i++)
             {
                 listPalletsApp[i].PalletImportDataId = listPalletsMap[i].id;
+                //listPalletsMap[i].Pallet = null;
                 var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMap = listPalletsMap[i] };
                 mvcp.Add(tempMVID);
             }
             for(; i < listPalletsMap.Count; i++)
             {
                 var tempMVID = new ModelViewCreatePallet { OrderNoApp = -1, PalletMap = listPalletsMap[i] };
+                //listPalletsMap[i].Pallet = null;
+
                 mvcp.Add(tempMVID);
             }
             _context.UpdateRange(listPalletsApp);
-
+            _context.SaveChanges();
 
             return Json(new { listPallets = mvcp });
         }

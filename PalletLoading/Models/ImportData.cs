@@ -24,6 +24,6 @@ namespace PalletLoading.Models
         public decimal weight  { get; set; }
         public decimal loading_date { get; set; }
         public decimal loading_time { get; set; }
-        public virtual Pallet Pallet { get; set; }
+        //public virtual Pallet Pallet { get; set; }
     }
 }
