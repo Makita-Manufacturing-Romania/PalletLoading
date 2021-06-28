@@ -18,6 +18,12 @@
 }
 
 <br />
+<div class="mb-2 mr-2" style="float:right">
+    <a class="btn btn-info" asp-action="Details" asp-controller="Containers2" asp-route-id="@Model.Container.Id" />Details</a>
+</div>
+
+<br />
+<br />
 <h5 style="text-align:right">Max pallets per layer: @totalLayer</h5>
 <br />
 
@@ -95,7 +101,6 @@
 </div>
 
 <br />
-
 <div style="width:100%" align="center">
     <form asp-action="Create" style="width:200px;">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -116,6 +121,21 @@
 </div>
 
 <input type="button" value="Sincronizare paleti" class="btn btn-dark" id="sincData" />
+
+<br />
+@{
+    @foreach (var ceva in Model.SwitchedPallets)
+    {
+        <table align="center">
+            <tr>
+                <td> 
+                    @ceva.FirstPallet <-> @ceva.SecondPallet
+                </td>
+                <hr />
+            </tr>
+        </table>
+    }
+}
 <div id="tableSection">
 
 </div>
@@ -170,7 +190,7 @@
                 for (var i = 0; i < noPallets; i++) {
                     var orderNo = data.listPallets[i].orderNoApp;
                     if (orderNo == -1) orderNo = "N/A"
-                    tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>" 
+                    tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
                         + "<td>" + data.listPallets[i].palletMap.salse_part +"</td>"
                         + "<td>" + data.listPallets[i].palletMap.pallet_no +"</td>"
                         + "<td>" + data.listPallets[i].palletMap.serial_from +"</td>"
@@ -183,6 +203,12 @@
             }
         });
     })
+
+    $("#details").click(function () {
+        var idContainer = $('#container').val();
+        var path = '@Url.Action("Details","Containers2")' + "?id=" + idContainer;
+        window.location.href = path;
+    });
 
     $("#removeRow").click(function () {
     var idContainer = $('#container').val();

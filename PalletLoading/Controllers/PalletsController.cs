@@ -70,12 +70,14 @@ namespace PalletLoading.Controllers
             var container = _context.Containers.Include(c=>c.Country).First(x => x.Id == id);
             List<Pallet> pallets = _context.Pallets.Where(x => x.Container2Id == container.Id).ToList();
             ContainerType type = _context.ContainerTypes.First(x => x.Id == container.TypeId);
+            List<SwitchedPallet> switchedPallets = _context.SwitchedPallets.Where(x => x.IdContainer == container.Id).ToList();
 
             var viewModel = new AddContainerViewModel
             {
                 Container = container,
                 Pallets = pallets,
-                Type = type
+                Type = type,
+                SwitchedPallets = switchedPallets
             };
 
             return View(viewModel);
@@ -99,7 +101,6 @@ namespace PalletLoading.Controllers
                 mvcp.Add(tempMVID);
             }
             _context.UpdateRange(listPalletsApp);
-
 
             return Json(new { listPallets = mvcp });
         }
@@ -166,23 +167,44 @@ namespace PalletLoading.Controllers
             int idDropped = Convert.ToInt32(droppedPallet);
 
             Pallet dragged = _context.Pallets.First(x => x.Id == idDragged);
-            Pallet dropped = _context.Pallets.First(x => x.Id == idDropped);
+            Pallet dropped = new();
+            SwitchedPallet switchedPallets = new();
+            if(_context.Pallets.Any(x => x.Id == idDropped))
+                dropped = _context.Pallets.First(x => x.Id == idDropped);
 
-/*            _context.Pallets.Remove(dragged);
-            _context.Pallets.Remove(dropped);
-            _context.SaveChanges();*/
-            Pallet palletAux = new Pallet();
-            palletAux = dropped;
-            dropped = dragged;
-            dragged = palletAux;
-/*
-            Pallet one = new Pallet();
-            Pallet two = new Pallet();
-            one = dropped;
-            two = dragged;
+            int? rowAux = 0, colAux = 0;
+            int orderNoAux = 0;
 
-            _context.Pallets.Add(one);
-            _context.Pallets.Add(two);*/
+            List<Pallet> pallets = _context.Pallets.Where(x => x.Container2Id == containerId).ToList();
+            if (!pallets.Any(x => x.Row == rowAux && x.Column == colAux))
+            {
+                dropped.Row = dragged.Row;
+                dropped.Column = dragged.Column;
+                dropped.OrderNo = dragged.OrderNo;
+                _context.Remove(dragged);
+                _context.Add(dropped);
+            }
+            else
+            {
+
+                rowAux = dropped.Row;
+                colAux = dropped.Column;
+                orderNoAux = dropped.OrderNo;
+
+                dropped.Row = dragged.Row;
+                dropped.Column = dragged.Column;
+                dropped.OrderNo = dragged.OrderNo;
+
+                dragged.Row = rowAux;
+                dragged.Column = colAux;
+                dragged.OrderNo = orderNoAux;
+
+                switchedPallets.FirstPallet = dragged.Name;
+                switchedPallets.SecondPallet = dropped.Name;
+                switchedPallets.IdContainer = containerId;
+
+                _context.SwitchedPallets.Add(switchedPallets);
+            }
             _context.SaveChanges();
             return RedirectToAction("Create", new { id = containerId });
         }
@@ -196,7 +218,7 @@ namespace PalletLoading.Controllers
             int row = Convert.ToInt32(rowAux);
             int col = Convert.ToInt32(colAux);
 
-            Pallet pallet = new Pallet();
+            Pallet pallet = new();
             pallet.Row = row;
             pallet.Column = col;
             pallet.Container2Id = containerId;

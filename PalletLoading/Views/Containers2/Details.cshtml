@@ -24,6 +24,10 @@
     </div>
 </div>
 
+<br />
+<div class="mb-2 mr-2" style="float:right">
+    <a class="btn btn-success" asp-action="Create" asp-controller="Pallets" asp-route-id="@Model.Container.Id" />Modify</a>
+</div>
 
 <h3 style="text-align:center">Pallets</h3>
 
@@ -42,23 +46,23 @@
             @for (int row = 0; row < widthContainer; row++)
             {
                 var heightCustom = 100;
-        <tr style="width:200px; height:@heightCustom.ToString()px; vertical-align: top">
-            @for (int col = 0; col < lengthContainer; col++)
-            {
-                string idPallet = row.ToString() + "," + col.ToString();
-                var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
+                <tr style="width:200px; height:@heightCustom.ToString()px; vertical-align: top">
+                    @for (int col = 0; col < lengthContainer; col++)
+                    {
+                        string idPallet = row.ToString() + "," + col.ToString();
+                        var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
 
-                if (currentPallets != null)
-                {
-                    <td style="width:200px; height:200px; text-align:center">
-                        @foreach (var palet in currentPallets)
+                        if (currentPallets != null)
                         {
-                            <input type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom.ToString()px; text-align:center" class="detailsBtn btn-info">
+                            <td style="width:200px; height:200px; text-align:center">
+                                @foreach (var palet in currentPallets)
+                                {
+                                    <input type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom.ToString()px; text-align:center" class="detailsBtn btn-info">
+                                }
+                            </td>
                         }
-                    </td>
-                }
-            }
-        </tr>
+                    }
+                </tr>
             }
         }
     </tbody>
