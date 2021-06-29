@@ -11,27 +11,28 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Pallet Loading</a>
+                <a href="~/Home/Index"><img src="~/Images/download.png" class="navbar-brand" style="width:100px; height:50px"></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Containers2" asp-action="Index">Containers</a>
+                        <li class="uk-active">
+                            <a href='@Url.Action("Index","Containers2")'>
+                                <img alt="Check" src="@Url.Content("~/Images/cargo-container-crane.png")" style="width: 45px;height: 45px; padding:"10, 10, 10, 10"; filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ContainerTypes" asp-action="Index">Container Types</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="PalletTypes" asp-action="Index">Pallet Types</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Countries" asp-action="Index">Countries</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="CMR" asp-action="Index">CMR</a>
+                        <li class="dropdown"  style="padding-left:15px">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img alt="Check" src="@Url.Content("~/Images/cogs-solid.svg")" style="width: 45px; height: 45px; filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown dropdown-submenu">
+                                <li>@Html.ActionLink("Container type", "Index", "ContainerTypes")</li>
+                                <li>@Html.ActionLink("Pallet type", "Index", "PalletTypes")</li>
+                                <li>@Html.ActionLink("Countries", "Index", "Countries")</li>
+                            </ul>
                         </li>
                     </ul>
                     @{

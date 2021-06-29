@@ -1,9 +1,9 @@
 ﻿@model PalletLoading.ViewModels.ContainerDetailsViewModel
 
 @{ ViewData["Title"] = "Details";
-                Layout = "~/Views/Shared/_Layout_Full.cshtml"; }
+    Layout = "~/Views/Shared/_Layout_Full.cshtml"; }
 
-<h1 style="text-align:center">Details - @Model.Container.Name</h1>
+<h1 style="text-align:center">Details - <a class="nav-link text-dark" asp-area="" asp-controller="CMR" asp-action="Index">@Model.Container.Name</a></h1>
 
 @*<div>
         <div align="center" style="padding:50px 300px 50px 300px">
@@ -50,9 +50,9 @@
 <h3 style="text-align:center">Pallets</h3>
 
 @{ var lengthContainer = Model.Container.NoOfColumns;
-                var widthContainer = Model.Container.NoOfRows;
-                var totalLayer = lengthContainer * widthContainer;
-                var palletsAux = Model.Pallets; }
+    var widthContainer = Model.Container.NoOfRows;
+    var totalLayer = lengthContainer * widthContainer;
+    var palletsAux = Model.Pallets; }
 
 <br />
 <div style="width:100%; padding-bottom:150px; overflow-x:auto; position:relative;">
@@ -60,33 +60,35 @@
     <table border="1" class="table-bordered" style="border:2px solid; border-right-style:dotted; max-width:1106px; margin-left:370px;  text-align: center; align-content: center;">
         <tbody>
             @{
-                            @for (int row = 0; row < widthContainer; row++)
-                            {
-                <tr style="vertical-align: top;">
-                    @for (int col = 0; col < lengthContainer; col++)
-                    {
-                        string idPallet = row.ToString() + "," + col.ToString();
-                        var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
-
-                        if (currentPallets != null)
+                @for (int row = 0; row < widthContainer; row++)
+                {
+                    <tr style="vertical-align: top;">
+                        @for (int col = 0; col < lengthContainer; col++)
                         {
-    <td style="min-width:85px; text-align:center; ">
-        @foreach (var palet in currentPallets)
-        {
-            if (palet.PalletImportData != null)
-            {
+                            string idPallet = row.ToString() + "," + col.ToString();
+                            var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
 
-<input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info"> }
-else
-{
+                            if (currentPallets != null)
+                            {
+                                <td style="min-width:85px; text-align:center; ">
+                                    @foreach (var palet in currentPallets)
+                                    {
+                                        if (palet.PalletImportData != null)
+                                        {
 
-<input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                            <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.PalletImportData.pallet_no" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info"> }
+                                        else
+                                        {
 
+                                            <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+
+                                        }
+                                    }
+                                </td>
+}
                         }
-        }
-    </td>}
-                    }
-                </tr>} }
+                    </tr>
+} }
         </tbody>
     </table>
 </div>
@@ -95,9 +97,9 @@ else
 <table class="table-bordered" border="1" style="width:600px; height:300px; border:2px solid" align="center">
     <tr>
         <div align="center">
-            <td style="background-color: antiquewhite; box-shadow:0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1); text-align: center; padding: 50px 100px 50px 100px" id="palletContent">
-                @{ if (Model.Pallet != null)
-                                { @*<div align="left">
+        <td style="background-color: antiquewhite; box-shadow:0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1); text-align: center; padding: 50px 100px 50px 100px" id="palletContent">
+            @{ if (Model.Pallet != null)
+                { @*<div align="left">
                             @Html.DisplayNameFor(model => model.Pallet.Name)
                             <span style="float:right">@Html.DisplayFor(model => model.Pallet.Name)</span>
                         </div>
@@ -108,16 +110,14 @@ else
                             @Html.DisplayNameFor(model => model.Pallet.OrderNo)
                             <span style="float:right">@Html.DisplayFor(model => model.Pallet.OrderNo)</span>
                         </div>*@ } }
-            </td>
+        </td>
         </div>
     </tr>
 </table>
 <br />
 <br />
 <div width="100%">
-    <h2 style="margin-left:10%;">Pallets details</h2>
     <table class='table' style=' max-width:80%; ' align="center">
-
     </table>
 </div>
 @section Scripts {
