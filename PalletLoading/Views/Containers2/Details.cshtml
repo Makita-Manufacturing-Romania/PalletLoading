@@ -65,21 +65,21 @@
     <table border="1" class="table-bordered" style="border:2px solid; border-right-style:dotted; max-width:1106px; margin-left:370px;  text-align: center; align-content: center;">
         <tbody>
             @{
-                            @for (int row = 0; row < widthContainer; row++)
-                            {
-                <tr style="vertical-align: top;">
-                    @for (int col = 0; col < lengthContainer; col++)
-                    {
-                        string idPallet = row.ToString() + "," + col.ToString();
-                        var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
-
-                        if (currentPallets != null)
+                @for (int row = 0; row < widthContainer; row++)
+                {
+                    <tr style="vertical-align: top;">
+                        @for (int col = 0; col < lengthContainer; col++)
                         {
-    <td style="min-width:85px; text-align:center; ">
-        @foreach (var palet in currentPallets)
-        {
-            if (palet.PalletImportData != null)
-            {
+                            string idPallet = row.ToString() + "," + col.ToString();
+                            var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
+
+                            if (currentPallets != null)
+                            {
+                                <td style="min-width:85px; text-align:center; ">
+                                    @foreach (var palet in currentPallets)
+                                    {
+                                        if (palet.PalletImportData != null)
+                                        {
 
 <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info"> }
 else if (palet.PalletImportDataHistory != null)
