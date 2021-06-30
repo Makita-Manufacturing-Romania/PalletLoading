@@ -20,9 +20,15 @@
                 <select asp-for="TypeId" class="form-control" asp-items="ViewBag.TypeId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="CountryId" class="control-label"></label>
-                <select asp-for="CountryId" class="form-control" asp-items="ViewBag.CountryId"></select>
+                <div align="left">
+                    <label asp-for="CountryId" class="control-label"></label>
+                    <select asp-for="CountryId" class="form-control" asp-items="ViewBag.CountryId"></select>
+                </div>
+                <span style="float:right">
+                    <input type="button" ; class="btn-success" ; value="New client" ; style="float:right" />
+                </span>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

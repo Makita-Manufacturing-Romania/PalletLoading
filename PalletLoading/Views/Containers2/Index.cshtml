@@ -1,13 +1,25 @@
 ﻿@model PalletLoading.ViewModels.ContainerIndexViewModel
 
-@{ 
+@{
     ViewData["Title"] = "Container list";
 }
 <h1 style="text-align:center">Container list</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
+<div style="display:flex; justify-content:space-between">
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    @using (Html.BeginForm("Index", "Containers2", FormMethod.Get))
+    {
+        <p>
+            @Html.TextBox("SearchString")
+            <input type="submit" value="Search" />
+        </p>
+    }
+</div>
+
+
 
 
 <table class="table">
@@ -66,48 +78,48 @@
 
 @*@model IEnumerable<PalletLoading.Models.Container>
 
-@{
-    ViewData["Title"] = "Index";
-}
+    @{
+        ViewData["Title"] = "Index";
+    }
 
-<h1>Index</h1>
+    <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TypeId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Country)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TypeId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Country.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>*@
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TypeId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Country)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TypeId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Country.Id)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>*@

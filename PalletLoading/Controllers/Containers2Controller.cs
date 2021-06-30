@@ -21,10 +21,14 @@ namespace PalletLoading.Controllers
         }
 
         // GET: Containers2
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
             var palletLoadingContext = _context.Containers.Include(c => c.Country).Include(c => c.Pallet);
             List<Container> containers = _context.Containers.ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                containers = containers.Where(x => x.Name.Contains(searchString)).ToList();
+            }
             List<ContainerType> containerTypes = _context.ContainerTypes.ToList();
             List<Countries> countries = _context.Countries.ToList();
 
