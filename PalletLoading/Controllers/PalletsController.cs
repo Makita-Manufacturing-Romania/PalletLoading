@@ -47,7 +47,7 @@ namespace PalletLoading.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             PalletType palletType = _context.PalletTypes.First(x => x.Id == pallet.TypeId);
-            
+
             var viewModel = new PalletDetailsViewModel()
             {
                 Pallet = pallet,
@@ -67,7 +67,7 @@ namespace PalletLoading.Controllers
             ViewData["PalletId"] = new SelectList(_context.PalletTypes, "Id", "Name");
             TempData["containerId"] = id.ToString();
 
-            var container = _context.Containers.Include(c=>c.Country).First(x => x.Id == id);
+            var container = _context.Containers.Include(c => c.Country).First(x => x.Id == id);
             List<Pallet> pallets = _context.Pallets.Where(x => x.Container2Id == container.Id).ToList();
             ContainerType type = _context.ContainerTypes.First(x => x.Id == container.TypeId);
             List<SwitchedPallet> switchedPallets = _context.SwitchedPallets.Where(x => x.IdContainer == container.Id).ToList();
@@ -83,30 +83,64 @@ namespace PalletLoading.Controllers
             return View(viewModel);
         }
 
-        public IActionResult GetPallets(string country, string container,int containerId)
+        public IActionResult GetPallets(string country, string container, int containerId)
         {
-            var listPalletsMap = _context.ImportData.Where(c => c.consignee_code.Equals(country) && c.container_no.Equals(container)).OrderBy(c=>c.loading_time).ToList();
-            var listPalletsApp = _context.Pallets.Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
-            var mvcp = new List<ModelViewCreatePallet>();
-            int i = 0;
-            for( ; i < listPalletsApp.Count; i++)
-            {
-                listPalletsApp[i].PalletImportDataId = listPalletsMap[i].id;
-                //listPalletsMap[i].Pallet = null;
-                var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMap = listPalletsMap[i] };
-                mvcp.Add(tempMVID);
-            }
-            for(; i < listPalletsMap.Count; i++)
-            {
-                var tempMVID = new ModelViewCreatePallet { OrderNoApp = -1, PalletMap = listPalletsMap[i] };
-                //listPalletsMap[i].Pallet = null;
+            var dateContainer = _context.Containers.Any(c => c.CreatedDate == DateTime.Today);
 
-                mvcp.Add(tempMVID);
-            }
-            _context.UpdateRange(listPalletsApp);
-            _context.SaveChanges();
 
-            return Json(new { listPallets = mvcp });
+
+            if (dateContainer)
+            {
+
+                var listPalletsMap = _context.ImportData.Where(c => c.consignee_code.Equals(country) && c.container_no.Equals(container)).OrderBy(c => c.loading_time).ToList();
+                var listPalletsApp = _context.Pallets.Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
+                var mvcp = new List<ModelViewCreatePallet>();
+                int i = 0;
+                for (; i < listPalletsApp.Count; i++)
+                {
+                    listPalletsApp[i].PalletImportDataId = listPalletsMap[i].id;
+                    //listPalletsMap[i].Pallet = null;
+                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMap = listPalletsMap[i] };
+                    mvcp.Add(tempMVID);
+                }
+                for (; i < listPalletsMap.Count; i++)
+                {
+                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = -1, PalletMap = listPalletsMap[i] };
+                    //listPalletsMap[i].Pallet = null;
+
+                    mvcp.Add(tempMVID);
+                }
+                _context.UpdateRange(listPalletsApp);
+                _context.SaveChanges();
+
+                return Json(new { listPallets = mvcp });
+            }
+            else
+            {
+                var listPalletsMap = _context.ImportDataHistory.Where(c => c.consignee_code.Equals(country) && c.container_no.Equals(container)).OrderBy(c => c.loading_time).ToList();
+                var listPalletsApp = _context.Pallets.Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
+                var mvcp = new List<ModelViewCreatePallet>();
+                int i = 0;
+                for (; i < listPalletsApp.Count; i++)
+                {
+                    listPalletsApp[i].PalletImportDataHistoryId = listPalletsMap[i].id;
+                    //listPalletsMap[i].Pallet = null;
+                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMapHistory = listPalletsMap[i] };
+                    mvcp.Add(tempMVID);
+                }
+                for (; i < listPalletsMap.Count; i++)
+                {
+                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = -1, PalletMapHistory = listPalletsMap[i] };
+                    //listPalletsMap[i].Pallet = null;
+
+                    mvcp.Add(tempMVID);
+                }
+                _context.UpdateRange(listPalletsApp);
+                _context.SaveChanges();
+
+                return Json(new { listPallets = mvcp });
+
+            }
         }
 
 
@@ -119,7 +153,7 @@ namespace PalletLoading.Controllers
         {
             if (ModelState.IsValid)
             {
-                string containerId = "",position = ""; 
+                string containerId = "", position = "";
                 if (TempData.ContainsKey("containerId"))
                     containerId = TempData["containerId"].ToString();
                 int idContainer = Convert.ToInt32(containerId);
@@ -158,11 +192,11 @@ namespace PalletLoading.Controllers
                 pallet.Container2Id = idContainer;
                 _context.Pallets.Add(pallet);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", new { id = idContainer});
+                return RedirectToAction("Create", new { id = idContainer });
             }
             return View(pallet);
         }
-        
+
         public ActionResult SwitchPallets(string idContainer, string draggedPallet, string droppedPallet)
         {
             int containerId = Convert.ToInt32(idContainer);
@@ -173,7 +207,7 @@ namespace PalletLoading.Controllers
             Pallet dragged = _context.Pallets.First(x => x.Id == idDragged);
             Pallet dropped = new();
             SwitchedPallet switchedPallets = new();
-            if(_context.Pallets.Any(x => x.Id == idDropped))
+            if (_context.Pallets.Any(x => x.Id == idDropped))
                 dropped = _context.Pallets.First(x => x.Id == idDropped);
 
             int? rowAux = 0, colAux = 0;
@@ -240,7 +274,7 @@ namespace PalletLoading.Controllers
             _context.Pallets.Add(pallet);
             _context.SaveChanges();
 
-            return RedirectToAction("Create", new { id = containerId});
+            return RedirectToAction("Create", new { id = containerId });
         }
 
         public ActionResult RemovePallet(string idContainer, string palletId)
@@ -254,7 +288,7 @@ namespace PalletLoading.Controllers
             _context.Pallets.Remove(pallet);
             _context.SaveChanges();
 
-            return RedirectToAction("Create", new { id = containerId});
+            return RedirectToAction("Create", new { id = containerId });
         }
 
         public ActionResult AddRow(string idContainer)
@@ -262,7 +296,7 @@ namespace PalletLoading.Controllers
             int containerId = Convert.ToInt32(idContainer);
             Container container = _context.Containers.First(x => x.Id == containerId);
 
-            if(container.NoOfRows < 3)
+            if (container.NoOfRows < 3)
                 container.NoOfRows++;
             _context.SaveChanges();
             return RedirectToAction("Create", new { id = containerId });
@@ -273,7 +307,7 @@ namespace PalletLoading.Controllers
             int containerId = Convert.ToInt32(idContainer);
             Container container = _context.Containers.First(x => x.Id == containerId);
 
-            if(container.NoOfRows > 1)
+            if (container.NoOfRows > 1)
                 container.NoOfRows--;
             _context.SaveChanges();
             return RedirectToAction("Create", new { id = containerId });
@@ -284,7 +318,7 @@ namespace PalletLoading.Controllers
             int containerId = Convert.ToInt32(idContainer);
             Container container = _context.Containers.First(x => x.Id == containerId);
 
-            if(container.NoOfColumns < 18)
+            if (container.NoOfColumns < 18)
                 container.NoOfColumns++;
             _context.SaveChanges();
             return RedirectToAction("Create", new { id = containerId });
@@ -295,7 +329,7 @@ namespace PalletLoading.Controllers
             int containerId = Convert.ToInt32(idContainer);
             Container container = _context.Containers.First(x => x.Id == containerId);
 
-            if(container.NoOfColumns > 1)
+            if (container.NoOfColumns > 1)
                 container.NoOfColumns--;
             _context.SaveChanges();
             return RedirectToAction("Create", new { id = containerId });

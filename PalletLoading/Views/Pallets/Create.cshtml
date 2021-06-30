@@ -191,19 +191,31 @@
             contentType: "application/json;charset=UTF-8",
             dataType: "json",
             success: function (data) {
-                console.log(data)
                 var noPallets = data.listPallets.length;
                 var tableTxt = "<table class='table' style='margin-top:25px;'><tr><th>Order no</th><th>Sales part</th><th>Pallet no</th><th>Serial from</th><th>Serial to</th><th>Quantity</th><th>Weight</th></tr>"
+
                 for (var i = 0; i < noPallets; i++) {
                     var orderNo = data.listPallets[i].orderNoApp;
                     if (orderNo == -1) orderNo = "N/A"
-                    tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
-                        + "<td>" + data.listPallets[i].palletMap.salse_part +"</td>"
-                        + "<td>" + data.listPallets[i].palletMap.pallet_no +"</td>"
-                        + "<td>" + data.listPallets[i].palletMap.serial_from +"</td>"
-                        + "<td>" + data.listPallets[i].palletMap.serial_to +"</td>"
-                        + "<td>" + data.listPallets[i].palletMap.picking_qty +"</td>"
-                        + "<td>" + data.listPallets[i].palletMap.weight +"</td></tr>"
+                    console.log(data.listPallets[i].palletMapHistory)
+                    if (data.listPallets[i].palletMapHistory == null) {
+                        tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
+                            + "<td>" + data.listPallets[i].palletMap.salse_part + "</td>"
+                            + "<td>" + data.listPallets[i].palletMap.pallet_no + "</td>"
+                            + "<td>" + data.listPallets[i].palletMap.serial_from + "</td>"
+                            + "<td>" + data.listPallets[i].palletMap.serial_to + "</td>"
+                            + "<td>" + data.listPallets[i].palletMap.picking_qty + "</td>"
+                            + "<td>" + data.listPallets[i].palletMap.weight + "</td></tr>"
+                    } else {
+                        tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
+                            + "<td>" + data.listPallets[i].palletMapHistory.salse_part + "</td>"
+                            + "<td>" + data.listPallets[i].palletMapHistory.pallet_no + "</td>"
+                            + "<td>" + data.listPallets[i].palletMapHistory.serial_from + "</td>"
+                            + "<td>" + data.listPallets[i].palletMapHistory.serial_to + "</td>"
+                            + "<td>" + data.listPallets[i].palletMapHistory.picking_qty + "</td>"
+                            + "<td>" + data.listPallets[i].palletMapHistory.weight + "</td></tr>"
+                    }
+
                 }
                 tableTxt = tableTxt + "</table>"
                 $("#tableSection").empty();

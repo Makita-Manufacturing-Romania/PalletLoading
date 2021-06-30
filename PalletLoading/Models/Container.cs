@@ -20,5 +20,6 @@ namespace PalletLoading.Models
         public int? CountryId { get; set; }
         public int NoOfRows { get; set; }
         public int NoOfColumns { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

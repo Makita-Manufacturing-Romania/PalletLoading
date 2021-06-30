@@ -8,6 +8,7 @@ namespace PalletLoading.Models
     public class ModelViewCreatePallet
     {
         public ImportData PalletMap{ get; set; }
+        public ImportDataHistory PalletMapHistory{ get; set; }
         public int OrderNoApp { get; set; }
     }
 }

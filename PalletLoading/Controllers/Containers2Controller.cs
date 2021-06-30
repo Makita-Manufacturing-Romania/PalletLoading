@@ -61,7 +61,7 @@ namespace PalletLoading.Controllers
             }
             Countries country = _context.Countries.First(x => x.Id == container.CountryId);
             ContainerType type = _context.ContainerTypes.First(x => x.Id == container.TypeId);
-            List<Pallet> pallets = _context.Pallets.Include(c => c.PalletImportData).Where(x => x.Container2Id == container.Id).ToList();
+            List<Pallet> pallets = _context.Pallets.Include(c => c.PalletImportData).Include(c=>c.PalletImportDataHistory).Where(x => x.Container2Id == container.Id).ToList();
             var palletLength = _context.PalletTypes.Max(x => x.Length);
             var palletWidth = _context.PalletTypes.Max(x => x.Width);
             ViewBag.palletLength = palletLength;
@@ -99,6 +99,7 @@ namespace PalletLoading.Controllers
                 ContainerType type = _context.ContainerTypes.First(x => x.Id == container.TypeId);
                 container.NoOfRows = type.Width/100;
                 container.NoOfColumns = type.Length / 100;
+                container.CreatedDate = DateTime.Today;
                 _context.Add(container);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Create","Pallets", new { id = container.Id});
