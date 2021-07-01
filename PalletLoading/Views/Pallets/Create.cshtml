@@ -38,57 +38,97 @@
 <table border="1" class="table-bordered" style="border:2px solid; border-right-style:dotted; width: 100%; height: 100%; text-align: center; align-content: center;">
     <tbody>
         @{
+            var colNo = 1;
+            var currentRow = 1;
             @for (int row = 0; row < widthContainer; row++)
             {
                 var heightCustom = 100;
-                <tr style="width:200px; height:@heightCustom.ToString()px; vertical-align: top">
-                    @for (int col = 0; col < lengthContainer; col++)
+        <tr style="width:200px; height:@heightCustom.ToString()px; vertical-align: top">
+            @for (int col = 0; col < lengthContainer; col++)
+            {
+                string idPallet = row.ToString() + "," + col.ToString();
+                var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
+
+                if (currentPallets != null)
+                {
+                    @if (currentPallets.Count() == 1)
                     {
-                        string idPallet = row.ToString() + "," + col.ToString();
-                        var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
-
-                        if (currentPallets != null)
+            <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px; position:relative;height:@heightCustom.ToString()px; vertical-align: top;">
+                @if (currentRow == 1)
+                {
+                    <p style="font-size:25px">@colNo</p>
+                    colNo++;
+                }
+                <div style="position:absolute; bottom:0; width:95%">
+                    @{
+                        var pallet = currentPallets.First();
+                        <input type="button" id="@idPallet" value="Add" style="top:0; width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
+                        if (pallet.PalletImportData != null)
                         {
-                            @*<td style="width:200px; height:@heightCustom.ToString()px; text-align:center; table-layout:fixed; margin-top: 0;">
-                                    <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="addBtn btn-secondary">
-                                    @foreach (var palet in currentPallets)
-                                    {
-                                        <input type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="removeBtn btn-danger">
-                                    }
-                                </td>*@
-                            <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px; height:@heightCustom.ToString()px; vertical-align: top;">
-                                <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
-                                @foreach (var palet in currentPallets)
-                                {
-                                    <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
-                                }
-                            </td>
+                            <input draggable="true" ondragstart="drag(event)" type="button" id="@pallet.Id" value="@pallet.OrderNo" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
                         }
-                        else
+                        <br />
+                        @foreach (var palet in currentPallets)
                         {
-                            <input type="button" id="@idPallet" value="Add" style="width:100%; height:100%; text-align:center" class="addBtn btn-secondary">
+                            <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
                         }
-
-
-
-                        @*                if (pallet != null)
-                            {
-                                    <td style="width:200px; height:200px; text-align:center">
-                                        <0form><input type="button" id="@idPallet" value="Add" text-align: center class="btn-secondary addBtn"></form>
-                                        <br />
-                                        <form><input type="button" id="@idPallet" value="@pallet.OrderNo" style="width:100%; height:100%; text-align:center" class="removeBtn btn-danger"></form>
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td style="color: white; width: 200px; height: 200px; text-align:center">
-                                        <form><input type="button" id="@idPallet" value="Add" style="width:100%; height:100%; text-align:center" class="addBtn btn-secondary"></form>
-                                    </td>
-                                }
-
-                                palletsAux.Remove(pallet);*@
                     }
-                </tr>
+                </div>
+                </td> 
+                    }
+                    else
+                    {
+                    <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px; height:@heightCustom.ToString()px; vertical-align: top;">
+
+                        @if (currentRow == 1)
+                        {
+                            <p style="font-size:25px">@colNo</p>
+                            colNo++;
+                        }
+                        <br />
+                        <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
+                        @foreach (var palet in currentPallets)
+                        {
+                            <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                        }
+                    </td>
+                }
+            @*<td style="width:200px; height:@heightCustom.ToString()px; text-align:center; table-layout:fixed; margin-top: 0;">
+            <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="addBtn btn-secondary">
+            @foreach (var palet in currentPallets)
+            {
+                <input type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="removeBtn btn-danger">
+            }
+        </td>*@
+            }
+            else
+            {
+            <input type="button" id="@idPallet" value="Add" style="width:100%; height:100%; text-align:center" class="addBtn btn-secondary">
+            }
+
+
+
+            @*                if (pallet != null)
+        {
+                <td style="width:200px; height:200px; text-align:center">
+                    <0form><input type="button" id="@idPallet" value="Add" text-align: center class="btn-secondary addBtn"></form>
+                    <br />
+                    <form><input type="button" id="@idPallet" value="@pallet.OrderNo" style="width:100%; height:100%; text-align:center" class="removeBtn btn-danger"></form>
+                </td>
+            }
+            else
+            {
+                <td style="color: white; width: 200px; height: 200px; text-align:center">
+                    <form><input type="button" id="@idPallet" value="Add" style="width:100%; height:100%; text-align:center" class="addBtn btn-secondary"></form>
+                </td>
+            }
+
+            palletsAux.Remove(pallet);*@
+            }
+            @{
+                currentRow++;
+            }
+</tr>
             }
         }
     </tbody>

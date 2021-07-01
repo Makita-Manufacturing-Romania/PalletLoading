@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PalletLoading.Data;
 using PalletLoading.Models;
 using PalletLoading.ViewModels;
+using PagedList;
 
 namespace PalletLoading.Controllers
 {
@@ -21,16 +22,20 @@ namespace PalletLoading.Controllers
         }
 
         // GET: Containers2
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, int? page)
         {
             var palletLoadingContext = _context.Containers.Include(c => c.Country).Include(c => c.Pallet);
-            List<Container> containers = _context.Containers.ToList();
+            List<Container> containers = _context.Containers.OrderByDescending(x => x.Id).ToList();
             if (!String.IsNullOrEmpty(searchString))
             {
                 containers = containers.Where(x => x.Name.Contains(searchString)).ToList();
+                page = 1;
             }
             List<ContainerType> containerTypes = _context.ContainerTypes.ToList();
             List<Countries> countries = _context.Countries.ToList();
+
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
 
             var viewModel = new ContainerIndexViewModel
             {
@@ -38,7 +43,9 @@ namespace PalletLoading.Controllers
                 ContainerType = containerTypes,
                 Countries = countries
             };
-            
+
+
+
             return View(viewModel);
         }
 

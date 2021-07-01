@@ -272,6 +272,14 @@ namespace PalletLoading.Controllers
         {
             int containerId = Convert.ToInt32(idContainer);
             Container container = _context.Containers.First(x => x.Id == containerId);
+            List<Pallet> pallets = new();
+            var rowToRemove = _context.Pallets.Max(x => x.Row);
+            if (_context.Pallets.Any(x => x.Row == rowToRemove))
+            {
+                pallets = _context.Pallets.Where(x => x.Row == rowToRemove).ToList();
+                foreach (var palet in pallets)
+                    _context.Remove(palet);
+            }
 
             if(container.NoOfRows > 1)
                 container.NoOfRows--;
@@ -294,6 +302,16 @@ namespace PalletLoading.Controllers
         {
             int containerId = Convert.ToInt32(idContainer);
             Container container = _context.Containers.First(x => x.Id == containerId);
+            List<Pallet> pallets = new();
+            var colToRemove = _context.Pallets.Max(x => x.Column);
+            if(_context.Pallets.Any(x => x.Column == colToRemove))
+            {
+                pallets = _context.Pallets.Where(x => x.Column == colToRemove).ToList();
+                foreach (var pallet in pallets)
+                    _context.Remove(pallet);
+            }
+
+
 
             if(container.NoOfColumns > 1)
                 container.NoOfColumns--;
