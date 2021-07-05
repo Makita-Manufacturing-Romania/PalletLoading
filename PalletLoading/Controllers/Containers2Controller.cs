@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using PalletLoading.Data;
 using PalletLoading.Models;
 using PalletLoading.ViewModels;
-using PagedList;
 using System.IO;
 using Rotativa.AspNetCore;
 

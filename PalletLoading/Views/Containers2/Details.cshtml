@@ -71,7 +71,7 @@
 
     <div style="width:100%; padding-bottom:150px; overflow-x:auto; position:relative;">
         <img src="~/unnamed2.png" style="position:absolute; z-index:-1; bottom:0;left:0;" min-width="900px" width="1800px" />
-        <table border="1" class="table-bordered" style="border:2px solid; border-right-style:dotted; max-width:1106px; margin-left:150px;  text-align: center; align-content: center;">
+        <table border="1" class="table-bordered" style="border:2px solid; border-right-style:dotted; max-width:1106px; margin-left:370px; float:left;  text-align: center; align-content: center;">
             <tbody>
                 @{
                     var colNo = 1;
@@ -86,38 +86,38 @@
 
                                 if (currentPallets != null)
                                 {
-                                    @*@if (currentPallets.Count() == 1)
+                                    @if (currentPallets.Count() == 1)
                                     {
-                                        <td style="min-width:85px; text-align:center; position:relative; min-height:250px">
-                                            @if (currentRow == 1)
-                                            {
-                                                <p style="font-size:25px">@colNo</p>
-                                                colNo++;
-                                            }
-                                            @{
-                                                var palet = currentPallets.First();
+                            <td style="min-width:85px; text-align:center; position:relative; min-height:250px">
+                                @if (currentRow == 1)
+                                {
+                            <p style="font-size:25px">@colNo</p>colNo++;
+                                                        }
+                                @{ var palet = currentPallets.First();
 
-                                                if (palet.PalletImportData != null)
-                                                {
-                                                    <div style="position: absolute; bottom: 0; width: 95%;">
-                                                        <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.PalletImportData.pallet_no" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
-                                                    </div>
-                                                }
-                                                else if (palet.PalletImportDataHistory != null)
-                                                {
-                                                    <input type="button" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info"> }
+                                                                if (palet.PalletImportData != null)
+                                                                {
+                                    <div style="position: absolute; bottom: 0; width: 95%;">
+                                        <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.PalletImportData.pallet_no" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                    </div> }
+                                                                else if (palet.PalletImportDataHistory != null)
+                                                                {
+                            <div style="position: absolute; bottom: 0; width: 95%;">
+
+                                <input type="button" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                            </div>}
+                                        else
+                                        {
+                                        <div style="position: absolute; bottom: 0; width: 95%;">
+                                            <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                        </div>
+                                        }
+                                        <br />
+                                        }
+                                </td>
+                                    }
                                                 else
                                                 {
-                                                    <div style="position: absolute; bottom: 0; width: 95%;">
-                                                        <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
-                                                    </div>
-                                                }
-                                                <br />
-                                            }
-                                        </td>
-                                    }*@
-                                    //else
-                                    //{
                             <td style="min-width:85px; text-align:center; height:150px; ">
                                 @if (currentRow == 1)
                                 {
@@ -141,8 +141,8 @@
                                     }
                                 }
                             </td>
-                                    //}
-                                }
+                                                    }
+                                                }
                             }
                             @{
                                 currentRow++;
