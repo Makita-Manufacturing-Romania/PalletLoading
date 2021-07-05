@@ -9,25 +9,20 @@ Layout=null;
 </div>
 <div width="100%" align="center" style="margin-bottom:10px;">
     <input type="hidden" value="@Model.Container.Id" id="container" />
-
-    <div class="container">
-        <div class="row">
-            <div class="col-6" align="right" style="font-weight:bold;">
-                @Html.DisplayNameFor(model => Model.Type.Name)
-            </div>
-            <div class="col-6" align="left">
-                @Html.DisplayFor(model => Model.Type.Name)
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6" align="right" style="font-weight:bold;">
-                Country
-            </div>
-            <div class="col-6" align="left">
-                @Html.DisplayFor(model => Model.Country.Name)
-            </div>
-        </div>
-    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => Model.Type.Name) - @Html.DisplayFor(model => Model.Type.Name)
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    Country - @Html.DisplayFor(model => Model.Country.Name)
+                </th>
+            </tr>
+        </thead>
+    </table>
 
     <br />
     <div class="mb-2 mr-2" style="float:right">
@@ -42,12 +37,11 @@ Layout=null;
     <br />
 
     <div style="width:100%; padding-bottom:150px; overflow-x:auto; position:relative;">
-        <img src="~/unnamed2.png" style="position:absolute; z-index:-1; bottom:0;left:0;" min-width="900px" width="1800px" />
-        <table border="1" class="table-bordered" style="border:2px solid; border-right-style:dotted; max-width:1106px; margin-left:370px;  text-align: center; align-content: center;">
+        <table border="1" class="table-bordered" style="border:2px solid; width:100%; border-right-style:dotted; max-width:1106px; margin-left:370px;  text-align: center; align-content: center;">
             <tbody>
                 @{
                     var colNo = 1;
-                    var currentRow = 1;
+                    var currentRow = 1; 
                     @for (int row = 0; row < widthContainer; row++)
                     {
                         <tr style="vertical-align: top;">
@@ -124,50 +118,55 @@ Layout=null;
   </div>
     </tr>
 </table>
-<br />
-<br />
-@if (Model.Pallets != null)
-{
+<P CLASS="breakhere">
+    <br />
+    <br />
+    @if (Model.Pallets != null)
+    {
 
-    <div width="100%">
-        <h2 style="margin-left:10%;">Pallets details</h2>
-        <table class='table' style="width:80%;" align="center">
-            <tr>
-                <th>Order no</th>
-                <th>Sales part</th>
-                <th>Pallet no</th>
-                <th>Serial from</th>
-                <th>Serial to</th>
-                <th>Quantity</th>
-                <th>Weight</th>
-            </tr>
-            @foreach (var pallet in Model.Pallets)
-            {
-                if (pallet.PalletImportData != null)
+        <div width="100%">
+            <h2 style="margin-left:10%;">Pallets details</h2>
+            <table class='table' style="width:80%;" align="center">
+                <tr>
+                    <th>Order no</th>
+                    <th>Sales part</th>
+                    <th>Pallet no</th>
+                    <th>Serial from</th>
+                    <th>Serial to</th>
+                    <th>Quantity</th>
+                    <th>Weight</th>
+                </tr>
+                @foreach (var pallet in Model.Pallets)
                 {
-                    <tr>
-                        <td>@pallet.OrderNo</td>
-                        <td>@pallet.PalletImportData.salse_part</td>
-                        <td>@pallet.PalletImportData.pallet_no</td>
-                        <td>@pallet.PalletImportData.serial_from</td>
-                        <td>@pallet.PalletImportData.serial_to</td>
-                        <td>@pallet.PalletImportData.picking_qty</td>
-                        <td>@pallet.PalletImportData.weight</td>
-                    </tr>
- }
-                else if (pallet.PalletImportDataHistory != null)
-                {
-                    <tr>
-                        <td>@pallet.OrderNo</td>
-                        <td>@pallet.PalletImportDataHistory.salse_part</td>
-                        <td>@pallet.PalletImportDataHistory.pallet_no</td>
-                        <td>@pallet.PalletImportDataHistory.serial_from</td>
-                        <td>@pallet.PalletImportDataHistory.serial_to</td>
-                        <td>@pallet.PalletImportDataHistory.picking_qty</td>
-                        <td>@pallet.PalletImportDataHistory.weight</td>
-                    </tr>
+                    if (pallet.PalletImportData != null)
+                    {
+                        <tr>
+                            <td>@pallet.OrderNo</td>
+                            <td>@pallet.PalletImportData.salse_part</td>
+                            <td>@pallet.PalletImportData.pallet_no</td>
+                            <td>@pallet.PalletImportData.serial_from</td>
+                            <td>@pallet.PalletImportData.serial_to</td>
+                            <td>@pallet.PalletImportData.picking_qty</td>
+                            <td>@pallet.PalletImportData.weight</td>
+                        </tr>
+                    }
+                    else if (pallet.PalletImportDataHistory != null)
+                    {
+                        <tr>
+                            <td>@pallet.OrderNo</td>
+                            <td>@pallet.PalletImportDataHistory.salse_part</td>
+                            <td>@pallet.PalletImportDataHistory.pallet_no</td>
+                            <td>@pallet.PalletImportDataHistory.serial_from</td>
+                            <td>@pallet.PalletImportDataHistory.serial_to</td>
+                            <td>@pallet.PalletImportDataHistory.picking_qty</td>
+                            <td>@pallet.PalletImportDataHistory.weight</td>
+                        </tr>
+                    }
                 }
-            }
-        </table>
-    </div>}
-
+            </table>
+        </div>}
+    <STYLE TYPE="text/css">
+        .breakhere {
+            page-break-after: always
+        }
+    </STYLE>

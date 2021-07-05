@@ -9,6 +9,7 @@
 </div>
 <div width="100%" align="center" style="margin-bottom:10px;">
     <a class="btn btn-success " asp-action="Create" asp-controller="Pallets" asp-route-id="@Model.Container.Id">Modify</a>
+    <a type="button" asp-action="GeneratePDF" asp-controller="Containers2" asp-route-id="@Model.Container.Id" target="_blank" class="btn btn-danger">Export PDF</a>
 
     @*<h1 style="text-align:center">Details - <a class="nav-link text-dark" asp-area="" asp-controller="CMR" asp-action="Index">@Model.Container.Name</a></h1>*@
     <input type="hidden" value="@Model.Container.Id" id="container" />
