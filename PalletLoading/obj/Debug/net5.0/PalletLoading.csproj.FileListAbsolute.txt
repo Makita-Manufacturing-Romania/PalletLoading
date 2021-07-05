@@ -925,4 +925,26 @@ C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Debug\net5.0\ref\
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Debug\net5.0\PalletLoading.pdb
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Debug\net5.0\PalletLoading.genruntimeconfig.cache
 C:\Users\r.cioroba\source\repos\PalletLoading\PalletLoading\obj\Debug\net5.0\Razor\Views\Shared\_Layout_Full.cshtml.g.cs
+<<<<<<< HEAD
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Debug\net5.0\Razor\Views\Shared\_Layout_Full.cshtml.g.cs
+=======
+C:\Users\r.cioroba\source\repos\PalletLoading\PalletLoading\bin\Debug\net5.0\PagedList.dll
+C:\Users\r.cioroba\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\Syncfusion.Compression.Portable.dll
+C:\Users\r.cioroba\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\Syncfusion.Licensing.dll
+C:\Users\r.cioroba\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\Syncfusion.Pdf.Portable.dll
+C:\Users\r.cioroba\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\r.cioroba\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+C:\Users\r.cioroba\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\Rotativa.AspNetCore.dll
+C:\Users\r.cioroba\source\repos\PalletLoading\PalletLoading\obj\Debug\net5.0\Razor\Views\Pallets\Report.cshtml.g.cs
+>>>>>>> e7e25e1e701fcd082c1f0f1dd3463ba0f1199a7c
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\PagedList.dll
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\Rotativa.AspNetCore.dll
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\Syncfusion.Compression.Portable.dll
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\Syncfusion.Licensing.dll
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\Syncfusion.Pdf.Portable.dll
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Debug\net5.0\Razor\Views\Pallets\Report.cshtml.g.cs
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Debug\net5.0\Razor\Views\Pallets\CreatePDF.cshtml.g.cs
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Debug\net5.0\Razor\Views\Pallets\GeneratePDF.cshtml.g.cs
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\bin\Debug\net5.0\Microsoft.DotNet.PlatformAbstractions.dll
