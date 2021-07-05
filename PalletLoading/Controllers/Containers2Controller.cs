@@ -10,6 +10,7 @@ using PalletLoading.Models;
 using PalletLoading.ViewModels;
 using PagedList;
 using System.IO;
+using Rotativa.AspNetCore;
 
 namespace PalletLoading.Controllers
 {
@@ -22,50 +23,73 @@ namespace PalletLoading.Controllers
             _context = context;
         }
 
-/*        public ActionResult CreateDocument(string idContainer)
+        public ActionResult GeneratePDF(int id)
         {
-            int containerId = Convert.ToInt32(idContainer);
+            int containerId = Convert.ToInt32(id);
             Container container = _context.Containers.First(x => x.Id == containerId);
-            List<Pallet> pallets = _context.Pallets.Where(x => x.Container2Id == containerId).ToList();
+            List<Pallet> pallets = _context.Pallets.Include(c => c.PalletImportData).Include(c => c.PalletImportDataHistory).Where(x => x.Container2Id == containerId).ToList();
 
+            ViewData["PalletId"] = new SelectList(_context.PalletTypes, "Id", "Name");
+            TempData["containerId"] = id.ToString();
 
+            ContainerType type = _context.ContainerTypes.First(x => x.Id == container.TypeId);
+            Countries country = _context.Countries.First(x => x.Id == container.CountryId);
+            Pallet pallet = pallets.First();
 
-
-            *//*PdfDocument document = new PdfDocument();
-            PdfPage page = document.Pages.Add();
-            PdfGraphics graphics = page.Graphics;
-
-            PdfFont font = new PdfStandardFont(PdfFontFamily.Helvetica, 20);
-            PdfFont titleFont = new PdfStandardFont(PdfFontFamily.Helvetica, 35);
-
-            string title = "Details - " + container.Name;
-            graphics.DrawString(title, titleFont, PdfBrushes.Black, new PointF(20, 0));
-            int y = 20;
-            foreach (var pallet in pallets)
+            var viewModel = new ContainerDetailsViewModel
             {
-                string row;
-                if (pallet.PalletImportData != null)
+                Container = container,
+                Pallets = pallets,
+                Type = type,
+                Country = country,
+                Pallet = pallet
+            };
+
+            return new ViewAsPdf("Report", viewModel)
+            {
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+            };
+        }
+
+        /*        public ActionResult CreateDocument(string idContainer)
                 {
-                    row = pallet.OrderNo + ". " + pallet.PalletImportData.pallet_no + " - " + pallet.PalletImportData.weight + "kg";
-                    graphics.DrawString(row, font, PdfBrushes.Black, new PointF(0,y));
-                    y += 20;
-                }
-            }
+                    int containerId = Convert.ToInt32(idContainer);
+                    Container container = _context.Containers.First(x => x.Id == containerId);
+                    List<Pallet> pallets = _context.Pallets.Where(x => x.Container2Id == containerId).ToList();
 
-            MemoryStream stream = new MemoryStream();
-            document.Save(stream);
-            stream.Position = 0;
 
-            FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/pdf");
-            fileStreamResult.FileDownloadName = "Report.pdf";
-            return fileStreamResult;*//*
-        }*/
 
-/*        public ActionResult GeneratePDF(int id)
-        {
-            Container container = _context.Containers.First(x => x.Id == id);
-            List<Pallet> pallets = _context.Pallets.Where(x => x.Container2Id == id).ToList();
-        }*/
+
+                    *//*PdfDocument document = new PdfDocument();
+                    PdfPage page = document.Pages.Add();
+                    PdfGraphics graphics = page.Graphics;
+
+                    PdfFont font = new PdfStandardFont(PdfFontFamily.Helvetica, 20);
+                    PdfFont titleFont = new PdfStandardFont(PdfFontFamily.Helvetica, 35);
+
+                    string title = "Details - " + container.Name;
+                    graphics.DrawString(title, titleFont, PdfBrushes.Black, new PointF(20, 0));
+                    int y = 20;
+                    foreach (var pallet in pallets)
+                    {
+                        string row;
+                        if (pallet.PalletImportData != null)
+                        {
+                            row = pallet.OrderNo + ". " + pallet.PalletImportData.pallet_no + " - " + pallet.PalletImportData.weight + "kg";
+                            graphics.DrawString(row, font, PdfBrushes.Black, new PointF(0,y));
+                            y += 20;
+                        }
+                    }
+
+                    MemoryStream stream = new MemoryStream();
+                    document.Save(stream);
+                    stream.Position = 0;
+
+                    FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/pdf");
+                    fileStreamResult.FileDownloadName = "Report.pdf";
+                    return fileStreamResult;*//*
+                }*/
 
         // GET: Containers2
         public async Task<IActionResult> Index(string searchString, int? page)
@@ -89,8 +113,6 @@ namespace PalletLoading.Controllers
                 ContainerType = containerTypes,
                 Countries = countries
             };
-
-
 
             return View(viewModel);
         }

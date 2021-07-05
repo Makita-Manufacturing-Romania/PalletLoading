@@ -1,0 +1,173 @@
+﻿@model PalletLoading.ViewModels.ContainerDetailsViewModel
+@{
+Layout=null;
+}
+<div width="100%;" align="center" style="padding:0; display:flex; align-items:center; justify-content: center;">
+    <div style="position:relative;">
+        <p style="padding:0; display:inline-block; font-weight:bold; font-size:30px; position:relative;top:7px;">Details - @Model.Container.Name</p>
+    </div>
+</div>
+<div width="100%" align="center" style="margin-bottom:10px;">
+    <input type="hidden" value="@Model.Container.Id" id="container" />
+
+    <div class="container">
+        <div class="row">
+            <div class="col-6" align="right" style="font-weight:bold;">
+                @Html.DisplayNameFor(model => Model.Type.Name)
+            </div>
+            <div class="col-6" align="left">
+                @Html.DisplayFor(model => Model.Type.Name)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6" align="right" style="font-weight:bold;">
+                Country
+            </div>
+            <div class="col-6" align="left">
+                @Html.DisplayFor(model => Model.Country.Name)
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <div class="mb-2 mr-2" style="float:right">
+    </div>
+
+
+    @{ var lengthContainer = Model.Container.NoOfColumns;
+        var widthContainer = Model.Container.NoOfRows;
+        var totalLayer = lengthContainer * widthContainer;
+        var palletsAux = Model.Pallets; }
+
+    <br />
+
+    <div style="width:100%; padding-bottom:150px; overflow-x:auto; position:relative;">
+        <img src="~/unnamed2.png" style="position:absolute; z-index:-1; bottom:0;left:0;" min-width="900px" width="1800px" />
+        <table border="1" class="table-bordered" style="border:2px solid; border-right-style:dotted; max-width:1106px; margin-left:370px;  text-align: center; align-content: center;">
+            <tbody>
+                @{
+                    var colNo = 1;
+                    var currentRow = 1;
+                    @for (int row = 0; row < widthContainer; row++)
+                    {
+                        <tr style="vertical-align: top;">
+                            @for (int col = 0; col < lengthContainer; col++)
+                            {
+                                string idPallet = row.ToString() + "," + col.ToString();
+                                var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
+
+                                if (currentPallets != null)
+                                {
+                                    @if (currentPallets.Count() == 1)
+                                    {
+                                        <td style="min-width:85px; text-align:center; position:relative; min-height:250px">
+                                            @if (currentRow == 1)
+                                            {
+                                                <p style="font-size:25px">@colNo</p>
+                                                colNo++;
+                                            }
+                                            @{
+                                                var palet = currentPallets.First();
+
+                                                if (palet.PalletImportData != null)
+                                                {
+                                                    <div style="position: absolute; bottom: 0; width: 95%;">
+                                                        <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.PalletImportData.pallet_no" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div style="position: absolute; bottom: 0; width: 95%;">
+                                                        <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                    </div>
+                                                }
+                                                <br />
+                                            }
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="min-width:85px; text-align:center; height:150px">
+                                            @if (currentRow == 1)
+                                            {
+                                                <p style="font-size:25px">@colNo</p>
+                                                colNo++;
+                                            }
+                                            <br />
+                                            @foreach (var palet in currentPallets)
+                                            {
+                                                if (palet.PalletImportData != null)
+                                                {
+
+                                                    <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.PalletImportData.pallet_no" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info"> }
+                                                else
+                                                {
+
+                                                    <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                }
+                            }
+                            @{
+                                currentRow++;
+                            }
+                        </tr>
+                    } }
+            </tbody>
+        </table>
+    </div>
+    <br />
+
+  </div>
+    </tr>
+</table>
+<br />
+<br />
+@if (Model.Pallets != null)
+{
+
+    <div width="100%">
+        <h2 style="margin-left:10%;">Pallets details</h2>
+        <table class='table' style="width:80%;" align="center">
+            <tr>
+                <th>Order no</th>
+                <th>Sales part</th>
+                <th>Pallet no</th>
+                <th>Serial from</th>
+                <th>Serial to</th>
+                <th>Quantity</th>
+                <th>Weight</th>
+            </tr>
+            @foreach (var pallet in Model.Pallets)
+            {
+                if (pallet.PalletImportData != null)
+                {
+                    <tr>
+                        <td>@pallet.OrderNo</td>
+                        <td>@pallet.PalletImportData.salse_part</td>
+                        <td>@pallet.PalletImportData.pallet_no</td>
+                        <td>@pallet.PalletImportData.serial_from</td>
+                        <td>@pallet.PalletImportData.serial_to</td>
+                        <td>@pallet.PalletImportData.picking_qty</td>
+                        <td>@pallet.PalletImportData.weight</td>
+                    </tr>
+ }
+                else if (pallet.PalletImportDataHistory != null)
+                {
+                    <tr>
+                        <td>@pallet.OrderNo</td>
+                        <td>@pallet.PalletImportDataHistory.salse_part</td>
+                        <td>@pallet.PalletImportDataHistory.pallet_no</td>
+                        <td>@pallet.PalletImportDataHistory.serial_from</td>
+                        <td>@pallet.PalletImportDataHistory.serial_to</td>
+                        <td>@pallet.PalletImportDataHistory.picking_qty</td>
+                        <td>@pallet.PalletImportDataHistory.weight</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>}
+

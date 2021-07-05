@@ -60,6 +60,7 @@ namespace PalletLoading
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            RotativaConfiguration.Setup((Microsoft.AspNetCore.Hosting.IHostingEnvironment)env);
         }
     }
 }
