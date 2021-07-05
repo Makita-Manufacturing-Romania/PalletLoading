@@ -2,6 +2,8 @@ C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\wi
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\css\site.css
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\favicon.ico
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\Images\1763063.png
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\Images\cargo-container-crane.png
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\Images\cogs-solid.svg
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\Images\download.png
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\js\site.js
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\PubTmp\Out\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css

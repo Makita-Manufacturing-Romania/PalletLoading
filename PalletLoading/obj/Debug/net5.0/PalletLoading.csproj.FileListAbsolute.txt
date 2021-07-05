@@ -925,3 +925,4 @@ C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Debug\net5.0\ref\
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Debug\net5.0\PalletLoading.pdb
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Debug\net5.0\PalletLoading.genruntimeconfig.cache
 C:\Users\r.cioroba\source\repos\PalletLoading\PalletLoading\obj\Debug\net5.0\Razor\Views\Shared\_Layout_Full.cshtml.g.cs
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Debug\net5.0\Razor\Views\Shared\_Layout_Full.cshtml.g.cs

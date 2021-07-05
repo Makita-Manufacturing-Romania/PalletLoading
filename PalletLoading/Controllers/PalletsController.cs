@@ -86,22 +86,27 @@ namespace PalletLoading.Controllers
         public IActionResult GetPallets(string country, string container, int containerId)
         {
             var dateContainer = _context.Containers.Any(c => c.CreatedDate == DateTime.Today);
+            var listPalletsMap = _context.ImportData.Where(c => c.consignee_code.Equals(country) && c.container_no.Equals(container)).OrderBy(c => c.loading_time).ToList();
 
 
 
-            if (dateContainer)
+            if (dateContainer && listPalletsMap.Count != 0)
             {
 
-                var listPalletsMap = _context.ImportData.Where(c => c.consignee_code.Equals(country) && c.container_no.Equals(container)).OrderBy(c => c.loading_time).ToList();
+                 listPalletsMap = _context.ImportData.Where(c => c.consignee_code.Equals(country) && c.container_no.Equals(container)).OrderBy(c => c.loading_time).ToList();
                 var listPalletsApp = _context.Pallets.Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
                 var mvcp = new List<ModelViewCreatePallet>();
                 int i = 0;
                 for (; i < listPalletsApp.Count; i++)
                 {
-                    listPalletsApp[i].PalletImportDataId = listPalletsMap[i].id;
-                    //listPalletsMap[i].Pallet = null;
-                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMap = listPalletsMap[i] };
-                    mvcp.Add(tempMVID);
+                    if (i < listPalletsMap.Count)
+                    {
+                        listPalletsApp[i].PalletImportDataId = listPalletsMap[i].id;
+                        //listPalletsMap[i].Pallet = null;
+                        var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMap = listPalletsMap[i] };
+                        mvcp.Add(tempMVID);
+                    }
+
                 }
                 for (; i < listPalletsMap.Count; i++)
                 {
@@ -117,20 +122,20 @@ namespace PalletLoading.Controllers
             }
             else
             {
-                var listPalletsMap = _context.ImportDataHistory.Where(c => c.consignee_code.Equals(country) && c.container_no.Equals(container)).OrderBy(c => c.loading_time).ToList();
+                var listPalletsMap2 = _context.ImportDataHistory.Where(c => c.consignee_code.Equals(country) && c.container_no.Equals(container)).OrderBy(c => c.loading_time).ToList();
                 var listPalletsApp = _context.Pallets.Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
                 var mvcp = new List<ModelViewCreatePallet>();
                 int i = 0;
                 for (; i < listPalletsApp.Count; i++)
                 {
-                    listPalletsApp[i].PalletImportDataHistoryId = listPalletsMap[i].id;
+                    listPalletsApp[i].PalletImportDataHistoryId = listPalletsMap2[i].id;
                     //listPalletsMap[i].Pallet = null;
-                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMapHistory = listPalletsMap[i] };
+                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMapHistory = listPalletsMap2[i] };
                     mvcp.Add(tempMVID);
                 }
-                for (; i < listPalletsMap.Count; i++)
+                for (; i < listPalletsMap2.Count; i++)
                 {
-                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = -1, PalletMapHistory = listPalletsMap[i] };
+                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = -1, PalletMapHistory = listPalletsMap2[i] };
                     //listPalletsMap[i].Pallet = null;
 
                     mvcp.Add(tempMVID);
