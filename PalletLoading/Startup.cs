@@ -10,14 +10,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PalletLoading.Data;
+using Rotativa.AspNetCore;
 
 namespace PalletLoading
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             Configuration = configuration;
+            RotativaConfiguration.Setup(env);
         }
 
         public IConfiguration Configuration { get; }

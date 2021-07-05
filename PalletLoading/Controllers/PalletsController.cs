@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using PalletLoading.Data;
 using PalletLoading.Models;
 using PalletLoading.ViewModels;
+using Rotativa.AspNetCore;
 
 namespace PalletLoading.Controllers
 {
@@ -19,6 +21,32 @@ namespace PalletLoading.Controllers
         public PalletsController(PalletLoadingContext context)
         {
             _context = context;
+        }
+
+        public ActionResult GeneratePDF(int id)
+        {
+            int containerId = Convert.ToInt32(id);
+            Container container = _context.Containers.First(x => x.Id == containerId);
+            List<Pallet> pallets = _context.Pallets.Where(x => x.Container2Id == containerId).ToList();
+
+            ViewData["PalletId"] = new SelectList(_context.PalletTypes, "Id", "Name");
+            TempData["containerId"] = id.ToString();
+
+            ContainerType type = _context.ContainerTypes.First(x => x.Id == container.TypeId);
+            List<SwitchedPallet> switchedPallets = _context.SwitchedPallets.Where(x => x.IdContainer == container.Id).ToList();
+
+            var viewModel = new AddContainerViewModel
+            {
+                Container = container,
+                Pallets = pallets,
+                Type = type,
+                SwitchedPallets = switchedPallets
+            };
+
+            return new ViewAsPdf("Create", viewModel)
+            {
+                PageSize = Rotativa.AspNetCore.Options.Size.A4
+            };
         }
 
         // GET: Pallets
@@ -311,6 +339,14 @@ namespace PalletLoading.Controllers
         {
             int containerId = Convert.ToInt32(idContainer);
             Container container = _context.Containers.First(x => x.Id == containerId);
+            List<Pallet> pallets = new();
+            var rowToRemove = _context.Pallets.Max(x => x.Row);
+            if (_context.Pallets.Any(x => x.Row == rowToRemove))
+            {
+                pallets = _context.Pallets.Where(x => x.Row == rowToRemove).ToList();
+                foreach (var palet in pallets)
+                    _context.Remove(palet);
+            }
 
             if (container.NoOfRows > 1)
                 container.NoOfRows--;
@@ -333,6 +369,16 @@ namespace PalletLoading.Controllers
         {
             int containerId = Convert.ToInt32(idContainer);
             Container container = _context.Containers.First(x => x.Id == containerId);
+            List<Pallet> pallets = new();
+            var colToRemove = _context.Pallets.Max(x => x.Column);
+            if(_context.Pallets.Any(x => x.Column == colToRemove))
+            {
+                pallets = _context.Pallets.Where(x => x.Column == colToRemove).ToList();
+                foreach (var pallet in pallets)
+                    _context.Remove(pallet);
+            }
+
+
 
             if (container.NoOfColumns > 1)
                 container.NoOfColumns--;

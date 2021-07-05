@@ -1,0 +1,313 @@
+﻿@model PalletLoading.ViewModels.AddContainerViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1 style="text-align:center">Add pallets</h1>
+
+@{
+    var type = Model.Type;
+    var lengthContainer = Model.Container.NoOfColumns;
+    var widthContainer = Model.Container.NoOfRows;
+
+    var totalLayer = lengthContainer * widthContainer;
+    var palletsAux = Model.Pallets;
+
+    var containerName = Model.Container.Name;
+    string countryName = "default";
+    if (Model.Container.Country != null)
+        countryName = Model.Container.Country.Abbreviation;
+
+}
+
+<br />
+<div class="mb-2 mr-2" style="float:right">
+    <a class="btn btn-info" asp-action="Details" asp-controller="Containers2" asp-route-id="@Model.Container.Id" />Details</a>
+</div>
+
+<div class="container">
+    <div class="col-lg-6" style="float:right;">
+        <h5 style="text-align:right">Max pallets per layer: @totalLayer</h5>
+    </div>
+    <div class="col-lg-6">
+        <h5>Country: @countryName</h5>
+        <h5>Container: @containerName</h5>
+    </div>
+
+    <a type="button" asp-action="GeneratePDF" asp-controller="Pallets" asp-route-id="@Model.Container.Id" target="_blank" class="btn btn-success col-lg-2">Export PDF</a>
+</div>
+<br />
+<br />
+<input type="hidden" value="@Model.Container.Id" id="container" />
+<table border="1" class="table-bordered" style="border:2px solid; border-right-style:dotted; width: 100%; height: 100%; text-align: center; align-content: center;">
+    <tbody>
+        @{
+            var colNo = 1;
+            var currentRow = 1;
+            @for (int row = 0; row < widthContainer; row++)
+            {
+                var heightCustom = 100;
+                <tr style="width:200px; height:@heightCustom.ToString()px; vertical-align: top">
+                    @for (int col = 0; col < lengthContainer; col++)
+                    {
+                        string idPallet = row.ToString() + "," + col.ToString();
+                        var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
+
+                        if (currentPallets != null)
+                        {
+                            @if (currentPallets.Count() == 1)
+                            {
+                                <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px; position:relative;height:@heightCustom.ToString()px; vertical-align: top;">
+                                    @if (currentRow == 1)
+                                    {
+                                        <p style="font-size:25px">@colNo</p>
+                                        colNo++;
+                                    }
+                                    <div style="position:absolute; bottom:0; width:95%">
+                                        @{
+                                            var pallet = currentPallets.First();
+                                            <input type="button" id="@idPallet" value="Add" style="top:0; width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
+                                            if (pallet.PalletImportData != null)
+                                            {
+                                                <input draggable="true" ondragstart="drag(event)" type="button" id="@pallet.Id" value="@pallet.OrderNo" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                                            }
+                                            <br />
+                                            @foreach (var palet in currentPallets)
+                                            {
+                                                <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                                            }
+                                        }
+                                    </div>
+                                </td>
+
+                            }
+                            else
+                            {
+                                <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px; height:@heightCustom.ToString()px; vertical-align: top;">
+
+                                    @if (currentRow == 1)
+                                    {
+                                        <p style="font-size:25px">@colNo</p>
+                                        colNo++;
+                                    }
+                                    <br />
+                                    <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
+                                    @foreach (var palet in currentPallets)
+                                    {
+                                        <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                                    }
+                                </td>
+                            }
+                            @*<td style="width:200px; height:@heightCustom.ToString()px; text-align:center; table-layout:fixed; margin-top: 0;">
+                                    <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="addBtn btn-secondary">
+                                    @foreach (var palet in currentPallets)
+                                    {
+                                        <input type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="removeBtn btn-danger">
+                                    }
+                                </td>*@
+                        }
+                        else
+                        {
+                            <input type="button" id="@idPallet" value="Add" style="width:100%; height:100%; text-align:center" class="addBtn btn-secondary">
+                        }
+
+
+
+                        @*                if (pallet != null)
+                            {
+                                    <td style="width:200px; height:200px; text-align:center">
+                                        <0form><input type="button" id="@idPallet" value="Add" text-align: center class="btn-secondary addBtn"></form>
+                                        <br />
+                                        <form><input type="button" id="@idPallet" value="@pallet.OrderNo" style="width:100%; height:100%; text-align:center" class="removeBtn btn-danger"></form>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="color: white; width: 200px; height: 200px; text-align:center">
+                                        <form><input type="button" id="@idPallet" value="Add" style="width:100%; height:100%; text-align:center" class="addBtn btn-secondary"></form>
+                                    </td>
+                                }
+
+                                palletsAux.Remove(pallet);*@
+                    }
+                    @{
+                        currentRow++;
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<br />
+
+<div style="display:flex; justify-content:space-between">
+    <div class="mb-2 mr-2">
+        <input type="button" value="New row" class="btn btn-dark" id="newRow" />
+        <input type="button" value="Remove row" class="btn btn-danger" id="removeRow" />
+    </div>
+
+    <div class="mb-2 mr-2">
+        <input type="button" value="New column" class="btn btn-dark" id="newColumn" />
+        <input type="button" value="Remove column" class="btn btn-danger" id="removeColumn" />
+    </div>
+</div>
+
+<br />
+<div style="width:100%" align="center">
+    <form asp-action="Create" style="width:200px;">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <!--<div class="form-group">
+            <label asp-for="Pallet.PalletType" class="control-label"></label>-->
+        @*<select asp-for="PalletType" class="form-control" asp-items="ViewBag.PalletId" id="selectedType"></select>*@
+        <!--<select asp-for="Pallet.PalletType" class="form-control" asp-items="ViewBag.PalletId"></select>
+        </div>
+        <div class="form-group" style="text-align:right">
+            <input type="submit" value="Add" class="btn btn-success" />
+        </div>-->
+    </form>
+</div>
+
+<input type="button" value="Sincronizare paleti" class="btn btn-dark" id="sincData" />
+
+<div id="content" class="html-content">
+    @{
+        @foreach (var ceva in Model.SwitchedPallets)
+        {
+            <table align="center">
+                <tr>
+                    <td>
+                        @ceva.FirstPallet <-> @ceva.SecondPallet
+                    </td>
+                    <hr />
+                </tr>
+            </table>
+        }
+    }
+</div>
+
+<br />
+
+<div id="tableSection">
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drag(ev) {
+        ev.dataTransfer.setData("drag", ev.target.id);
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var draggedPallet = ev.dataTransfer.getData("drag");
+        ev.target.appendChild(document.getElementById(draggedPallet));
+
+        var idContainer = $('#container').val();
+        var droppedPallet = ev.target.id;
+        var path = '@Url.Action("SwitchPallets")' + "?idContainer=" + idContainer + "&draggedPallet=" + draggedPallet + "&droppedPallet=" + droppedPallet;
+        window.location.href = path;
+    }
+
+    $("#newRow").click(function () {
+        var idContainer = $('#container').val();
+        var path = '@Url.Action("AddRow")' + "?idContainer=" + idContainer;
+        window.location.href = path;
+    });
+
+    $("#sincData").click(function () {
+        var idContainer = $('#container').val();
+        var containerName = "@containerName";
+        var countryName = "@countryName";
+        $.ajax({
+            url: "/Pallets/GetPallets",
+
+            data: {
+                country: ''+countryName, container: ''+containerName, containerId: idContainer
+            },
+
+            cache: false,
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                var noPallets = data.listPallets.length;
+                var tableTxt = "<table class='table' style='margin-top:25px;'><tr><th>Order no</th><th>Sales part</th><th>Pallet no</th><th>Serial from</th><th>Serial to</th><th>Quantity</th><th>Weight</th></tr>"
+                for (var i = 0; i < noPallets; i++) {
+                    var orderNo = data.listPallets[i].orderNoApp;
+                    if (orderNo == -1) orderNo = "N/A"
+                    tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
+                        + "<td>" + data.listPallets[i].palletMap.salse_part +"</td>"
+                        + "<td>" + data.listPallets[i].palletMap.pallet_no +"</td>"
+                        + "<td>" + data.listPallets[i].palletMap.serial_from +"</td>"
+                        + "<td>" + data.listPallets[i].palletMap.serial_to +"</td>"
+                        + "<td>" + data.listPallets[i].palletMap.picking_qty +"</td>"
+                        + "<td>" + data.listPallets[i].palletMap.weight +"</td></tr>"
+                }
+                tableTxt = tableTxt + "</table>"
+                $("#tableSection").empty();
+                $("#tableSection").append(tableTxt);
+            }
+        });
+    })
+
+    $("#details").click(function () {
+        var idContainer = $('#container').val();
+        var path = '@Url.Action("Details","Containers2")' + "?id=" + idContainer;
+        window.location.href = path;
+    });
+
+    $("#removeRow").click(function () {
+    var idContainer = $('#container').val();
+    var path = '@Url.Action("RemoveRow")' + "?idContainer=" + idContainer;
+    window.location.href = path;
+    });
+
+    $("#newColumn").click(function () {
+    var idContainer = $('#container').val();
+    var path = '@Url.Action("AddColumn")' + "?idContainer=" + idContainer;
+    window.location.href = path;
+    });
+
+    $("#removeColumn").click(function () {
+    var idContainer = $('#container').val();
+    var path = '@Url.Action("RemoveColumn")' + "?idContainer=" + idContainer;
+    window.location.href = path;
+    });
+
+    $(".addBtn").click(function () {
+        var position = this.id;
+        var idContainer = $('#container').val();
+        var palletName = $('#palletName').val();
+        var path = '@Url.Action("AddPallet")' + "?idContainer=" + idContainer + "&position=" + position + "&palletName=" + palletName;
+        window.location.href = path;
+    });
+
+    $(".removeBtn").click(function () {
+        var palletId = this.id;
+        var idContainer = $('#container').val();
+        var path = '@Url.Action("RemovePallet")' + "?idContainer=" + idContainer + "&palletId=" + palletId;
+        window.location.href = path;
+    });
+    </script>
+}
+
+@*<style>
+        table {
+            display: table;
+            empty-cells: show;
+        }
+
+        table tr {
+            display: table-cell;
+        }
+
+        table tr td {
+            display: block;
+        }
+    </style>*@
