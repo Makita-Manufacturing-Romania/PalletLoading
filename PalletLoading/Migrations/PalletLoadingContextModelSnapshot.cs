@@ -32,6 +32,9 @@ namespace PalletLoading.Migrations
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -107,6 +110,21 @@ namespace PalletLoading.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("IPRVCC")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("IPRVDD")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("IPRVMM")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("IPRVYY")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("IPSEQ")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("consignee_code")
                         .HasMaxLength(3)
                         .HasColumnType("nvarchar(3)");
@@ -145,6 +163,66 @@ namespace PalletLoading.Migrations
                     b.ToTable("ImportData");
                 });
 
+            modelBuilder.Entity("PalletLoading.Models.ImportDataHistory", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("IPRVCC")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("IPRVDD")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("IPRVMM")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("IPRVYY")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("IPSEQ")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("consignee_code")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
+                    b.Property<string>("container_no")
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
+
+                    b.Property<decimal>("loading_date")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("loading_time")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("pallet_no")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("picking_qty")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("salse_part")
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
+                    b.Property<decimal>("serial_from")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("serial_to")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("weight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ImportDataHistory");
+                });
+
             modelBuilder.Entity("PalletLoading.Models.Pallet", b =>
                 {
                     b.Property<int>("Id")
@@ -164,6 +242,9 @@ namespace PalletLoading.Migrations
                     b.Property<int>("OrderNo")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PalletImportDataHistoryId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("PalletImportDataId")
                         .HasColumnType("int");
 
@@ -178,9 +259,9 @@ namespace PalletLoading.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PalletImportDataId")
-                        .IsUnique()
-                        .HasFilter("[PalletImportDataId] IS NOT NULL");
+                    b.HasIndex("PalletImportDataHistoryId");
+
+                    b.HasIndex("PalletImportDataId");
 
                     b.HasIndex("PalletTypeId");
 
@@ -255,15 +336,21 @@ namespace PalletLoading.Migrations
 
             modelBuilder.Entity("PalletLoading.Models.Pallet", b =>
                 {
+                    b.HasOne("PalletLoading.Models.ImportDataHistory", "PalletImportDataHistory")
+                        .WithMany()
+                        .HasForeignKey("PalletImportDataHistoryId");
+
                     b.HasOne("PalletLoading.Models.ImportData", "PalletImportData")
-                        .WithOne("Pallet")
-                        .HasForeignKey("PalletLoading.Models.Pallet", "PalletImportDataId");
+                        .WithMany()
+                        .HasForeignKey("PalletImportDataId");
 
                     b.HasOne("PalletLoading.Models.PalletType", "PalletType")
                         .WithMany("Pallets")
                         .HasForeignKey("PalletTypeId");
 
                     b.Navigation("PalletImportData");
+
+                    b.Navigation("PalletImportDataHistory");
 
                     b.Navigation("PalletType");
                 });
@@ -276,11 +363,6 @@ namespace PalletLoading.Migrations
             modelBuilder.Entity("PalletLoading.Models.Countries", b =>
                 {
                     b.Navigation("Containers");
-                });
-
-            modelBuilder.Entity("PalletLoading.Models.ImportData", b =>
-                {
-                    b.Navigation("Pallet");
                 });
 
             modelBuilder.Entity("PalletLoading.Models.Pallet", b =>

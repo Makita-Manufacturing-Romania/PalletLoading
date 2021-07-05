@@ -29,6 +29,7 @@ namespace PalletLoading.Data
         public DbSet<PalletLoading.Models.PalletType> PalletTypes { get; set; }
         public DbSet<PalletLoading.Models.Countries> Countries { get; set; }
         public DbSet<PalletLoading.Models.ImportData> ImportData { get; set; }
+        public DbSet<PalletLoading.Models.ImportDataHistory> ImportDataHistory { get; set; }
         public DbSet<PalletLoading.Models.SwitchedPallet> SwitchedPallets { get; set; }
     }
 }

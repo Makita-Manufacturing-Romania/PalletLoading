@@ -20,6 +20,8 @@ namespace PalletLoading.Models
         public int? Column { get; set; }
         public int? PalletImportDataId { get; set; }
         public virtual ImportData PalletImportData { get; set; }
+        public int? PalletImportDataHistoryId { get; set; }
+        public virtual ImportDataHistory PalletImportDataHistory { get; set; }
 
         //Campuri utile:
         /*
