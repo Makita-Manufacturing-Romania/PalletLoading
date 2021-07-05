@@ -9,6 +9,10 @@ using PalletLoading.Data;
 using PalletLoading.Models;
 using PalletLoading.ViewModels;
 using PagedList;
+using Syncfusion.Pdf;
+using Syncfusion.Pdf.Graphics;
+using Syncfusion.Drawing;
+using System.IO;
 
 namespace PalletLoading.Controllers
 {
@@ -20,6 +24,51 @@ namespace PalletLoading.Controllers
         {
             _context = context;
         }
+
+/*        public ActionResult CreateDocument(string idContainer)
+        {
+            int containerId = Convert.ToInt32(idContainer);
+            Container container = _context.Containers.First(x => x.Id == containerId);
+            List<Pallet> pallets = _context.Pallets.Where(x => x.Container2Id == containerId).ToList();
+
+
+
+
+            *//*PdfDocument document = new PdfDocument();
+            PdfPage page = document.Pages.Add();
+            PdfGraphics graphics = page.Graphics;
+
+            PdfFont font = new PdfStandardFont(PdfFontFamily.Helvetica, 20);
+            PdfFont titleFont = new PdfStandardFont(PdfFontFamily.Helvetica, 35);
+
+            string title = "Details - " + container.Name;
+            graphics.DrawString(title, titleFont, PdfBrushes.Black, new PointF(20, 0));
+            int y = 20;
+            foreach (var pallet in pallets)
+            {
+                string row;
+                if (pallet.PalletImportData != null)
+                {
+                    row = pallet.OrderNo + ". " + pallet.PalletImportData.pallet_no + " - " + pallet.PalletImportData.weight + "kg";
+                    graphics.DrawString(row, font, PdfBrushes.Black, new PointF(0,y));
+                    y += 20;
+                }
+            }
+
+            MemoryStream stream = new MemoryStream();
+            document.Save(stream);
+            stream.Position = 0;
+
+            FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/pdf");
+            fileStreamResult.FileDownloadName = "Report.pdf";
+            return fileStreamResult;*//*
+        }*/
+
+/*        public ActionResult GeneratePDF(int id)
+        {
+            Container container = _context.Containers.First(x => x.Id == id);
+            List<Pallet> pallets = _context.Pallets.Where(x => x.Container2Id == id).ToList();
+        }*/
 
         // GET: Containers2
         public async Task<IActionResult> Index(string searchString, int? page)

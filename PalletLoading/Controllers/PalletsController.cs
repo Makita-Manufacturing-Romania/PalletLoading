@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using PalletLoading.Data;
 using PalletLoading.Models;
 using PalletLoading.ViewModels;
+using Rotativa.AspNetCore;
 
 namespace PalletLoading.Controllers
 {
@@ -19,6 +21,32 @@ namespace PalletLoading.Controllers
         public PalletsController(PalletLoadingContext context)
         {
             _context = context;
+        }
+
+        public ActionResult GeneratePDF(int id)
+        {
+            int containerId = Convert.ToInt32(id);
+            Container container = _context.Containers.First(x => x.Id == containerId);
+            List<Pallet> pallets = _context.Pallets.Where(x => x.Container2Id == containerId).ToList();
+
+            ViewData["PalletId"] = new SelectList(_context.PalletTypes, "Id", "Name");
+            TempData["containerId"] = id.ToString();
+
+            ContainerType type = _context.ContainerTypes.First(x => x.Id == container.TypeId);
+            List<SwitchedPallet> switchedPallets = _context.SwitchedPallets.Where(x => x.IdContainer == container.Id).ToList();
+
+            var viewModel = new AddContainerViewModel
+            {
+                Container = container,
+                Pallets = pallets,
+                Type = type,
+                SwitchedPallets = switchedPallets
+            };
+
+            return new ViewAsPdf("Create", viewModel)
+            {
+                PageSize = Rotativa.AspNetCore.Options.Size.A4
+            };
         }
 
         // GET: Pallets
