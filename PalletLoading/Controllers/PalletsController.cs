@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using PalletLoading.Data;
 using PalletLoading.Models;
 using PalletLoading.ViewModels;
-using Rotativa.AspNetCore;
 
 namespace PalletLoading.Controllers
 {
