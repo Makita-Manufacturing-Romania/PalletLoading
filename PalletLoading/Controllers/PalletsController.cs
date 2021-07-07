@@ -352,8 +352,7 @@ namespace PalletLoading.Controllers
             int containerId = Convert.ToInt32(idContainer);
             Container container = _context.Containers.First(x => x.Id == containerId);
 
-            if (container.NoOfColumns < 18)
-                container.NoOfColumns++;
+            container.NoOfColumns++;
             _context.SaveChanges();
             return RedirectToAction("Create", new { id = containerId });
         }
