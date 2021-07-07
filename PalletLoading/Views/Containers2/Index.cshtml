@@ -1,5 +1,5 @@
-﻿@model PalletLoading.ViewModels.ContainerIndexViewModel
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+﻿@model PalletLoading.Models.PaginatedList<PalletLoading.Models.ContainerVM>
+
 @{
     ViewData["Title"] = "Container list";
 }
@@ -35,32 +35,42 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var container in Model.Container)
+        @foreach (var container in Model)
         {
-            @foreach (var type in Model.ContainerType)
-            {
-                foreach (var country in Model.Countries)
-                {
-                    if (container.TypeId == type.Id && container.CountryId == country.Id)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => container.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => type.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => country.Name)
-                            </td>
-                            <td>
-                                <a asp-action="Details" asp-route-id="@container.Id">Details</a> |
-                                <a asp-action="Delete" asp-route-id="@container.Id">Delete</a>
-                            </td>
-                        </tr>
-                    }
-                }
-            }
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => container.Container.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => container.ContainerType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => container.Countries.Name)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@container.Container.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@container.Container.Id">Delete</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = Model.PageIndex - 1 == 0 ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   class=" @prevDisabled">
+    Previous
+</a>
+
+@Model.PageIndex / @Model.TotalPages
+
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   class=" @nextDisabled">
+    Next
+</a>

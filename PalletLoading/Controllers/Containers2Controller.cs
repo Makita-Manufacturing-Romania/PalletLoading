@@ -10,6 +10,7 @@ using PalletLoading.Models;
 using PalletLoading.ViewModels;
 using System.IO;
 using Rotativa.AspNetCore;
+using PagedList;
 
 namespace PalletLoading.Controllers
 {
@@ -51,69 +52,43 @@ namespace PalletLoading.Controllers
             };
         }
 
-        /*        public ActionResult CreateDocument(string idContainer)
-                {
-                    int containerId = Convert.ToInt32(idContainer);
-                    Container container = _context.Containers.First(x => x.Id == containerId);
-                    List<Pallet> pallets = _context.Pallets.Where(x => x.Container2Id == containerId).ToList();
-
-
-
-
-                    *//*PdfDocument document = new PdfDocument();
-                    PdfPage page = document.Pages.Add();
-                    PdfGraphics graphics = page.Graphics;
-
-                    PdfFont font = new PdfStandardFont(PdfFontFamily.Helvetica, 20);
-                    PdfFont titleFont = new PdfStandardFont(PdfFontFamily.Helvetica, 35);
-
-                    string title = "Details - " + container.Name;
-                    graphics.DrawString(title, titleFont, PdfBrushes.Black, new PointF(20, 0));
-                    int y = 20;
-                    foreach (var pallet in pallets)
-                    {
-                        string row;
-                        if (pallet.PalletImportData != null)
-                        {
-                            row = pallet.OrderNo + ". " + pallet.PalletImportData.pallet_no + " - " + pallet.PalletImportData.weight + "kg";
-                            graphics.DrawString(row, font, PdfBrushes.Black, new PointF(0,y));
-                            y += 20;
-                        }
-                    }
-
-                    MemoryStream stream = new MemoryStream();
-                    document.Save(stream);
-                    stream.Position = 0;
-
-                    FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/pdf");
-                    fileStreamResult.FileDownloadName = "Report.pdf";
-                    return fileStreamResult;*//*
-                }*/
-
         // GET: Containers2
-        public async Task<IActionResult> Index(string searchString, int? page)
+        public async Task<IActionResult> Index(string searchString, int? pageNumber)
         {
-            var palletLoadingContext = _context.Containers.Include(c => c.Country).Include(c => c.Pallet);
+            if(pageNumber == null)
+            {
+                pageNumber = 1;
+            }
             List<Container> containers = _context.Containers.OrderByDescending(x => x.Id).ToList();
             if (!String.IsNullOrEmpty(searchString))
             {
-                containers = containers.Where(x => x.Name.Contains(searchString)).ToList();
-                page = 1;
+                containers = _context.Containers.Where(x => x.Name.Contains(searchString)).OrderByDescending(x => x.Id).ToList();
             }
-            List<ContainerType> containerTypes = _context.ContainerTypes.ToList();
-            List<Countries> countries = _context.Countries.ToList();
 
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
-
-            var viewModel = new ContainerIndexViewModel
+            List<ContainerVM> containerList = new();
+            foreach(var container in containers)
             {
-                Container = containers,
-                ContainerType = containerTypes,
-                Countries = countries
-            };
+                ContainerVM newContainer = new();
+                newContainer.Container = container;
 
-            return View(viewModel);
+                var type = _context.ContainerTypes.First(x => x.Id == container.TypeId);
+                newContainer.ContainerType = type;
+
+                var country = _context.Countries.First(x => x.Id == container.CountryId);
+                newContainer.Countries = country;
+
+                containerList.Add(newContainer);
+            }
+
+            int pageSize = 15;
+            if (pageNumber < 1)
+                pageNumber = 1;
+            else if (pageNumber > ((containerList.Count() - 1) / pageSize) + 1)
+                pageNumber = ((containerList.Count() - 1) / pageSize) + 1;
+
+            var paginedList = await PaginatedList<ContainerVM>.CreateAsync(containerList, pageNumber ?? 1, pageSize);
+            
+            return View(paginedList);
         }
 
         // GET: Containers2/Details/5
@@ -153,7 +128,7 @@ namespace PalletLoading.Controllers
                 Pallets = pallets,
                 Pallet = palletDetailed
             };
-
+            
             return View(viewModel);
         }
 
@@ -182,6 +157,7 @@ namespace PalletLoading.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Create","Pallets", new { id = container.Id});
             }
+
             ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id", container.CountryId);
             ViewData["TypeId"] = new SelectList(_context.ContainerTypes, "Id", "Name");
             return View(container);

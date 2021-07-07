@@ -24,5 +24,10 @@ namespace PalletLoading.Models
         public int NoOfRows { get; set; }
         public int NoOfColumns { get; set; }
         public DateTime CreatedDate { get; set; }
+
+        public static implicit operator List<object>(Container v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
