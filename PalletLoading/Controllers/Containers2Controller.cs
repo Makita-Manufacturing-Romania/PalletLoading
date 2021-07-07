@@ -10,7 +10,6 @@ using PalletLoading.Models;
 using PalletLoading.ViewModels;
 using System.IO;
 using Rotativa.AspNetCore;
-using PagedList;
 
 namespace PalletLoading.Controllers
 {

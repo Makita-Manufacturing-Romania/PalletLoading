@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<parameters>
-  <parameter name="IIS Web Application Name" description="" value="PalletLoading" tags="IisApp">
-    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\r\.tanase\\Source\\Repos\\PalletLoading\\PalletLoading\\obj\\Release\\net5\.0\\win-x64\\PubTmp\\Out\\$" />
-  </parameter>
-</parameters>
