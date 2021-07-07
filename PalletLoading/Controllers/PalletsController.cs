@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using PalletLoading.Data;
 using PalletLoading.Models;
@@ -86,6 +88,24 @@ namespace PalletLoading.Controllers
 
         public IActionResult GetPallets(string country, string container, int containerId)
         {
+
+            using (var cmd = _context.Database.GetDbConnection().CreateCommand())
+            {
+                cmd.CommandText = "sp_execPalletJob";
+
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                if (cmd.Connection.State != ConnectionState.Open)
+                    cmd.Connection.Open();
+                cmd.CommandTimeout = 120;
+                cmd.ExecuteReader();
+
+
+                cmd.Connection.Close();
+            }
+
+
             var dateContainer = _context.Containers.Any(c => c.CreatedDate == DateTime.Today);
             var listPalletsMap = _context.ImportData.Where(c => c.consignee_code.Equals(country) && c.container_no.Equals(container)).OrderBy(c => c.loading_time).ToList();
 

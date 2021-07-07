@@ -8,6 +8,62 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
+    <style>
+        #containerImg {
+            /*transition: transform 0.5ms linear;*/
+        }
+
+            #containerImg:hover {
+                /*transform: scale(1.2);*/
+                animation-name: rotateContainer;
+                animation-duration: 0.7s;
+            }
+
+        @@keyframes rotateContainer {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(-15deg);
+            }
+
+            75% {
+                transform: rotate(15deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        #settingsImg {
+            /*transition: transform 0.5ms linear;*/
+            /*            animation-name: rotateContainer;
+            animation-duration: 0.7s;*/
+        }
+
+            #settingsImg:hover {
+                /*transform: scale(1.2);*/
+                animation-name: scaleSettings;
+                animation-duration: 0.2s;
+                animation-fill-mode: forwards;
+            }
+
+        @@keyframes scaleSettings {
+            0% {
+                transform: scale(0.8);
+            }
+
+            50% {
+                transform: scale(1.3);
+            }
+
+            100% {
+                transform: scale(1.1);
+            }
+        }
+    </style>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -20,18 +76,25 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="uk-active">
                             <a href='@Url.Action("Index","Containers2")'>
-                                <img alt="Check" src="@Url.Content("~/Images/cargo-container-crane.png")" style="width: 45px;height: 45px; padding:" 10, 10, 10, 10"; filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
+                                <img alt="Check"  id="containerImg" src="@Url.Content("~/Images/cargo-container-crane.png")" style="width: 45px;height: 45px; padding:" 10, 10, 10, 10"; filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
                             </a>
                         </li>
-                        <li class="dropdown" style="padding-left:15px">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img alt="Check" src="@Url.Content("~/Images/cogs-solid.svg")" style="width: 45px; height: 45px; filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
+                        <li class="dropdown" style="padding-left:25px">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="text-decoration:none;">
+                                <img alt="Check" id="settingsImg"  src="@Url.Content("~/Images/cogs-solid.svg")" style="width: 45px; height: 45px; filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="dropdown dropdown-submenu">
-                                <li>@Html.ActionLink("Container type", "Index", "ContainerTypes")</li>
-                                <li>@Html.ActionLink("Pallet type", "Index", "PalletTypes")</li>
-                                <li>@Html.ActionLink("Countries", "Index", "Countries")</li>
+                                <li>
+                                    <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="ContainerTypes" asp-action="Index"><b>Container type</b></a>
+                                </li>
+                                <li>
+                                    <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="PalletTypes" asp-action="Index"><b>Pallet type</b></a>
+                                </li>
+                                <li>
+                                    <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Countries" asp-action="Index"><b>Countries</b></a>
+
+                                </li>
                             </ul>
                         </li>
                     </ul>
