@@ -22,7 +22,7 @@ namespace PalletLoading.Controllers
         // GET: Countries
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Countries.ToListAsync());
+            return View(await _context.Countries.OrderBy(c=>c.Abbreviation).ToListAsync());
         }
 
         // GET: Countries/Details/5
