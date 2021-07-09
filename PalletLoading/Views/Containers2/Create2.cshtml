@@ -1,0 +1,57 @@
+﻿@*@using Syncfusion.EJ2
+@section ControlsSection{
+    <div class="control-section">
+        <div class="control-wrapper">
+            <div id='content'>
+                <div>
+                    <h4> Default Mode</h4>
+                    <ejs-multiselect id="default" dataSource="@ViewBag.data" placeholder="Favorite Sports" mode="Default"></ejs-multiselect>
+                </div>
+                <div class="control-styles">
+                    <h4>Box Mode</h4>
+                    <ejs-multiselect id="box" dataSource="@ViewBag.data" placeholder="Favorite Sports" mode="Box"></ejs-multiselect>
+                </div>
+
+                <div class="control-styles">
+                    <h4>Delimiter Mode</h4>
+                    <ejs-multiselect id="delimiter" dataSource="@ViewBag.data" placeholder="Favorite Sports" mode="Delimiter"></ejs-multiselect>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        .control-fluid, .container-fluid {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .control-content .control-section {
+            border-width: 0px !important;
+        }
+
+        .control-section .control-wrapper {
+            width: 80%;
+            margin: 0 auto;
+            min-width: 185px;
+        }
+
+        .e-bigger .control-section .control-wrapper {
+            width: 100%;
+        }
+
+        .property-section .right-side {
+            padding-left: 10px;
+        }
+
+        .property-section .left-side {
+            padding: 5px;
+            width: 25%
+        }
+
+        .control-styles {
+            padding-top: 30px
+        }
+    </style>
+}*@

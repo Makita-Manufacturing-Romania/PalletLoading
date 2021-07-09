@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PalletLoading.Data;
 
 namespace PalletLoading.Migrations
 {
     [DbContext(typeof(PalletLoadingContext))]
-    partial class PalletLoadingContextModelSnapshot : ModelSnapshot
+    [Migration("20210708112216_RemoveContainerFromCountries")]
+    partial class RemoveContainerFromCountries
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,24 +61,6 @@ namespace PalletLoading.Migrations
                     b.HasIndex("PalletId");
 
                     b.ToTable("Containers");
-                });
-
-            modelBuilder.Entity("PalletLoading.Models.ContainerAT", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ContainerId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CountryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ContainerATs");
                 });
 
             modelBuilder.Entity("PalletLoading.Models.ContainerType", b =>
@@ -239,38 +223,6 @@ namespace PalletLoading.Migrations
                     b.HasKey("id");
 
                     b.ToTable("ImportDataHistory");
-                });
-
-            modelBuilder.Entity("PalletLoading.Models.ImportDataPalletsLP", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CustomerCode180P")
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
-
-                    b.Property<string>("CustomerCode250P")
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
-
-                    b.Property<int>("LOADED180")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LOADED250")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PICKED180")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PICKED250")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ImportDataPalletsLP");
                 });
 
             modelBuilder.Entity("PalletLoading.Models.Pallet", b =>

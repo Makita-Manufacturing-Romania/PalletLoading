@@ -173,8 +173,29 @@
         <h5 style="text-align:right">Max pallets per layer: @totalLayer</h5>
     </div>
     <div class="col-lg-6">
-        <h5>Country: @countryName</h5>
+        <h5>
+            Client:
+            @{
+                string virgula = ",";
+                foreach (var country in Model.Countries)
+                {
+                    @country.Name
+                    if(country.Id != Model.Countries.Last().Id)
+                    {
+                        @virgula
+                    }
+                }
+            }
+        </h5>
         <h5>Container: @containerName</h5>
+        <h5>Picked pallets: @ViewData["pickedPallets"]</h5>
+        <div class="form-group">
+            <div align="left">
+                <label asp-for="Container.CountryId" class="control-label"></label>
+                <select id="newCountry" asp-for="Container.CountryId" class="form-control" asp-items="ViewBag.CountryId"></select>
+            </div>
+            <input type="button" value="Add client" class="btn btn-success" id="addClient" />
+        </div>
     </div>
 </div>
 
@@ -379,6 +400,13 @@
     $("#newRow").click(function () {
         var idContainer = $('#container').val();
         var path = '@Url.Action("AddRow")' + "?idContainer=" + idContainer;
+        window.location.href = path;
+    });
+
+    $("#addClient").click(function () {
+        var idContainer = $('#container').val();
+        var idCountry = $('#newCountry').val();
+        var path = '@Url.Action("AddCountry")' + "?container=" + idContainer + "&country=" + idCountry;
         window.location.href = path;
     });
 

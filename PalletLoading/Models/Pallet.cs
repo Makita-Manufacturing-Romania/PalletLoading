@@ -22,19 +22,5 @@ namespace PalletLoading.Models
         public virtual ImportData PalletImportData { get; set; }
         public int? PalletImportDataHistoryId { get; set; }
         public virtual ImportDataHistory PalletImportDataHistory { get; set; }
-
-        //Campuri utile:
-        /*
-            -sales part
-            -serial no
-            -qty
-            -pallet no
-            -weight
-            -loading date
-            -loading time
-
-            *consignee code (tara)
-            *conainer no
-         */
     }
 }

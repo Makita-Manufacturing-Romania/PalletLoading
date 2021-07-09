@@ -68,12 +68,23 @@ namespace PalletLoading.Controllers
         public IActionResult Create(int? id)
         {
             ViewData["PalletId"] = new SelectList(_context.PalletTypes, "Id", "Name");
+            ViewData["CountryId"] = new SelectList(_context.Countries.OrderBy(x => x.Name), "Id", "Name");
             TempData["containerId"] = id.ToString();
 
             var container = _context.Containers.Include(c => c.Country).First(x => x.Id == id);
             List<Pallet> pallets = _context.Pallets.Where(x => x.Container2Id == container.Id).ToList();
             ContainerType type = _context.ContainerTypes.First(x => x.Id == container.TypeId);
             List<SwitchedPallet> switchedPallets = _context.SwitchedPallets.Where(x => x.IdContainer == container.Id).ToList();
+            var pickedPallets = _context.ImportData.Where(x => x.container_no == container.Name).Count();
+            ViewData["pickedPallets"] = pickedPallets;
+            List<ContainerAT> containerATs = _context.ContainerATs.Where(x => x.ContainerId == container.Id).ToList();
+            List<Countries> countries = new();
+            foreach(var containerAT in containerATs)
+            {
+                var country = _context.Countries.First(x => x.Id == containerAT.CountryId);
+                countries.Add(country);
+            }
+
             using (var cmd = _context.Database.GetDbConnection().CreateCommand())
             {
                 cmd.CommandText = "sp_execPalletPLJob";
@@ -97,6 +108,7 @@ namespace PalletLoading.Controllers
                 Pallets = pallets,
                 Type = type,
                 SwitchedPallets = switchedPallets,
+                Countries = countries,
                 idplp = idplp
             };
 
@@ -272,6 +284,19 @@ namespace PalletLoading.Controllers
                 return RedirectToAction("Create", new { id = idContainer });
             }
             return View(pallet);
+        }
+
+        public ActionResult AddCountry(string container, string country)
+        {
+            int containerId = Convert.ToInt32(container);
+            int countryId = Convert.ToInt32(country);
+            ContainerAT containerAT = new();
+            containerAT.ContainerId = containerId;
+            containerAT.CountryId = countryId;
+            _context.ContainerATs.Add(containerAT);
+            _context.SaveChanges();
+
+            return RedirectToAction("Create", new { id = containerId});
         }
 
         public ActionResult SwitchPallets(string idContainer, string draggedPallet, string droppedPallet)
