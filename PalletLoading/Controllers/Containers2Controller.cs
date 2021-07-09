@@ -134,7 +134,7 @@ namespace PalletLoading.Controllers
         // GET: Containers2/Create
         public IActionResult Create()
         {
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name");
+            ViewData["CountryId"] = new SelectList(_context.Countries.OrderBy(x => x.Name), "Id", "Name");
             ViewData["TypeId"] = new SelectList(_context.ContainerTypes, "Id", "Name");
             return View();
         }
@@ -154,12 +154,23 @@ namespace PalletLoading.Controllers
                 container.CreatedDate = DateTime.Today;
                 _context.Add(container);
                 await _context.SaveChangesAsync();
+                ContainerAT containerAT = new();
+                containerAT.ContainerId = container.Id;
+                containerAT.CountryId = (int)container.CountryId;
+                _context.ContainerATs.Add(containerAT);
+                await _context.SaveChangesAsync();
                 return RedirectToAction("Create","Pallets", new { id = container.Id});
             }
 
             ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id", container.CountryId);
             ViewData["TypeId"] = new SelectList(_context.ContainerTypes, "Id", "Name");
             return View(container);
+        }
+
+        public IActionResult Create2()
+        {
+            ViewBag.data = new string[] { "American Football", "Badminton", "Basketball", "Cricket", "Football", "Golf", "Hockey", "Rugby", "Snooker", "Tennis" };
+            return View();
         }
 
         // GET: Containers2/Edit/5

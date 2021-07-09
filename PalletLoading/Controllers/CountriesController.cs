@@ -20,9 +20,16 @@ namespace PalletLoading.Controllers
         }
 
         // GET: Countries
-        public async Task<IActionResult> Index()
+        public ActionResult Index(string sortOrder)
         {
-            return View(await _context.Countries.ToListAsync());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_cresc" : "";
+            List<Countries> countries = new();
+            if (sortOrder == "name_cresc")
+                countries = _context.Countries.OrderByDescending(x => x.Name).ToList();
+            else
+                countries = _context.Countries.OrderBy(x => x.Name).ToList();
+            return View(countries);
         }
 
         // GET: Countries/Details/5
