@@ -6,16 +6,14 @@
 
     #loader-1 {
         display: none;
+        left: 50%;
+        position: relative;
     }
 
         #loader-1 #loader {
             position: absolute;
-            left: 50%;
-            top: 50%;
             height: 5vw;
             width: 5vw;
-            top: calc(50% - 2.5vw);
-            left: calc(50% - 2.5vw);
             border: 6px solid transparent;
             border-top-color: #3498db;
             border-bottom-color: #3498db;
@@ -146,9 +144,7 @@
 </style>
 
 
-<div class="loader-wrapper" id="loader-1">
-    <div id="loader"></div>
-</div>
+
 
 <h1 style="text-align:center">Add pallets</h1>
 
@@ -202,8 +198,22 @@
         </div>
     </div>
 </div>
+
 <br />
 <br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+
+            <h4><b>Finished Product:</b> <span style="font-size:20px;" > <span id="l250">@Model.idplp.LOADED250</span> (Loaded) / <span id="p250">@Model.idplp.PICKED250</span> (Picked) </span></h4>
+            <h4><b>Spares:</b> <span style="font-size:20px;"><span id="l180">@Model.idplp.LOADED180</span> (Loaded) / <span id="p180">@Model.idplp.PICKED180</span> (Picked) </span></h4>
+        </div>
+        <div class="col-md-1" style="display:flex; justify-content: center;align-items: center;">
+            <input class="btn btn-primary btn-sm" value="Actualizare" type="button" id="updateLPBtn"/>
+        </div>
+
+    </div>
+</div>
 <input type="hidden" value="@Model.Container.Id" id="container" />
 <table border="1" class="table-bordered" style="border:2px solid; border-right-style:dotted; width: 100%; height: 100%; text-align: center; align-content: center;">
     <tbody>
@@ -333,6 +343,13 @@
     </form>
 </div>
 
+<div style="width:100%; position:relative;">
+    <div style="width: 100%; margin-top:-2.5vh; position:absolute;">
+        <div class="loader-wrapper" id="loader-1">
+            <div id="loader"></div>
+        </div>
+    </div>
+</div>
 <input type="button" value="Sincronizare paleti" class="btn btn-dark" id="sincData" />
 
 <div id="content" class="html-content">
@@ -359,7 +376,7 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
+<script>
 
     function allowDrop(ev) {
         ev.preventDefault();
@@ -393,11 +410,39 @@
         window.location.href = path;
     });
 
+        $("#updateLPBtn").click(function () {
+            $("#updateLPBtn").attr("disabled", "true");
+            var countryName = "@countryName";
+
+            $.ajax({
+                url: "/Pallets/GetLP",
+
+                data: {
+                    country: '' + countryName
+                },
+
+                cache: false,
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (data) {
+
+                    $("#updateLPBtn").removeAttr("disabled");
+                    $("#l250").text("" + data.importLP.loadeD250);
+                    $("#l180").text("" + data.importLP.loadeD180);
+                    $("#p250").text("" + data.importLP.pickeD250);
+                    $("#p180").text("" + data.importLP.pickeD180);
+                }
+            });
+        });
+
+
     $("#sincData").click(function () {
         var idContainer = $('#container').val();
         var containerName = "@containerName";
         var countryName = "@countryName";
-        $("#loader-1").css("display", "block");
+        var thisBtn = $(this);
+        $("#loader-1").show()
+        $(this).attr('disabled','true')
 
         $.ajax({
             url: "/Pallets/GetPallets",
@@ -410,14 +455,14 @@
             contentType: "application/json;charset=UTF-8",
             dataType: "json",
             success: function (data) {
-                $("#loader-1").css("display", "none");
+
                 var noPallets = data.listPallets.length;
                 var tableTxt = "<table class='table' style='margin-top:25px;'><tr><th>Order no</th><th>Sales part</th><th>Pallet no</th><th>Serial from</th><th>Serial to</th><th>Quantity</th><th>Weight</th></tr>"
 
                 for (var i = 0; i < noPallets; i++) {
                     var orderNo = data.listPallets[i].orderNoApp;
                     if (orderNo == -1) orderNo = "N/A"
-                    console.log(data.listPallets[i].palletMapHistory)
+                    /*console.log(data.listPallets[i].palletMapHistory)*/
                     if (data.listPallets[i].palletMapHistory == null) {
                         tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
                             + "<td>" + data.listPallets[i].palletMap.salse_part + "</td>"
@@ -440,6 +485,8 @@
                 tableTxt = tableTxt + "</table>"
                 $("#tableSection").empty();
                 $("#tableSection").append(tableTxt);
+                $("#loader-1").hide();
+                $("#sincData").removeAttr("disabled");
             }
         });
     })
@@ -482,7 +529,7 @@
         var path = '@Url.Action("RemovePallet")' + "?idContainer=" + idContainer + "&palletId=" + palletId;
         window.location.href = path;
     });
-    </script>
+</script>
 }
 
 @*<style>

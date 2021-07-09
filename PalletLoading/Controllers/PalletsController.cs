@@ -85,18 +85,64 @@ namespace PalletLoading.Controllers
                 countries.Add(country);
             }
 
+            using (var cmd = _context.Database.GetDbConnection().CreateCommand())
+            {
+                cmd.CommandText = "sp_execPalletPLJob";
+
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                if (cmd.Connection.State != ConnectionState.Open)
+                    cmd.Connection.Open();
+                cmd.CommandTimeout = 120;
+                cmd.ExecuteReader();
+
+
+                cmd.Connection.Close();
+            }
+            ImportDataPalletsLP idplp = _context.ImportDataPalletsLP.Where(c => c.CustomerCode180P.Equals(container.Country.Abbreviation) || c.CustomerCode250P.Equals(container.Country.Abbreviation)).FirstOrDefault();
+
             var viewModel = new AddContainerViewModel
             {
                 Container = container,
                 Pallets = pallets,
                 Type = type,
                 SwitchedPallets = switchedPallets,
-                Countries = countries
+                Countries = countries,
+                idplp = idplp
             };
 
             return View(viewModel);
         }
+        public IActionResult GetLP(string country)
+        {
 
+            using (var cmd = _context.Database.GetDbConnection().CreateCommand())
+            {
+                cmd.CommandText = "sp_execPalletPLJob";
+
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                if (cmd.Connection.State != ConnectionState.Open)
+                    cmd.Connection.Open();
+                cmd.CommandTimeout = 120;
+                cmd.ExecuteReader();
+
+
+                cmd.Connection.Close();
+            }
+
+            var importLP = _context.ImportDataPalletsLP.Where(c => c.CustomerCode180P.Equals(country) || c.CustomerCode250P.Equals(country)).FirstOrDefault();
+
+            if(importLP == null)
+            {
+                importLP = new ImportDataPalletsLP { CustomerCode180P = country, CustomerCode250P = country, LOADED180 = 0, LOADED250 = 0, PICKED180 = 0, PICKED250 = 0 };
+            }
+
+            return Json(new { importLP = importLP });
+
+        }
         public IActionResult GetPallets(string country, string container, int containerId)
         {
 
@@ -157,6 +203,12 @@ namespace PalletLoading.Controllers
                 var listPalletsMap2 = _context.ImportDataHistory.Where(c => c.consignee_code.Equals(country) && c.container_no.Equals(container)).OrderBy(c => c.loading_time).ToList();
                 var listPalletsApp = _context.Pallets.Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
                 var mvcp = new List<ModelViewCreatePallet>();
+                if (listPalletsMap2.Count == 0)
+                {
+                    return Json(new { listPallets = mvcp });
+
+                }
+
                 int i = 0;
                 for (; i < listPalletsApp.Count; i++)
                 {

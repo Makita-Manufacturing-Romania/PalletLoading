@@ -162,7 +162,7 @@ namespace PalletLoading.Controllers
                 return RedirectToAction("Create","Pallets", new { id = container.Id});
             }
 
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id", container.CountryId);
+            ViewData["CountryId"] = new SelectList(_context.Countries.OrderBy(c=>c.Name), "Id", "Id", container.CountryId);
             ViewData["TypeId"] = new SelectList(_context.ContainerTypes, "Id", "Name");
             return View(container);
         }
