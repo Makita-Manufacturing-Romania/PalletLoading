@@ -1,18 +1,44 @@
 ﻿@model PalletLoading.ViewModels.ContainerDetailsViewModel
 
 @{ ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_Layout_Full.cshtml"; }
+    Layout = "~/Views/Shared/_Layout_Full.cshtml";
+    var templistContainer = "";
+    }
 
 
+<style>
+    .detailsBtn:focus {
+        outline: 0 !important;
+        box-shadow: none !important;
+        background-color: darkseagreen;
+        border-color: darkseagreen;
+    }
 
-
+    .detailsBtn:active {
+        box-shadow: none !important;
+        outline: 0 !important;
+    }
+</style>
+@if (Model.Container.ContainerAT != null)
+{
+    var listNames = new List<String>();
+    @foreach (var containerName in Model.Container.ContainerAT)
+    {
+        listNames.Add(containerName.ContainerName);
+    }
+     templistContainer = String.Join(", ", listNames);
+}
 <div width="100%;" align="center" style="padding:0; display:flex; align-items:center; justify-content: center;">
     <div style="position:relative;">
-        <p style="padding:0; display:inline-block; font-weight:bold; font-size:35px; position:relative;top:7px;">Details - @Model.Container.Name</p>
+
+        <p style="padding:0; display:inline-block; font-weight:bold; font-size:25px; position:relative;top:7px;">Details - @templistContainer</p>
     </div>
 </div>
 <div width="100%" align="center" style="margin-bottom:10px;">
-    <a class="btn btn-success " asp-action="Create" asp-controller="Pallets" asp-route-id="@Model.Container.Id">Modify</a>
+    @if (ViewBag.UserRightLevel > 0)
+    {
+        <a class="btn btn-success " asp-action="Create" asp-controller="Pallets" asp-route-id="@Model.Container.Id">Modify</a>
+    }
     <a type="button" asp-action="GeneratePDF" asp-controller="Containers2" asp-route-id="@Model.Container.Id" target="_blank" class="btn btn-danger">Export PDF</a>
 
     @*<h1 style="text-align:center">Details - <a class="nav-link text-dark" asp-area="" asp-controller="CMR" asp-action="Index">@Model.Container.Name</a></h1>*@
@@ -34,7 +60,15 @@
                 </div>
             </div>
         </div>*@
-
+    @if (Model.Container.ContainerAT != null)
+    {
+        var listNames = new List<String>();
+        @foreach (var containerName in Model.Container.ContainerAT)
+        {
+            listNames.Add(containerName.Country.Name);
+        }
+         templistContainer = String.Join(", ", listNames);
+    }
     <div class="container" style="margin-top:10px">
         <div class="row">
             <div class="col-6" align="right" style="font-weight:bold;">
@@ -48,8 +82,9 @@
             <div class="col-6" align="right" style="font-weight:bold;">
                 Country
             </div>
+
             <div class="col-6" align="left">
-                @Html.DisplayFor(model => Model.Country.Name)
+                @templistContainer
             </div>
         </div>
     </div>
@@ -73,7 +108,6 @@
             }
             Html.EndForm();
         }*@
-
     <div style="width:100%; padding-bottom:150px; overflow-x:auto; position:relative;">
         <img src="~/unnamed2.png" style="position:absolute; z-index:-1; bottom:0;left:0;" min-width="900px" width="1800px" />
         <table border="1" class="table-bordered" style="border:2px solid; border-right-style:dotted; max-width:1106px; margin-left:370px; float:left;  text-align: center; align-content: center;">
@@ -91,9 +125,9 @@
 
                                 if (currentPallets != null)
                                 {
-                                    @if (currentPallets.Count() == 1)
+                                    @if (currentPallets.Count() == 1 && currentRow == 1)
                                     {
-                                        <td style="min-width:85px; text-align:center; position:relative; min-height:250px">
+                                        <td style="width: 4vw; max-width: 4vw;min-width: 40px; text-align: center; position: relative; height:110px;">
                                             @if (currentRow == 1)
                                             {
                                                 <p style="font-size:25px">@colNo</p>colNo++;
@@ -103,27 +137,59 @@
                                                 if (palet.PalletImportData != null)
                                                 {
                                                     <div style="position: absolute; bottom: 0; width: 95%;">
-                                                        <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                        <input type="button" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px;min-width: 30px; min-height:40px; margin-bottom:5px; border-radius:5px; height:3vw; text-align:center" class="detailsBtn btn-info">
                                                     </div> }
                                                 else if (palet.PalletImportDataHistory != null)
                                                 {
                                                     <div style="position: absolute; bottom: 0; width: 95%;">
 
-                                                        <input type="button" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                        <input type="button" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" min-height:40px; style="width:3vw; margin-top:5px; margin-bottom:5px; border-radius:5px; min-width: 30px; height:6vh; text-align:center" class="detailsBtn btn-info">
                                                     </div>}
                                                 else
                                                 {
                                                     <div style="position: absolute; bottom: 0; width: 95%;">
-                                                        <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                        <input type="button" data-consignee="" data-container="" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top: 5px;min-height:40px; margin-bottom: 5px; border-radius: 5px; height:6vh;text-align: center" class="detailsBtn btn-info">
                                                     </div>
                                                 }
                                                 <br />
                                             }
                                         </td>
                                     }
+                                    else if (currentPallets.Count() == 1)
+                                    {
+                                        <td style="width: 4vw; max-width: 4vw; text-align: center; position: relative; min-width: 40px; min-height: 4vw;">
+                                            @if (currentRow == 1)
+                                            {
+                                                <p style="font-size:25px">@colNo</p>colNo++;
+                                            }
+                                            @{ var palet = currentPallets.First();
+
+                                                if (palet.PalletImportData != null)
+                                                {
+                                                    <div style="position: absolute; bottom: 0; width: 95%;">
+                                                        <input type="button" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width:80%; min-height:40px; min-width: 30px; margin-top:5px; margin-bottom:5px; border-radius:5px; height:3vw; text-align:center" class="detailsBtn btn-info">
+                                                    </div> }
+                                                else if (palet.PalletImportDataHistory != null)
+                                                {
+                                                    <div style="position: absolute; bottom: 0; width: 95%;">
+
+                                                        <input type="button" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width:3vw; min-height:40px; margin-top:5px; margin-bottom:5px; min-width: 30px; border-radius:5px; height:6vh; text-align:center" class="detailsBtn btn-info">
+                                                    </div>}
+                                                else
+                                                {
+                                                    <div style="position: absolute; bottom: 0; width: 95%;">
+                                                        <input type="button" data-consignee="" data-container="" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top: 5px; margin-bottom: 5px; border-radius: 5px; min-height:40px; height:6vh;text-align: center" class="detailsBtn btn-info">
+                                                    </div>
+                                                }
+                                                <br />
+                                            }
+                                        </td>
+
+
+                                    }
                                     else
                                     {
-                                        <td style="min-width:85px; text-align:center; height:150px; ">
+                                        <td style=" width:4vw; text-align:center; height:75px; min-width: 40px;">
                                             @if (currentRow == 1)
                                             {
                                                 <p style="font-size:25px;margin-bottom:0;">@colNo</p>
@@ -133,15 +199,15 @@
                                             {
                                                 if (palet.PalletImportData != null)
                                                 {
-                                                    <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                    <input type="button" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:50px; border-radius:5px;height:6vh;text-align:center" class="detailsBtn btn-info">
                                                 }
                                                 else if (palet.PalletImportDataHistory != null)
                                                 {
-                                                    <input type="button" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info"> }
+                                                    <input type="button" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:50px; border-radius:5px; height:6vh; text-align:center" class="detailsBtn btn-info"> }
                                                 else
                                                 {
 
-                                                    <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                    <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width: 3vw; margin-top:5px; margin-bottom:5px; min-height:50px; border-radius:5px; height:6vh; min-width: 30px; text-align:center" class="detailsBtn btn-info">
 
                                                 }
                                             }
@@ -195,22 +261,24 @@
             <h2 align="center">Pallets details</h2>
             <table class='table' style="width:80%;" align="center">
                 <tr>
-                    <th>Order no</th>
-                    <th>Sales part</th>
+                    <th>Loading no</th>
+                    <th>Container</th>
                     <th>Pallet no</th>
+                    <th>Sales part</th>
                     <th>Serial from</th>
                     <th>Serial to</th>
                     <th>Quantity</th>
                     <th>Weight</th>
                 </tr>
-                @foreach (var pallet in Model.Pallets)
+                @foreach (var pallet in Model.Pallets.OrderBy(c => c.OrderNo))
                 {
                     if (pallet.PalletImportData != null)
                     {
                         <tr>
                             <td>@pallet.OrderNo</td>
-                            <td>@pallet.PalletImportData.salse_part</td>
+                            <td>@pallet.PalletImportData.consignee_code - @pallet.PalletImportData.container_no</td>
                             <td>@pallet.PalletImportData.pallet_no</td>
+                            <td>@pallet.PalletImportData.salse_part</td>
                             <td>@pallet.PalletImportData.serial_from</td>
                             <td>@pallet.PalletImportData.serial_to</td>
                             <td>@pallet.PalletImportData.picking_qty</td>
@@ -221,8 +289,9 @@
                     {
                         <tr>
                             <td>@pallet.OrderNo</td>
-                            <td>@pallet.PalletImportDataHistory.salse_part</td>
+                            <td>@pallet.PalletImportDataHistory.consignee_code - @pallet.PalletImportDataHistory.container_no</td>
                             <td>@pallet.PalletImportDataHistory.pallet_no</td>
+                            <td>@pallet.PalletImportDataHistory.salse_part</td>
                             <td>@pallet.PalletImportDataHistory.serial_from</td>
                             <td>@pallet.PalletImportDataHistory.serial_to</td>
                             <td>@pallet.PalletImportDataHistory.picking_qty</td>
@@ -250,6 +319,7 @@
     $(".detailsBtn").click(function () {
         var palletId = this.id;
         var palletTxt = "<div align='left'> <span style='float:left;font-weight:bold;'>Loading no:</span> <span style='float: right'> " + $(this).attr("data-orderNo") + "</span></div ></br> "
+            + "<div align='left'><span style='float:left;font-weight:bold;'> Container:</span> <span style='float: right'> " + $(this).attr("data-consignee") + ' - ' + $(this).attr("data-container") + "</span></div></br>"
             + "<div align='left'><span style='float:left;font-weight:bold;'> Sales part:</span> <span style='float: right'> " + $(this).attr("data-sales") + "</span></div></br>"
             + "<div align='left'> <span style='float:left;font-weight:bold;'>Pallet no:</span> <span style='float: right'> " + $(this).attr("data-palletno") + "</span></div ></br> "
             + "<div align='left'><span style='float:left;font-weight:bold;'> Serial from:</span> <span style='float: right'> " + $(this).attr("data-serialfrom") + "</span></div > </br>"

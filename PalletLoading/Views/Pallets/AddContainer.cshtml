@@ -1,0 +1,29 @@
+﻿@model PalletLoading.Models.ContainerAT
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h1>Add container and country</h1>
+        <form asp-action="SaveContainer">
+            <input type="hidden" asp-for="ContainerId" />
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-1">
+                        <h5 asp-for="Container.CountryId" class="control-label">Country</h5>
+
+                    </div>
+                    <div class="col-md-3">
+                        <select id="newCountry" asp-for="CountryId" class="form-control" asp-items="ViewBag.CountryId"></select>
+
+                    </div>
+                    <div class="col-md-3">
+                        <input asp-for="ContainerName" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+
+                    </div>
+                </div>
+            </div>
+        </form>

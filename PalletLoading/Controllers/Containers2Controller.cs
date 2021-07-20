@@ -13,13 +13,11 @@ using Rotativa.AspNetCore;
 
 namespace PalletLoading.Controllers
 {
-    public class Containers2Controller : Controller
+    public class Containers2Controller : MainController
     {
-        private readonly PalletLoadingContext _context;
 
-        public Containers2Controller(PalletLoadingContext context)
+        public Containers2Controller(PalletLoadingContext context):base(null,context,null)
         {
-            _context = context;
         }
 
         public ActionResult GeneratePDF(int id)
@@ -33,7 +31,15 @@ namespace PalletLoading.Controllers
 
             ContainerType type = _context.ContainerTypes.First(x => x.Id == container.TypeId);
             Countries country = _context.Countries.First(x => x.Id == container.CountryId);
-            Pallet pallet = pallets.First();
+            Pallet pallet = new Pallet();
+            if (pallets != null || pallets.Count() == 0)
+            {
+                pallet = pallets.First();
+            }
+            else
+            {
+                pallet = new Pallet();
+            }
 
             var viewModel = new ContainerDetailsViewModel
             {
@@ -58,10 +64,10 @@ namespace PalletLoading.Controllers
             {
                 pageNumber = 1;
             }
-            List<Container> containers = _context.Containers.OrderByDescending(x => x.Id).ToList();
+            List<Container> containers = _context.Containers.Include(c => c.ContainerAT).Include("ContainerAT.Country").OrderByDescending(x => x.Id).ToList();
             if (!String.IsNullOrEmpty(searchString))
             {
-                containers = _context.Containers.Where(x => x.Name.Contains(searchString)).OrderByDescending(x => x.Id).ToList();
+                containers = _context.Containers.Include(c=>c.ContainerAT).Include(c => c.ContainerAT).Include("ContainerAT.Country").Where(x => x.Name.Contains(searchString)).OrderByDescending(x => x.Id).ToList();
             }
 
             List<ContainerVM> containerList = new();
@@ -98,7 +104,7 @@ namespace PalletLoading.Controllers
                 return NotFound();
             }
 
-            Container container = _context.Containers.First(x => x.Id == id);
+            Container container = _context.Containers.Include(c => c.ContainerAT).Include("ContainerAT.Country").First(x => x.Id == id);
             int idPallet = -1;
             if (pallet != null)
                 idPallet = Convert.ToInt32(pallet);
@@ -134,7 +140,8 @@ namespace PalletLoading.Controllers
         // GET: Containers2/Create
         public IActionResult Create()
         {
-            ViewData["CountryId"] = new SelectList(_context.Countries.OrderBy(x => x.Name), "Id", "Name");
+            ViewData["CountryId"] = new SelectList(_context.Countries.Select(c => new { Id = c.Id, Name = (c.Name + " - " + c.Abbreviation) }).OrderBy(x => x.Name), "Id", "Name");
+
             ViewData["TypeId"] = new SelectList(_context.ContainerTypes, "Id", "Name");
             return View();
         }
@@ -157,6 +164,7 @@ namespace PalletLoading.Controllers
                 ContainerAT containerAT = new();
                 containerAT.ContainerId = container.Id;
                 containerAT.CountryId = (int)container.CountryId;
+                containerAT.ContainerName = container.Name;
                 _context.ContainerATs.Add(containerAT);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Create","Pallets", new { id = container.Id});

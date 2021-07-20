@@ -33,5 +33,7 @@ namespace PalletLoading.Data
         public DbSet<PalletLoading.Models.SwitchedPallet> SwitchedPallets { get; set; }
         public DbSet<PalletLoading.Models.ContainerAT> ContainerATs { get; set; }
         public DbSet<PalletLoading.Models.ImportDataPalletsLP> ImportDataPalletsLP { get; set; }
+        public DbSet<PalletLoading.Models.User> User { get; set; }
+        public DbSet<PalletLoading.Models.UserRight> UserRight { get; set; }
     }
 }

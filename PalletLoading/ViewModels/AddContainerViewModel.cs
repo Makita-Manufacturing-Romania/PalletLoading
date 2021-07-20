@@ -13,7 +13,7 @@ namespace PalletLoading.ViewModels
         public Pallet Pallet { get; set; }
         public ContainerType Type { get; set; }
         public List<SwitchedPallet> SwitchedPallets { get; set; }
-        public List<Countries> Countries { get; set; }
+        public List<ContainerAT> ContainerAT { get; set; }
         public ImportDataPalletsLP idplp { get; set; }
     }
 }

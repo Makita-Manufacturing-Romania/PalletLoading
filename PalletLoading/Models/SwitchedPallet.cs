@@ -10,6 +10,10 @@ namespace PalletLoading.Models
         public int Id { get; set; }
         public string FirstPallet { get; set; }
         public string SecondPallet { get; set; }
+
+        public int FirstPalletId { get; set; }
+        public int SecondPalletId { get; set; }
+
         public int IdContainer { get; set; }
     }
 }

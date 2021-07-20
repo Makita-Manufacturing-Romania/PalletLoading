@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PalletLoading.Data;
 using PalletLoading.Models;
 using System;
 using System.Collections.Generic;
@@ -9,13 +10,17 @@ using System.Threading.Tasks;
 
 namespace PalletLoading.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : MainController
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, PalletLoadingContext context):base(logger,context,null)
         {
-            _logger = logger;
+        }
+        public IActionResult AccesDenied()
+        {
+
+            return View();
         }
 
         public IActionResult Index()

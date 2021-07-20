@@ -10,13 +10,11 @@ using PalletLoading.Models;
 
 namespace PalletLoading.Controllers
 {
-    public class PalletTypesController : Controller
+    public class PalletTypesController : MainController
     {
-        private readonly PalletLoadingContext _context;
 
-        public PalletTypesController(PalletLoadingContext context)
+        public PalletTypesController(PalletLoadingContext context):base(null,context,null)
         {
-            _context = context;
         }
 
         // GET: PalletTypes

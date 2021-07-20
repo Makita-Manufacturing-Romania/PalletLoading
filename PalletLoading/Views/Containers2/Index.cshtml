@@ -4,17 +4,30 @@
     ViewData["Title"] = "Container list";
 }
 <h1 style="text-align:center">Container list</h1>
+<style>
+    #searchBtn{
+        transition: transform 0.2s ease-out;
+    }
 
+    #searchBtn:active{
+        transform:scale(0.95);
+    }
+</style>
 
 <div style="display:flex; justify-content:space-between">
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
-    @using (Html.BeginForm("Index", "Containers2", FormMethod.Get))
+    @if (ViewBag.UserRightLevel > 0)
     {
         <p>
-            @Html.TextBox("SearchString")
-            <input type="submit" value="Search" />
+            <a asp-action="Create" class=" btn btn-success btn-sm  "> Add new container <i class="fas fa-plus" width="10px" heigth="10px" style="background-color:white; text-align:center; font-size:13px; padding:3px; border-radius:50%; color:forestgreen;"></i></a>
+        </p>
+    }
+
+    @using (Html.BeginForm("Index", "Containers2", FormMethod.Get))
+    {
+        <p style="display:inline-block">
+            @*@Html.TextBox("SearchString")*@
+            <input type="text" class="form-control" style="display:inline;width:10vw;min-width:100px;" id="SearchString" name="SearchString" />
+            <input type="submit" id="searchBtn" class="" style="display:inline; border:none; background-color:#b82e00; border-radius:5px; color:white" value="Search" />
         </p>
     }
 </div>
@@ -37,21 +50,51 @@
     <tbody>
         @foreach (var container in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => container.Container.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => container.ContainerType.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => container.Countries.Name)
-                </td>
+        <tr>
+            <td>
+                @if (container.Container.ContainerAT != null)
+                {
+                    var listNames = new List<String>();
+                    @foreach (var containerName in container.Container.ContainerAT)
+                    {
+                        listNames.Add(containerName.ContainerName);
+                    }
+                    var templistContainer = String.Join(", ", listNames);
+                    @:@templistContainer
+                }
+
+
+            </td>
+            <td>
+
+                @Html.DisplayFor(modelItem => container.ContainerType.Name)
+            </td>
+            <td>
+                @if (container.Container.ContainerAT != null)
+                {
+                    var listNames = new List<String>();
+                    @foreach (var containerName in container.Container.ContainerAT)
+                    {
+                        listNames.Add(containerName.Country.Name);
+                    }
+                    var templistContainer = String.Join(", ", listNames);
+                    @:@templistContainer
+                }
+            </td>
+            @if (ViewBag.UserRightLevel > 0)
+            {
                 <td>
                     <a asp-action="Details" asp-route-id="@container.Container.Id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@container.Container.Id">Delete</a>
                 </td>
-            </tr>
+            }
+            else
+            {
+                <td>
+                    <a asp-action="Details" asp-route-id="@container.Container.Id">Details</a> 
+                </td>
+            }
+        </tr>
         }
     </tbody>
 </table>

@@ -71,10 +71,17 @@ namespace PalletLoading.Migrations
                     b.Property<int>("ContainerId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ContainerName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("CountryId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContainerId");
+
+                    b.HasIndex("CountryId");
 
                     b.ToTable("ContainerATs");
                 });
@@ -352,15 +359,65 @@ namespace PalletLoading.Migrations
                     b.Property<string>("FirstPallet")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("FirstPalletId")
+                        .HasColumnType("int");
+
                     b.Property<int>("IdContainer")
                         .HasColumnType("int");
 
                     b.Property<string>("SecondPallet")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SecondPalletId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("SwitchedPallets");
+                });
+
+            modelBuilder.Entity("PalletLoading.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserRightId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Usermail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserRightId");
+
+                    b.ToTable("User");
+                });
+
+            modelBuilder.Entity("PalletLoading.Models.UserRight", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Right")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RightLevel")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserRight");
                 });
 
             modelBuilder.Entity("PalletLoading.Models.Container", b =>
@@ -384,6 +441,25 @@ namespace PalletLoading.Migrations
                     b.Navigation("Pallet");
                 });
 
+            modelBuilder.Entity("PalletLoading.Models.ContainerAT", b =>
+                {
+                    b.HasOne("PalletLoading.Models.Container", "Container")
+                        .WithMany()
+                        .HasForeignKey("ContainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PalletLoading.Models.Countries", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Container");
+
+                    b.Navigation("Country");
+                });
+
             modelBuilder.Entity("PalletLoading.Models.Pallet", b =>
                 {
                     b.HasOne("PalletLoading.Models.ImportDataHistory", "PalletImportDataHistory")
@@ -403,6 +479,17 @@ namespace PalletLoading.Migrations
                     b.Navigation("PalletImportDataHistory");
 
                     b.Navigation("PalletType");
+                });
+
+            modelBuilder.Entity("PalletLoading.Models.User", b =>
+                {
+                    b.HasOne("PalletLoading.Models.UserRight", "UserRight")
+                        .WithMany()
+                        .HasForeignKey("UserRightId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserRight");
                 });
 
             modelBuilder.Entity("PalletLoading.Models.ContainerType", b =>

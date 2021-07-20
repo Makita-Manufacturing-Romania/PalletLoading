@@ -8,6 +8,7 @@ namespace PalletLoading.Models
 {
     public class Container
     {
+        [Key]
         public int Id { get; set; }
         [Display(Name ="Client name")]
         public string Name { get; set; }
@@ -24,6 +25,7 @@ namespace PalletLoading.Models
         public int NoOfRows { get; set; }
         public int NoOfColumns { get; set; }
         public DateTime CreatedDate { get; set; }
+        public virtual List<ContainerAT> ContainerAT { get; set; }
 
         public static implicit operator List<object>(Container v)
         {
