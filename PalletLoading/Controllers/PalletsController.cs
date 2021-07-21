@@ -197,8 +197,7 @@ namespace PalletLoading.Controllers
 
             var dateContainer = _context.Containers.Any(c => c.CreatedDate == DateTime.Today && c.Id == containerId);
             var containerAt = _context.ContainerATs.Include(c=>c.Country).Where(c => c.ContainerId == containerId).ToList();
-            var temoAbv = containerAt.Select(c => c.Country.Abbreviation).ToList();
-            var temoCont = containerAt.Select(c => c.ContainerName).ToList();
+
             var listPalletsMap = _context.ImportData.Where(c => containerAt.Select(c => c.Country.Abbreviation).ToList().Contains(c.consignee_code) && containerAt.Select(c => c.ContainerName).ToList().Contains(c.container_no)).OrderBy(c => c.loading_time).ToList();
             var switches = _context.SwitchedPallets.Where(c => c.IdContainer == containerId).ToList();
 

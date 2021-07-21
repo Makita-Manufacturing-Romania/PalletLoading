@@ -35,5 +35,6 @@ namespace PalletLoading.Data
         public DbSet<PalletLoading.Models.ImportDataPalletsLP> ImportDataPalletsLP { get; set; }
         public DbSet<PalletLoading.Models.User> User { get; set; }
         public DbSet<PalletLoading.Models.UserRight> UserRight { get; set; }
+        public DbSet<PalletLoading.Models.CountryDescriptionImportData> CountryDescriptionImportData { get; set; }
     }
 }
