@@ -83,10 +83,15 @@
             </td>
             @if (ViewBag.UserRightLevel > 0)
             {
-                <td>
-                    <a asp-action="Details" asp-route-id="@container.Container.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@container.Container.Id">Delete</a>
-                </td>
+        <td>
+            <a asp-action="Details" asp-route-id="@container.Container.Id">Details</a> |
+            <a asp-action="Delete" asp-route-id="@container.Container.Id">Delete</a>
+            @if (container.Container.CmrId != null)
+            {
+                <span> | </span>
+                <a asp-action="CmrReport" asp-controller="CMR" asp-route-id="@container.Container.CmrId">CMR</a>
+            }
+        </td>
             }
             else
             {

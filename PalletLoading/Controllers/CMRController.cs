@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PalletLoading.Data;
 using PalletLoading.Models;
+using Rotativa.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +17,17 @@ namespace PalletLoading.Controllers
     {
         public CMRController(PalletLoadingContext context) : base(null, context, null)
         {
+        }
+
+        public ActionResult GeneratePDF(int id)
+        {
+            Container container = _context.Containers.First(x => x.Id == id);
+            CmrData cmr = _context.CmrDatas.First(x => x.ContainerName == container.Name);
+
+            return new ViewAsPdf("Create2", cmr)
+            {
+                PageSize = Rotativa.AspNetCore.Options.Size.A4,
+            };
         }
 
         public ActionResult Create(int id)
@@ -74,6 +87,8 @@ namespace PalletLoading.Controllers
             newCmr.Adress = address;
             _context.CmrDatas.Add(newCmr);
             _context.SaveChanges();
+            container.CmrId = newCmr.Id;
+            _context.SaveChanges();
             return View(newCmr);            
         }
 
@@ -86,6 +101,11 @@ namespace PalletLoading.Controllers
             newCmr.Driver = driver;
             _context.SaveChanges();
             return View(newCmr);
+        }
+        public ActionResult CmrReport(int id)
+        {
+            CmrData cmr = _context.CmrDatas.First(x => x.Id == id);
+            return View("Create2",cmr);
         }
     }
 }

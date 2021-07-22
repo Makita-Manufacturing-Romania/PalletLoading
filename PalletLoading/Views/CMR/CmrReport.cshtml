@@ -1,21 +1,22 @@
 ﻿@model PalletLoading.Models.CmrData
 
-@{ 
+@{
     var today = DateTime.Now.ToString("dd/MM/yyyy");
+    Layout = null;
 }
 
 <div class="row redTr parent" style="height:70px">
-    <div class="col-md-1 number">1</div>
-    <div class="col-md-5 verticalLine content currentCell">
+    <div class="col-md-1 col-sm-1 number">1</div>
+    <div class="col-md-5 col-sm-5  verticalLine content currentCell">
         Sender (name, address, country)
         <br />
         Absender (Name, Anschrift, Land)
         <br />
         Nadawca (nazwisko lub nazwa, adres, kraj)
     </div>
-    <img class="fieldFromModel" src="~/Images/Stamp1.png" style=" top: 5px; left: 310px; width: 150px; height: 60px;"/>
+    <img class="fieldFromModel" src="~/Images/Stamp1.png" style=" top: 5px; left: 280px; width: 130px; height: 90px;" />
     <br />
-    <div class="col-md-6 content">
+    <div class="col-md-6 col-sm-6 content">
         This carriage is subject notwithstanding any
         clause to the contrary, to the Convention on
         the Contract for the international Carriage of
@@ -23,20 +24,20 @@
     </div>
 </div>
 
-<div class="row redTr parent" style="height:150px">
-    <div class="col-md-1 number">2</div>
-    <div class="col-md-5 verticalLine content currentCell">
+<div class="row redTr parent">
+    <div class="col-md-1 col-sm-1 number">2</div>
+    <div class="col-md-5 col-sm-5 verticalLine content currentCell">
         Consignee (name, address, country)
         <br />
         Empfanger (Name, Anschrift, Land)
         <br />
         Odbiorca (nazwisko lub nazwa, adres, kraj)
     </div>
-    <div class="fieldFromModel" style="top: 1px; left: 280px; width: 200px; height: 80px;">
+    <div class="fieldFromModel" style="top: 1px; left: 310px; width: 210px; height: 50px;">
         @Model.Adress
     </div>
-    <div class="col-md-1 number" style="border-top:2px solid; border-left:2px solid">16</div>
-    <div class="col-md-5 content" style="border-top:2px solid; border-right:2px solid">
+    <div class="col-md-1 col-sm-1 number" style="border-top:2px solid; border-left:2px solid">16</div>
+    <div class="col-md-5 col-sm-5 content" style="border-top:2px solid; border-right:2px solid">
         Carrier (name, address, country)
         <br />
         Frachtfuhrer (Name, Anschrift, Land)
@@ -49,18 +50,18 @@
 </div>
 
 <div class="row redTr parent" style="height:150px">
-    <div class="col-md-1 number">3</div>
-    <div class="col-md-5 content verticalLine currentCell">
+    <div class="col-md-1 col-sm-1 number">3</div>
+    <div class="col-md-5 col-sm-5 content verticalLine currentCell">
         Place of delivery of the goods (place, country)
         <br />
         Auslieferungsort des Gutes (Ort, Land)
         <br />
         Miejsce przeznaczenia (miejscowosc, kraj)
     </div>
-    <div class="fieldFromModel" style="top: 1px; left: 280px; width: 200px; height: 50px;">
+    <div class="fieldFromModel" style="top: 1px; left: 310px; width: 250px; height: 50px;">
         @Model.Adress
     </div>
-    <div class="col-md-1 number" style="border-left: 2px solid">17</div>
+    <div class="col-md-1 col-sm-1 number" style="border-left: 2px solid">17</div>
     <div class="col-md-5 content" style="border-right: 2px solid">
         Successive carriers (name, address, country)
         <br />
@@ -104,98 +105,100 @@
         <br />
         Zalaczone dokumenty
     </div>
-    <div class="fieldFromModel" style="top: 70px; left: 200px; width: 230px; height: 20px;">
+    <div class="fieldFromModel" style="top: 70px; left: 345px; width: 90px; height: 20px;">
         PACKING LIST - @Model.PackingList
     </div>
 </div>
 
-<div class="row redTr parent" style="height:200px">
-    <table style=" table-layout:fixed; width:100%; left:0px; border:1px solid red; text-align:left;">
-        <tr class="currentCell">
-            <td class="number">6</td>
-            <td class="content" style="text-align:left">
-                Marks and Nos
-                <br />
-                Kennzeichen und Nammern
-                <br />
-                Cechy i numery
-            </td>
-            <div class="fieldFromModel" style="top:70px; left:20px">
-                @Model.NoOfTools
-                <br />
-                @{
-                    var number = Model.NoOfSpr.Split(" ").First();
-                    if (number == "0")
-                    {
-                        <div>
+<div class="row redTr parent" style="height:300px">
+    <div class="col-md-1 number">6</div>
+    <div class="col-md-1 content currentCell">
+        Marks and Nos
+        <br />
+        Kennzeichen und Nammern
+        <br />
+        Cechy i numery
+    </div>
 
-                        </div>
-                    }
-                    else
-                    {
-                        @Model.NoOfSpr
-                    }
-                }
+    <div class="fieldFromModel" style="top:90px; left:20px">
+        @Model.NoOfTools
+        <br />
+        @{
+            var number = Model.NoOfSpr.Split(" ").First();
+            if (number == "0")
+            {
+                <div>
 
-                <br />
-                <br />
-                <br />
-                SEAL NO: @Model.SerialNo
-            </div>
+                </div>
+            }
+            else
+            {
+                @Model.NoOfSpr
+            }
+        }
 
-            <td class="number">7</td>
-            <td class="content" style="text-align:left">
-                Number of packages
-                <br />
-                Anzahl der Packstucke
-                <br />
-                Ilosc sztuk
-            </td>
-            <td class="number">8</td>
-            <td class="content" style="text-align:left">
-                Method of packing
-                <br />
-                Art der Verpackung
-                <br />
-                Sposob opakowania
-            </td>
-            <td class="number">9</td>
-            <td class="content verticalLine" style="text-align:left">
-                Nature of the goods
-                <br />
-                Bezeichnung des Gutes
-                <br />
-                Rodzaj towaru
-            </td>
-            <td class="number">10</td>
-            <td class="content verticalLine" style="text-align:left">
-                Statistical number
-                <br />
-                Statistiknummer
-                <br />
-                Numer statystyczny
-            </td>
-            <td class="number">11</td>
-            <td class="content verticalLine" style="text-align:left">
-                Gross weight in kg
-                <br />
-                Bruttogewicht in kg
-                <br />
-                Waga brutto w kg
-            </td>
-            <div class="fieldFromModel" style="top: 130px; left: 700px;">
-                @Model.Weight KG
-            </div>
-            <td class="number">12</td>
-            <td class="content verticalLine" style="text-align:left">
-                Volume in m3
-                <br />
-                Umfang m3
-                <br />
-                Objetosc w m3
-            </td>
-        </tr>
-    </table>
+        <br />
+        <br />
+        <br />
+        SEAL NO: @Model.SerialNo
+    </div>
+
+    <div class="col-md-1 number">7</div>
+    <div class="col-md-1 content">
+        Number of packages
+        <br />
+        Anzahl der Packstucke
+        <br />
+        Ilosc sztuk
+    </div>
+
+    <div class="col-md-auto number">8</div>
+    <div class="col-md-1 content">
+        Method of packing
+        <br />
+        Art der Verpackung
+        <br />
+        Sposob opakowania
+    </div>
+
+    <div class="col-md-auto number">9</div>
+    <div class="col-md-1 content verticalLine">
+        Nature of the goods
+        <br />
+        Bezeichnung des Gutes
+        <br />
+        Rodzaj towaru
+    </div>
+
+    <div class="col-md-auto number">10</div>
+    <div class="col-md-1 content verticalLine">
+        Statistical number
+        <br />
+        Statistiknummer
+        <br />
+        Numer statystyczny
+    </div>
+
+    <div class="col-md-auto number">11</div>
+    <div class="col-md-1 content verticalLine currentCell">
+        Gross weight in kg
+        <br />
+        Bruttogewicht in kg
+        <br />
+        Waga brutto w kg
+    </div>
+    <div class="fieldFromModel" style="top: 75px; left: 820px;">
+        @Model.Weight KG
+    </div>
+
+    <div class="col-md-auto number">12</div>
+    <div class="col-md-1 content">
+        Volume in m3
+        <br />
+        Umfang m3
+        <br />
+        Objetosc w m3
+    </div>
 </div>
 
 <div class="row redTr">
@@ -422,7 +425,7 @@
     <div class="fieldFromModel" style="left:200px">
         BRANESTI
     </div>
-    <div class="fieldFromModel" style="left:370px">
+    <div class="fieldFromModel" style="left:450px">
         @today
     </div>
     <div class="col-md-2 content verticalLine">
@@ -494,29 +497,29 @@
 <br />
 
 @*<div class="redTable">
-    <div class="row">
-        <div class="col-md-5">5</div>
-        <div class="col-md-3">3<br />line</div>
-        <div class="col-md-2">
-            <div class="row">
-                <div class="col-md-12">7</div>
+        <div class="row">
+            <div class="col-md-5">5</div>
+            <div class="col-md-3">3<br />line</div>
+            <div class="col-md-2">
+                <div class="row">
+                    <div class="col-md-12">7</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">8</div>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">8</div>
-            </div>
+            <div class="col-md-2">2</div>
         </div>
-        <div class="col-md-2">2</div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="row">
-                <div class="col-md-12">6</div>
-                <div class="col-md-12">6</div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">6</div>
+                    <div class="col-md-12">6</div>
+                </div>
             </div>
+            <div class="col-md-6">6</div>
         </div>
-        <div class="col-md-6">6</div>
-    </div>
-</div>*@
+    </div>*@
 
 
 
@@ -526,18 +529,18 @@
         width: 100%;
         border: 2px solid;
         border-color: red;
-        color:red;
-        border:solid;
+        color: red;
+        border: solid;
     }
 
     .redTr {
         border-top-style: solid;
-        border-right-style:solid;
-        border-left-style:solid;
-        border-bottom-style:hidden;
+        border-right-style: solid;
+        border-left-style: solid;
+        border-bottom-style: hidden;
         border-color: red;
         text-decoration-color: red;
-        color:red;
+        color: red;
     }
 
     .redTd {
@@ -557,8 +560,9 @@
     }
 
     .content {
-        font-size:9px;
+        font-size: 9px;
     }
+
     .parent {
         position: relative;
         top: 0;
@@ -573,7 +577,7 @@
 
     .fieldFromModel {
         position: absolute;
-        color:black;
-        font-weight:bold;
+        color: black;
+        font-weight: bold;
     }
 </style>

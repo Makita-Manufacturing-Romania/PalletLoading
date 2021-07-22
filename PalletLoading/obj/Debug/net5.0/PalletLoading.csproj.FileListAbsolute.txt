@@ -953,3 +953,4 @@ C:\Users\r.cioroba\source\repos\PalletLoading\PalletLoading\obj\Debug\net5.0\Pal
 C:\Users\r.cioroba\source\repos\PalletLoading\PalletLoading\obj\Debug\net5.0\PalletLoading.csproj.CopyComplete
 C:\Users\r.cioroba\source\repos\PalletLoading\PalletLoading\obj\Debug\net5.0\PalletLoading.genruntimeconfig.cache
 C:\Users\r.cioroba\source\repos\PalletLoading\PalletLoading\obj\Debug\net5.0\Razor\Views\CMR\Create2.cshtml.g.cs
+C:\Users\r.cioroba\source\repos\PalletLoading\PalletLoading\obj\Debug\net5.0\Razor\Views\CMR\CmrReport.cshtml.g.cs
