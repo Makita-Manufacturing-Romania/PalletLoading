@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PalletLoading.Data;
 
 namespace PalletLoading.Migrations
 {
     [DbContext(typeof(PalletLoadingContext))]
-    partial class PalletLoadingContextModelSnapshot : ModelSnapshot
+    [Migration("20210721115225_AddingCmrData")]
+    partial class AddingCmrData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,9 +27,6 @@ namespace PalletLoading.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Adress")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContainerName")
                         .HasColumnType("nvarchar(max)");

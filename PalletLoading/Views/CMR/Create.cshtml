@@ -1,20 +1,36 @@
-﻿
+﻿@model PalletLoading.Models.CmrData
+
 <h1 style="text-align:center">Generate CMR</h1>
 
+<input type="hidden" value="@Model.Id" id="cmrId"/>
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
             <label class="control-label">Seal No</label>
-            <input id="clientName" class="form-control" />
+            <input id="sealNo" class="form-control" />
         </div>
         <div class="form-group">
             <label class="control-label">License plate</label>
-            <input id="clientName" class="form-control" />
+            <input id="licensePlate" class="form-control" />
         </div>
         <div class="form-group">
             <label class="control-label">Driver</label>
-            <input id="clientName" class="form-control" />
+            <input id="driver" class="form-control" />
         </div>
     </div>
 </div>
 
+<input class="btn btn-success" id="generate" type="button" value="Generate" style="float:right"/>
+
+@section Scripts {
+    <script>
+        $("#generate").click(function () {
+            var cmrId = $('#cmrId').val();
+            var sealNo = $('#sealNo').val();
+            var licensePlate = $('#licensePlate').val();
+            var driver = $('#driver').val();
+            var path = '@Url.Action("Create2")' + "?cmrId=" + cmrId + "&sealNo=" + sealNo + "&licensePlate=" + licensePlate + "&driver=" + driver;
+            window.location.href = path;
+        });
+    </script>
+}
