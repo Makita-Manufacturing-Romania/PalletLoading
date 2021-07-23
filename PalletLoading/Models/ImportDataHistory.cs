@@ -30,7 +30,7 @@ namespace PalletLoading.Models
         public decimal IPRVMM{ get; set; }
         public decimal IPRVDD{ get; set; }
         public decimal IPSEQ { get; set; }
-        [StringLength(10)]
+        [StringLength(255)]
         public string IPPLNO { get; set; }
         //public virtual Pallet? Pallet { get; set; }
     }
