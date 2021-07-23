@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\r.tanase\\Source\\Repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj": {}
+    "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj": {}
   },
   "projects": {
-    "C:\\Users\\r.tanase\\Source\\Repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj": {
+    "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\r.tanase\\Source\\Repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
+        "projectUniqueName": "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
         "projectName": "PalletLoading",
-        "projectPath": "C:\\Users\\r.tanase\\Source\\Repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
-        "packagesPath": "C:\\Users\\r.tanase\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\r.tanase\\Source\\Repos\\PalletLoading\\PalletLoading\\obj\\",
+        "projectPath": "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
+        "packagesPath": "C:\\Users\\r.cioroba\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\r.tanase\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\r.cioroba\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -89,7 +92,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.204\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
         }
       }
     }

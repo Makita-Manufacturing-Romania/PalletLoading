@@ -31,5 +31,6 @@ namespace PalletLoading.Models
         {
             throw new NotImplementedException();
         }
+        public int? CmrId { get; set; }
     }
 }
