@@ -21,8 +21,8 @@ namespace PalletLoading.Controllers
 
         public ActionResult GeneratePDF(int id)
         {
-            Container container = _context.Containers.First(x => x.Id == id);
-            CmrData cmr = _context.CmrDatas.First(x => x.ContainerName == container.Name);
+            //Container container = _context.Containers.FirstOrDefault(x => x.Id == id);
+            CmrData cmr = _context.CmrDatas.First(x => x.Id == id);
 
             return new ViewAsPdf("Create2", cmr)
             {
