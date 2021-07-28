@@ -89,8 +89,8 @@
             @if (container.Container.CmrId != null)
             {
                 <span> | </span>
-                <a asp-action="GeneratePDF" asp-controller="CMR" asp-route-id="@container.Container.CmrId">CMR</a>
-                <a asp-action="CmrReport" asp-controller="CMR" asp-route-id="@container.Container.CmrId">CMR2</a>
+                @*<a asp-action="GeneratePDF" asp-controller="CMR" asp-route-id="@container.Container.CmrId">CMR</a>*@
+                <a asp-action="CmrReport" asp-controller="CMR" asp-route-id="@container.Container.CmrId">CMR</a>
             }
         </td>
             }
