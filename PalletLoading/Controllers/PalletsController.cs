@@ -207,15 +207,14 @@ namespace PalletLoading.Controllers
                 var listPalletsApp = _context.Pallets.Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
                 var mvcp = new List<ModelViewCreatePallet>();
                 int i = 0;
-                for (; i < listPalletsApp.Count; i++)
+                for (; i < listPalletsApp.Count && i < listPalletsMap.Count; i++)
                 {
-                    if (i < listPalletsMap.Count)
-                    {
+
                         listPalletsApp[i].PalletImportDataId = listPalletsMap[i].id;
                         //listPalletsMap[i].Pallet = null;
                         var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMap = listPalletsMap[i] };
                         mvcp.Add(tempMVID);
-                    }
+                    
 
                 }
                 for (; i < listPalletsMap.Count; i++)
@@ -258,7 +257,7 @@ namespace PalletLoading.Controllers
                 }
 
                 int i = 0;
-                for (; i < listPalletsApp.Count; i++)
+                for (; i < listPalletsApp.Count && i<listPalletsMap2.Count ; i++)
                 {
                     listPalletsApp[i].PalletImportDataHistoryId = listPalletsMap2[i].id;
                     //listPalletsMap[i].Pallet = null;
