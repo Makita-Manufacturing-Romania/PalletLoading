@@ -40,10 +40,11 @@ namespace PalletLoading.Controllers
             decimal weight = 0;
             int noOfTools = 0, noOfSpr = 0, noPalletSpr = 0,noPalletTools = 0;
             Pallet pallet = new();
-            if (_context.Pallets.Any(x => x.PalletImportData.salse_part != ""))
+
+            if (pallets.Any(x => x.PalletImportDataId != null))
             {
                 //weight, noOfTools, noOfSpr - today
-                weight = pallets.Where(x => x.PalletImportData.salse_part != null).Sum(x => x.PalletImportData.weight);
+                weight = pallets.Where(x => x.PalletImportData.salse_part != "").Sum(x => x.PalletImportData.weight);
                 if (pallets.Any(x => x.PalletImportData.serial_from != 0))
                 {
                     noPalletTools = pallets.Where(x => x.PalletImportData.serial_from != 0).Count();
