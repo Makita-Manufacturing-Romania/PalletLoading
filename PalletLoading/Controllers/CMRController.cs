@@ -40,10 +40,10 @@ namespace PalletLoading.Controllers
             decimal weight = 0;
             int noOfTools = 0, noOfSpr = 0, noPalletSpr = 0,noPalletTools = 0;
             Pallet pallet = new();
-            if (_context.Pallets.Any(x => x.PalletImportData != null))
+            if (_context.Pallets.Any(x => x.PalletImportData.salse_part != ""))
             {
                 //weight, noOfTools, noOfSpr - today
-                weight = pallets.Sum(x => x.PalletImportData.weight);
+                weight = pallets.Where(x => x.PalletImportData.salse_part != null).Sum(x => x.PalletImportData.weight);
                 if (pallets.Any(x => x.PalletImportData.serial_from != 0))
                 {
                     noPalletTools = pallets.Where(x => x.PalletImportData.serial_from != 0).Count();
@@ -62,7 +62,7 @@ namespace PalletLoading.Controllers
             else
             {
                 //weight, noOfTools, noOfSpr - history
-                weight = pallets.Sum(x => x.PalletImportDataHistory.weight);
+                weight = pallets.Where(x => x.PalletImportDataHistory.salse_part != "").Sum(x => x.PalletImportDataHistory.weight);
                 if (pallets.Any(x => x.PalletImportDataHistory.serial_from != 0))
                 {
                     noPalletTools = pallets.Where(x => x.PalletImportDataHistory.serial_from != 0).Count();
@@ -92,13 +92,19 @@ namespace PalletLoading.Controllers
             return View(newCmr);            
         }
 
-        public IActionResult Create2(string cmrId, string sealNo, string licensePlate, string driver)
+        public IActionResult Create2(string cmrId, string sealNo, string licensePlate, string driver, string weight)
         {
             int id = Convert.ToInt32(cmrId);
             CmrData newCmr = _context.CmrDatas.First(x => x.Id == id);
             newCmr.SerialNo = sealNo;
             newCmr.LicensePlate = licensePlate;
             newCmr.Driver = driver;
+            if (newCmr.NoOfSpr != null && weight != null)
+            {
+                decimal weightAux = Convert.ToDecimal(weight);
+                weightAux += Convert.ToDecimal(newCmr.Weight);
+                newCmr.Weight = weightAux.ToString();
+            }
             _context.SaveChanges();
             return View(newCmr);
         }
@@ -106,6 +112,16 @@ namespace PalletLoading.Controllers
         {
             CmrData cmr = _context.CmrDatas.First(x => x.Id == id);
             return View("Create2",cmr);
+        }
+
+        public ActionResult Delete (int id)
+        {
+            Container container = _context.Containers.First(x => x.Id == id);
+            CmrData cmr = _context.CmrDatas.First(x => x.Id == container.CmrId);
+            container.CmrId = null;
+            _context.CmrDatas.Remove(cmr);
+            _context.SaveChanges();
+            return RedirectToAction("Create","Pallets", new { id = container.Id});
         }
     }
 }

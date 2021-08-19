@@ -17,6 +17,10 @@
             <label class="control-label">Driver</label>
             <input id="driver" class="form-control" />
         </div>
+        <div class="form-group">
+            <label class="control-label">Spares weight</label>
+            <input class="form-control" id="sparesWeight" />
+        </div>
     </div>
 </div>
 
@@ -29,7 +33,8 @@
             var sealNo = $('#sealNo').val();
             var licensePlate = $('#licensePlate').val();
             var driver = $('#driver').val();
-            var path = '@Url.Action("Create2")' + "?cmrId=" + cmrId + "&sealNo=" + sealNo + "&licensePlate=" + licensePlate + "&driver=" + driver;
+            var weight = $('#sparesWeight').val();
+            var path = '@Url.Action("Create2")' + "?cmrId=" + cmrId + "&sealNo=" + sealNo + "&licensePlate=" + licensePlate + "&driver=" + driver + "&weight=" + weight;
             window.location.href = path;
         });
     </script>

@@ -421,7 +421,33 @@ else
     </div>
 </div>
 <input type="button" value="Sync pallets" class="btn btn-dark" id="sincData" />
-<input type="button" value="Generate CMR" class="btn btn-success" onclick="location.href='@Url.Action("Create","CMR", new { id = Model.Container.Id})'" />
+
+@if (Model.Container.CmrId == null)
+{
+    <input type="button" value="Generate CMR" class="btn btn-success" onclick="location.href='@Url.Action("Create","CMR", new { id = Model.Container.Id})'" />
+}
+else
+{
+    @*    <input type="button" value="Delete old CMR" class="btn btn-danger" onclick="location.href='@Url.Action("Delete","CMR", new { id = Model.Container.Id})'" />*@
+    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
+        Delete old CMR
+    </button>
+}
+<!-- Button trigger modal -->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h5 class="modal-title" id="exampleModalLabel">Do you want to delete your old CMR?</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" onclick="location.href='@Url.Action("Delete","CMR", new { id = Model.Container.Id})'">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <br />
@@ -433,18 +459,18 @@ else
         {
             if (pallet.PalletImportData != null)
             {
-    <tr>
-        <td>@pallet.OrderNo</td>
-        <td>@pallet.PalletImportData.consignee_code - @pallet.PalletImportData.container_no </td>
+                <tr>
+                    <td>@pallet.OrderNo</td>
+                    <td>@pallet.PalletImportData.consignee_code - @pallet.PalletImportData.container_no </td>
 
-        <td>@pallet.PalletImportData.salse_part</td>
-        <td>@((int)pallet.PalletImportData.pallet_no)</td>
-        <td>@((int)pallet.PalletImportData.serial_from)</td>
-        <td>@((int)pallet.PalletImportData.serial_to)</td>
+                    <td>@pallet.PalletImportData.salse_part</td>
+                    <td>@((int)pallet.PalletImportData.pallet_no)</td>
+                    <td>@((int)pallet.PalletImportData.serial_from)</td>
+                    <td>@((int)pallet.PalletImportData.serial_to)</td>
 
-        <td>@pallet.PalletImportData.picking_qty</td>
-        <td>@pallet.PalletImportData.weight</td>
-    </tr>
+                    <td>@pallet.PalletImportData.picking_qty</td>
+                    <td>@pallet.PalletImportData.weight</td>
+                </tr>
             }
             else if (pallet.PalletImportDataHistory != null)
             {
