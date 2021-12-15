@@ -284,6 +284,19 @@ else
     </div>
 }
 
+@{
+    var pallets = Model.Pallets.Where(x => x.Column <= 3).ToList();
+    decimal palletsTotalMotrica = 0;
+
+    var firstPallet = pallets.First();
+
+    if (firstPallet.PalletImportData != null)
+        palletsTotalMotrica = pallets.Sum(x => x.PalletImportData.weight);
+    else
+        palletsTotalMotrica = pallets.Sum(x => x.PalletImportDataHistory.weight);
+
+}
+<h5>Motrica: @palletsTotalMotrica kg</h5>
 
 <input type="hidden" value="@Model.Container.Id" id="container" />
 <div class="dinamicTable">
