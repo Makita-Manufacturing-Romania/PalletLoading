@@ -210,7 +210,8 @@ namespace PalletLoading.Controllers
             if (dateContainer && listPalletsMap.Count != 0)
             {
                  
-                var listPalletsApp = _context.Pallets.Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
+                var listPalletsApp = _context.Pallets.Include(x => x.PalletImportData).Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
+                
                 var mvcp = new List<ModelViewCreatePallet>();
                 int i = 0;
                 for (; i < listPalletsApp.Count && i < listPalletsMap.Count; i++)
@@ -248,13 +249,26 @@ namespace PalletLoading.Controllers
 
                 }
 
-                return Json(new { listPallets = mvcp });
+
+                var listPalletsApp2 = _context.Pallets.Include(x => x.PalletImportData).Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
+                List<Pallet> palletsMotrica = null;
+                decimal motricaWeight = 0;
+                if (listPalletsApp2.Any(x => x.Column <= 3))
+                {
+                    palletsMotrica = listPalletsApp2.Where(x => x.Column <= 3 && x.PalletImportData != null).ToList();
+
+                    motricaWeight = palletsMotrica.Sum(x => x.PalletImportData.weight);
+                    ViewBag.motricaWeight = motricaWeight;
+                }
+
+                return Json(new { listPallets = mvcp, motrica = motricaWeight });
             }
             else
             {
                 var listPalletsMap2 = _context.ImportDataHistory.Where(c => containerAt.Select(c => c.Country.Abbreviation).ToList().Contains(c.consignee_code) && containerAt.Select(c => c.ContainerName).ToList().Contains(c.container_no)).OrderBy(c => c.loading_time).ToList();
 
-                var listPalletsApp = _context.Pallets.Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
+                var listPalletsApp = _context.Pallets.Include(x => x.PalletImportDataHistory).Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
+
                 var mvcp = new List<ModelViewCreatePallet>();
                 if (listPalletsMap2.Count == 0)
                 {
@@ -302,7 +316,18 @@ namespace PalletLoading.Controllers
 
                 }
 
-                return Json(new { listPallets = mvcp });
+                var listPalletsApp2 = _context.Pallets.Include(x => x.PalletImportDataHistory).Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
+                List<Pallet> palletsMotrica = null;
+                decimal motricaWeight = 0;
+                if (listPalletsApp2.Any(x => x.Column <= 3))
+                {
+                    palletsMotrica = listPalletsApp2.Where(x => x.Column <= 3 && x.PalletImportDataHistory != null).ToList();
+
+                    motricaWeight = palletsMotrica.Sum(x => x.PalletImportDataHistory.weight);
+                    ViewBag.motricaWeight = motricaWeight;
+                }
+
+                return Json(new { listPallets = mvcp, motrica = motricaWeight });
 
             }
         }

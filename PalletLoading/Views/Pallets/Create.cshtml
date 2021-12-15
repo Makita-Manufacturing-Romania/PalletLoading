@@ -284,7 +284,8 @@ else
     </div>
 }
 
-@{
+@*@if(Model.Pallets.Any(x => x.Column <= 3))
+{
     var pallets = Model.Pallets.Where(x => x.Column <= 3).ToList();
     decimal palletsTotalMotrica = 0;
 
@@ -294,9 +295,20 @@ else
         palletsTotalMotrica = pallets.Sum(x => x.PalletImportData.weight);
     else
         palletsTotalMotrica = pallets.Sum(x => x.PalletImportDataHistory.weight);
+    <h5>Motrica: @palletsTotalMotrica kg</h5>    
+}*@
 
-}
-<h5>Motrica: @palletsTotalMotrica kg</h5>
+@*@{ 
+    var motricaWeight = ViewBag.motricaWeight;
+
+    if(motricaWeight != null)
+    { 
+        <h5>@motricaWeight</h5>
+    }
+}*@
+
+<h5 >Motrica: <span id="motrica">0</span> kg</h5>
+
 
 <input type="hidden" value="@Model.Container.Id" id="container" />
 <div class="dinamicTable">
@@ -677,6 +689,9 @@ else
 
                 var noPallets = data.listPallets.length;
                 var tableTxt = "<table class='table' style='margin-top:25px;'><tr><th>Order no</th><th>Container</th><th>Sales part</th><th>Pallet no</th><th>Serial from</th><th>Serial to</th><th>Quantity</th><th>Weight</th></tr>"
+                var motrica = data.motrica;
+
+                $("#motrica").text(motrica+"");
 
                 for (var i = 0; i < noPallets; i++) {
                     var orderNo = data.listPallets[i].orderNoApp;
