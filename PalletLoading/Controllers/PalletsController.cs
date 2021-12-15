@@ -131,7 +131,10 @@ namespace PalletLoading.Controllers
             {
 
             }
-            ImportDataPalletsLP idplp = _context.ImportDataPalletsLP.Where(c => c.CustomerCode180P.Equals(container.Country.Abbreviation) || c.CustomerCode250P.Equals(container.Country.Abbreviation)).FirstOrDefault();
+
+            var listOfCountryAbv = containerATs.Select(c => c.Country.Abbreviation.Trim()).ToList();
+            List<ImportDataPalletsLP> idplpList = _context.ImportDataPalletsLP.Where(c => listOfCountryAbv.Contains(c.CustomerCode180P.Trim()) || listOfCountryAbv.Contains(c.CustomerCode250P.Trim())).ToList();
+            //ImportDataPalletsLP idplp = _context.ImportDataPalletsLP.Where(c => c.CustomerCode180P.Equals(container.Country.Abbreviation) || c.CustomerCode250P.Equals(container.Country.Abbreviation)).FirstOrDefault();
 
             var viewModel = new AddContainerViewModel
             {
@@ -141,12 +144,12 @@ namespace PalletLoading.Controllers
                 SwitchedPallets = switchedPallets,
                 //Countries = countries,
                 ContainerAT = containerATs,
-                idplp = idplp
+                idplp = idplpList
             };
 
             return View(viewModel);
         }
-        public IActionResult GetLP(string country)
+        public IActionResult GetLP(int containerId)
         {
 
             using (var cmd = _context.Database.GetDbConnection().CreateCommand())
@@ -165,14 +168,17 @@ namespace PalletLoading.Controllers
                 cmd.Connection.Close();
             }
 
-            var importLP = _context.ImportDataPalletsLP.Where(c => c.CustomerCode180P.Equals(country) || c.CustomerCode250P.Equals(country)).FirstOrDefault();
+            var listOfCountryAbv = _context.ContainerATs.Where(c=>c.ContainerId == containerId).Select(c => c.Country.Abbreviation.Trim()).ToList();
 
-            if(importLP == null)
+            //var importLP = _context.ImportDataPalletsLP.Where(c => c.CustomerCode180P.Equals(country) || c.CustomerCode250P.Equals(country)).FirstOrDefault();
+            List<ImportDataPalletsLP> idplpList = _context.ImportDataPalletsLP.Where(c => listOfCountryAbv.Contains(c.CustomerCode180P.Trim()) || listOfCountryAbv.Contains(c.CustomerCode250P.Trim())).ToList();
+
+            if (idplpList == null)
             {
-                importLP = new ImportDataPalletsLP { CustomerCode180P = country, CustomerCode250P = country, LOADED180 = 0, LOADED250 = 0, PICKED180 = 0, PICKED250 = 0 };
+                idplpList.Add( new ImportDataPalletsLP { CustomerCode180P = "", CustomerCode250P = "", LOADED180 = 0, LOADED250 = 0, PICKED180 = 0, PICKED250 = 0 });
             }
 
-            return Json(new { importLP = importLP });
+            return Json(new { importLP = idplpList });
 
         }
         public IActionResult GetPallets(int containerId)
@@ -436,15 +442,17 @@ namespace PalletLoading.Controllers
             pallet.Column = col;
             pallet.Container2Id = containerId;
             pallet.Name = palletName;
+            pallet.DataInsert = DateTime.Now;
+            pallet.CreatedBy = User.Identity.Name.Replace("MMRMAKITA\\", "");
+            pallet.OrderNo = _context.Pallets.Where(x => x.Container2Id == container.Id).Count() + 1;
+            //if (_context.Pallets.Any(x => x.OrderNo == 1) && _context.Pallets.Any(x => x.Container2Id == container.Id))
+            //{
 
-            if (_context.Pallets.Any(x => x.OrderNo == 1) && _context.Pallets.Any(x => x.Container2Id == container.Id))
-            {
-
-                var lastPallet = _context.Pallets.OrderBy(x => x.OrderNo).Last(x => x.Container2Id == container.Id);
-                pallet.OrderNo = lastPallet.OrderNo + 1;
-            }
-            else
-                pallet.OrderNo = 1;
+            //    var lastPallet = _context.Pallets.OrderBy(x => x.OrderNo).Last(x => x.Container2Id == container.Id);
+            //    pallet.OrderNo = lastPallet.OrderNo + 1;
+            //}
+            //else
+            //    pallet.OrderNo = 1;
 
             _context.Pallets.Add(pallet);
             _context.SaveChanges();
@@ -502,7 +510,7 @@ namespace PalletLoading.Controllers
             var rowToRemove = container.NoOfRows - 1;
             if (_context.Pallets.Any(x => x.Row == rowToRemove && x.Container2Id == containerId))
             {
-                pallets = _context.Pallets.Where(x => x.Row == rowToRemove).ToList();
+                pallets = _context.Pallets.Where(x => x.Row == rowToRemove && x.Container2Id == containerId).ToList();
                 _context.RemoveRange(pallets);
             }
 
@@ -530,7 +538,7 @@ namespace PalletLoading.Controllers
             var colToRemove = container.NoOfColumns - 1;
             if(_context.Pallets.Any(x => x.Column == colToRemove && x.Container2Id == containerId) )
             {
-                pallets = _context.Pallets.Where(x => x.Column == colToRemove).ToList();
+                pallets = _context.Pallets.Where(x => x.Column == colToRemove && x.Container2Id == containerId).ToList();
                 _context.RemoveRange(pallets);
             }
 

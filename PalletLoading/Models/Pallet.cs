@@ -22,5 +22,7 @@ namespace PalletLoading.Models
         public virtual ImportData PalletImportData { get; set; }
         public int? PalletImportDataHistoryId { get; set; }
         public virtual ImportDataHistory PalletImportDataHistory { get; set; }
+        public DateTime DataInsert { get; set; }
+        public string CreatedBy { get; set; }
     }
 }

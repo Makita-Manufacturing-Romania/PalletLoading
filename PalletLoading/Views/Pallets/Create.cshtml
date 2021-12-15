@@ -157,6 +157,7 @@
     var palletsAux = Model.Pallets;
 
     var containerName = Model.Container.Name;
+    var containerId = Model.Container.Id;
     string countryName = "default";
     if (Model.Container.Country != null)
         countryName = Model.Container.Country.Abbreviation;
@@ -236,21 +237,34 @@
 </div>
 
 <br />
-@if (Model.idplp != null)
+@if ( Model.idplp.Count != 0)
 {
-    <div class="container">
-        <div class="row">
-            <div class="col-md-5">
+    <div class="row m-2" >
+        <div class="col-5" style="border:1px dashed silver; border-right:none;">
+            @foreach (var tempItem in Model.idplp)
+            {
+                <div class="container" style="margin:0px;">
+                    <h5>Country: <b>@tempItem.CustomerCode180P</b></h5>
 
-                <h5><b style="letter-spacing:1.5px;">Finished Product:</b> <span style="font-size:18px;"> <span id="l250">@Model.idplp.LOADED250</span> (Loaded) / <span id="p250">@Model.idplp.PICKED250</span> (Picked) </span></h5>
-                <h5><b style="letter-spacing:1.5px;">Spares:</b> <span style="font-size:18px;"><span id="l180">@Model.idplp.LOADED180</span> (Loaded) / <span id="p180">@Model.idplp.PICKED180</span> (Picked) </span></h5>
-            </div>
-            <div class="col-md-1" style="display:flex; justify-content: center;align-items: center;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5><b style="letter-spacing:1.5px;">Finished Product:</b> <span style="font-size:18px;"> <span id="l250-@tempItem.CustomerCode250P">@tempItem.LOADED250</span> (Loaded) / <span id="p250-@tempItem.CustomerCode250P">@tempItem.PICKED250</span> (Picked) </span></h5>
+                            <h5><b style="letter-spacing:1.5px;">Spares:</b> <span style="font-size:18px;"><span id="l180-@tempItem.CustomerCode250P">@tempItem.LOADED180</span> (Loaded) / <span id="p180-@tempItem.CustomerCode250P">@tempItem.PICKED180</span> (Picked) </span></h5>
+                        </div>
+
+                    </div>
+                </div>
+                <br />
+
+            }
+        </div>
+        <div class="col-2"  style="display:flex; justify-content: center;align-items: center; border:1px dashed silver; border-left:none;">
+
                 <input class="btn btn-primary btn-sm" value="Update" type="button" id="updateLPBtn" />
-            </div>
 
         </div>
     </div>
+
 }
 
 else
@@ -602,25 +616,27 @@ else
 
         $("#updateLPBtn").click(function () {
             $("#updateLPBtn").attr("disabled", "true");
-            var countryName = "@countryName";
+            var containerId = "@containerId";
 
             $.ajax({
                 url: "/Pallets/GetLP",
 
                 data: {
-                    country: '' + countryName
+                    containerId: '' + containerId
                 },
 
                 cache: false,
                 contentType: "application/json;charset=UTF-8",
                 dataType: "json",
                 success: function (data) {
-
                     $("#updateLPBtn").removeAttr("disabled");
-                    $("#l250").text("" + data.importLP.loadeD250);
-                    $("#l180").text("" + data.importLP.loadeD180);
-                    $("#p250").text("" + data.importLP.pickeD250);
-                    $("#p180").text("" + data.importLP.pickeD180);
+
+                    for (var i = 0; i < data.importLP.length; i++) {
+                        $("#l250-" + data.importLP[i].customerCode180P).text("" + data.importLP[i].loadeD250);
+                        $("#l180-" + data.importLP[i].customerCode180P).text("" + data.importLP[i].loadeD180);
+                        $("#p250-" + data.importLP[i].customerCode180P).text("" + data.importLP[i].pickeD250);
+                        $("#p180-" + data.importLP[i].customerCode180P).text("" + data.importLP[i].pickeD180);
+                    }
                 }
             });
         });

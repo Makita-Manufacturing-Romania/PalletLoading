@@ -67,7 +67,7 @@ namespace PalletLoading.Controllers
             List<Container> containers = _context.Containers.Include(c => c.ContainerAT).Include("ContainerAT.Country").OrderByDescending(x => x.Id).ToList();
             if (!String.IsNullOrEmpty(searchString))
             {
-                containers = _context.Containers.Include(c=>c.ContainerAT).Include(c => c.ContainerAT).Include("ContainerAT.Country").Where(x => x.Name.Contains(searchString)).OrderByDescending(x => x.Id).ToList();
+                containers = _context.Containers.Include(c=>c.ContainerAT).Include(c => c.ContainerAT).Include("ContainerAT.Country").Where(x => x.ContainerAT.Any(c=>c.ContainerName.Equals(searchString))).OrderByDescending(x => x.Id).ToList();
             }
 
             List<ContainerVM> containerList = new();

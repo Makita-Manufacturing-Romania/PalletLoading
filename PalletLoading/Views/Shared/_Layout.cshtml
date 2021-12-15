@@ -6,6 +6,7 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/mlogo.ico" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
@@ -41,7 +42,7 @@
 
         #settingsImg {
             /*transition: transform 0.5ms linear;*/
-/*            animation-name: rotateContainer;
+            /*            animation-name: rotateContainer;
             animation-duration: 0.7s;*/
         }
 
@@ -65,68 +66,72 @@
                 transform: scale(1.1);
             }
         }
-
     </style>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                @* <a href="~/Home/Index"><img src="~/Images/download.png" class="navbar-brand" style="width:100px; height:50px"></a>*@
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="uk-active">
-                            <a href='@Url.Action("Index","Containers2")'>
-                                <img alt="Check" id="containerImg" src="@Url.Content("~/Images/cargo-container-crane.png")" style="width: 45px;height: 45px;  padding:" 10, 10, 10, 10";filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
-                            </a>
-                        </li>
+                <img src="~/MakitaLogo.png" style="height: 46px; margin-left: 20px; top: 0 !important; margin-top: -8px !important;">
+                <div class="container" >
 
-                        @if (ViewBag.UserRightLevel > 1)
-                        {
-                            <li class="dropdown" style="padding-left:25px">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="text-decoration:none;">
-                                    <img alt="Check" id="settingsImg" src="@Url.Content("~/Images/cogs-solid.svg")" style="width: 45px; height: 45px; filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
+                    @* <a href="~/Home/Index"><img src="~/Images/download.png" class="navbar-brand" style="width:100px; height:50px"></a>*@
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation" style="position:absolute; right:0; top:10px;">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+
+                    <div class="navbar-collapse collapse">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="uk-active">
+                                <a href='@Url.Action("Index","Containers2")'>
+                                    <img alt="Check" id="containerImg" src="@Url.Content("~/Images/cargo-container-crane.png")" style="width: 45px;height: 45px;  padding:" 10, 10, 10, 10";filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
                                 </a>
-
-                                <ul class="dropdown-menu">
-                                    <li class="dropdown dropdown-submenu">
-                                    <li>
-                                        <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="ContainerTypes" asp-action="Index"><b>Container type</b></a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="PalletTypes" asp-action="Index"><b>Pallet type</b></a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Countries" asp-action="Index"><b>Countries</b></a>
-
-                                    </li>
-                                    <li>
-                                        <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Users" asp-action="Index"><b>Users</b></a>
-
-                                    </li>
-                                </ul>
                             </li>
-                        }
+
+                            @if (ViewBag.UserRightLevel > 1)
+                            {
+                                <li class="dropdown" style="padding-left:25px">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="text-decoration:none;">
+                                        <img alt="Check" id="settingsImg" src="@Url.Content("~/Images/cogs-solid.svg")" style="width: 45px; height: 45px; filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
+                                    </a>
+
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown dropdown-submenu">
+                                        <li>
+                                            <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="ContainerTypes" asp-action="Index"><b>Container type</b></a>
+                                        </li>
+                                        <li>
+                                            <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="PalletTypes" asp-action="Index"><b>Pallet type</b></a>
+                                        </li>
+                                        <li>
+                                            <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Countries" asp-action="Index"><b>Countries</b></a>
+
+                                        </li>
+                                        <li>
+                                            <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Users" asp-action="Index"><b>Users</b></a>
+
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
 
                             @*                        <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="ContainerTypes" asp-action="Index">Container Types</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="PalletTypes" asp-action="Index">Pallet Types</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Countries" asp-action="Index">Countries</a>
-            </li>*@
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="ContainerTypes" asp-action="Index">Container Types</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="PalletTypes" asp-action="Index">Pallet Types</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Countries" asp-action="Index">Countries</a>
+                                </li>*@
                         </ul>
-                    @{
-                        var nume = @User.Identity.Name.Split('.').Last();
-                        string altceva = nume;
-                        altceva = char.ToUpper(nume[0]) + nume.Substring(1);
-                    }
-                <p class="nav navbar-text">Hello, @ViewBag.FullName!</p>
+                        @{
+                            var nume = @User.Identity.Name.Split('.').Last();
+                            string altceva = nume;
+                            altceva = char.ToUpper(nume[0]) + nume.Substring(1);
+                        }
+                        <p class="nav navbar-text">Hello, @ViewBag.FullName!</p>
 
+                    </div>
                 </div>
             </div>
         </nav>
