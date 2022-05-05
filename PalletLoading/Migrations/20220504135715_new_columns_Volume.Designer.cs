@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PalletLoading.Data;
 
 namespace PalletLoading.Migrations
 {
     [DbContext(typeof(PalletLoadingContext))]
-    partial class PalletLoadingContextModelSnapshot : ModelSnapshot
+    [Migration("20220504135715_new_columns_Volume")]
+    partial class new_columns_Volume
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,9 +148,6 @@ namespace PalletLoading.Migrations
 
                     b.Property<int>("Width")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("volume")
-                        .HasColumnType("decimal(18,6)");
 
                     b.HasKey("Id");
 
@@ -370,7 +369,7 @@ namespace PalletLoading.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("volume")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("weight")
                         .HasColumnType("decimal(18,2)");
@@ -437,7 +436,7 @@ namespace PalletLoading.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("volume")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("weight")
                         .HasColumnType("decimal(18,2)");

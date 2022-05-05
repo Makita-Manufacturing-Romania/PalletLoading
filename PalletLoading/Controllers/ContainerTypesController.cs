@@ -52,7 +52,7 @@ namespace PalletLoading.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Length,Width,Height")] ContainerType containerType)
+        public async Task<IActionResult> Create([Bind("Id,Name,Length,Width,Height,volume")] ContainerType containerType)
         {
             if (ModelState.IsValid)
             {
@@ -84,7 +84,7 @@ namespace PalletLoading.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Length,Width,Height")] ContainerType containerType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Length,Width,Height,volume")] ContainerType containerType)
         {
             if (id != containerType.Id)
             {

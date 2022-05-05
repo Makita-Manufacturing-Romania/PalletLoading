@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,6 +33,9 @@ namespace PalletLoading.Models
         public decimal IPSEQ { get; set; }
         [StringLength(255)]
         public string IPPLNO { get; set; }
+        [Column(TypeName = "decimal(18, 6)")]
+        public decimal volume { get; set; }
+
         //public virtual Pallet? Pallet { get; set; }
     }
 }

@@ -158,7 +158,21 @@
 
     var containerName = Model.Container.Name;
     var containerId = Model.Container.Id;
-    string countryName = "default";
+    var containerVolume = Model.Type.volume;
+    decimal completedVolume = 0.000000M;
+    var anyPallets = Model.Pallets.Any(c => c.PalletImportData != null);
+    var anyPalletsHistory = Model.Pallets.Any(c => c.PalletImportDataHistory != null);
+
+    if (anyPallets)
+    {
+        completedVolume = Model.Pallets.Sum(c => c.PalletImportData.volume);
+    }
+    else
+    {
+        completedVolume = Model.Pallets.Sum(c => c.PalletImportDataHistory.volume);
+    }
+
+        string countryName = "default";
     if (Model.Container.Country != null)
         countryName = Model.Container.Country.Abbreviation;
 
@@ -209,37 +223,38 @@
         </h5>
         <a class="btn btn-info" asp-action="CountryList" asp-controller="Pallets" asp-route-id="@Model.Container.Id" style="margin-bottom:15px;" />Edit clients & containers </a>
         <h5> <span style="font-weight:bold; letter-spacing:1.5px;">Picked pallets:</span> @ViewData["pickedPallets"]</h5>
+        <h5> <span style="font-weight:bold; letter-spacing:1.5px;">Volume:</span> @completedVolume / @containerVolume</h5>
 
     </div>
 
     @*<div class="container">
-            <div class="row">
-                <div class="col-md-1">
-                    <h5 asp-for="Container.CountryId" class="control-label">Country</h5>
+        <div class="row">
+        <div class="col-md-1">
+        <h5 asp-for="Container.CountryId" class="control-label">Country</h5>
 
-                </div>
-                <div class="col-md-3">
-                    <select id="newCountry" asp-for="Container.CountryId" class="form-control" asp-items="ViewBag.CountryId"></select>
+        </div>
+        <div class="col-md-3">
+        <select id="newCountry" asp-for="Container.CountryId" class="form-control" asp-items="ViewBag.CountryId"></select>
 
-                </div>
-                <div class="col-md-3">
-                    <select id="newCountry" asp-for="Container.CountryId" class="form-control" asp-items="ViewBag.CountryId"></select>
+        </div>
+        <div class="col-md-3">
+        <select id="newCountry" asp-for="Container.CountryId" class="form-control" asp-items="ViewBag.CountryId"></select>
 
-                </div>
-                <div class="col-md-3">
-                    <input type="button" value="Add client" class="btn btn-success" id="addClient" />
+        </div>
+        <div class="col-md-3">
+        <input type="button" value="Add client" class="btn btn-success" id="addClient" />
 
-                </div>
-            </div>
-            <div align="left">
-            </div>
+        </div>
+        </div>
+        <div align="left">
+        </div>
         </div>*@
 </div>
 
 <br />
-@if ( Model.idplp.Count != 0)
+@if (Model.idplp.Count != 0)
 {
-    <div class="row m-2" >
+    <div class="row m-2">
         <div class="col-5" style="border:1px dashed silver; border-right:none;">
             @foreach (var tempItem in Model.idplp)
             {
@@ -258,9 +273,9 @@
 
             }
         </div>
-        <div class="col-2"  style="display:flex; justify-content: center;align-items: center; border:1px dashed silver; border-left:none;">
+        <div class="col-2" style="display:flex; justify-content: center;align-items: center; border:1px dashed silver; border-left:none;">
 
-                <input class="btn btn-primary btn-sm" value="Update" type="button" id="updateLPBtn" />
+            <input class="btn btn-primary btn-sm" value="Update" type="button" id="updateLPBtn" />
 
         </div>
     </div>
@@ -350,31 +365,31 @@ else
                                 @*}
                                     else
                                     {
-                                        <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px; padding-bottom:10px; height:@heightCustom.ToString()px;  vertical-align: top;">
+                                    <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px; padding-bottom:10px; height:@heightCustom.ToString()px;  vertical-align: top;">
 
-                                            @if (currentRow == 1)
-                                            {
+                                    @if (currentRow == 1)
+                                    {
 
-                                                <p style="font-size:25px">@colNo</p>
-                                                colNo++;
-                                            }
-                                            else
-                                            {
-                                                <br />
-                                            }
-                                            <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
-                                            @foreach (var palet in currentPallets)
-                                            {
-                                                <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
-                                            }
-                                        </td>
+                                    <p style="font-size:25px">@colNo</p>
+                                    colNo++;
+                                    }
+                                    else
+                                    {
+                                    <br />
+                                    }
+                                    <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
+                                    @foreach (var palet in currentPallets)
+                                    {
+                                    <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                                    }
+                                    </td>
                                     }*@
                                 @*<td style="width:200px; height:@heightCustom.ToString()px; text-align:center; table-layout:fixed; margin-top: 0;">
-                                        <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="addBtn btn-secondary">
-                                        @foreach (var palet in currentPallets)
-                                        {
-                                            <input type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="removeBtn btn-danger">
-                                        }
+                                    <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="addBtn btn-secondary">
+                                    @foreach (var palet in currentPallets)
+                                    {
+                                    <input type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="removeBtn btn-danger">
+                                    }
                                     </td>*@
                             }
                             else
@@ -386,20 +401,20 @@ else
 
                             @*                if (pallet != null)
                                 {
-                                        <td style="width:200px; height:200px; text-align:center">
-                                            <0form><input type="button" id="@idPallet" value="Add" text-align: center class="btn-secondary addBtn"></form>
-                                            <br />
-                                            <form><input type="button" id="@idPallet" value="@pallet.OrderNo" style="width:100%; height:100%; text-align:center" class="removeBtn btn-danger"></form>
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td style="color: white; width: 200px; height: 200px; text-align:center">
-                                            <form><input type="button" id="@idPallet" value="Add" style="width:100%; height:100%; text-align:center" class="addBtn btn-secondary"></form>
-                                        </td>
-                                    }
+                                <td style="width:200px; height:200px; text-align:center">
+                                <0form><input type="button" id="@idPallet" value="Add" text-align: center class="btn-secondary addBtn"></form>
+                                <br />
+                                <form><input type="button" id="@idPallet" value="@pallet.OrderNo" style="width:100%; height:100%; text-align:center" class="removeBtn btn-danger"></form>
+                                </td>
+                                }
+                                else
+                                {
+                                <td style="color: white; width: 200px; height: 200px; text-align:center">
+                                <form><input type="button" id="@idPallet" value="Add" style="width:100%; height:100%; text-align:center" class="addBtn btn-secondary"></form>
+                                </td>
+                                }
 
-                                    palletsAux.Remove(pallet);*@
+                                palletsAux.Remove(pallet);*@
                         }
                         @{
                             currentRow++;
@@ -481,7 +496,7 @@ else
 
 <div id="tableSection">
     <table class='table' style='margin-top:25px;'>
-        <tr><th>Order no</th><th>Container</th><th>Sales part</th><th>Pallet no</th><th>Serial from</th><th>Serial to</th><th>Quantity</th><th>Weight</th></tr>
+        <tr><th>Order no</th><th>Container</th><th>Sales part</th><th>Pallet no</th><th>Serial from</th><th>Serial to</th><th>Quantity</th><th>Weight</th><th>Volume</th></tr>
         @foreach (var pallet in Model.Pallets.OrderBy(c => c.OrderNo))
         {
             if (pallet.PalletImportData != null)
@@ -497,6 +512,7 @@ else
 
                     <td>@pallet.PalletImportData.picking_qty</td>
                     <td>@pallet.PalletImportData.weight</td>
+                    <td>@pallet.PalletImportData.volume</td>
                 </tr>
             }
             else if (pallet.PalletImportDataHistory != null)
@@ -512,6 +528,7 @@ else
 
                     <td>@pallet.PalletImportDataHistory.picking_qty</td>
                     <td>@pallet.PalletImportDataHistory.weight</td>
+                    <td>@pallet.PalletImportDataHistory.volume</td>
                 </tr>
             }
         }
@@ -542,8 +559,10 @@ else
     }
 </div>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+<script>
 
     function allowDrop(ev) {
         ev.preventDefault();
@@ -570,7 +589,7 @@ else
 
 
         @*var path = '@Url.Action("SwitchPallets")' + "?idContainer=" + idContainer + "&draggedPallet=" + draggedPallet + "&droppedPallet=" + droppedPallet;
-        window.location.href = path;*@
+            window.location.href = path;*@
 
         $.ajax({
             url: "/Pallets/SwitchPallets",
@@ -596,7 +615,7 @@ else
      $(document).on('click', "#newRow",function () {
         var idContainer = $('#container').val();
         @*var path = '@Url.Action("AddRow")' + "?idContainer=" + idContainer;
-        window.location.href = path;*@
+            window.location.href = path;*@
 
 
         $.ajax({
@@ -722,7 +741,7 @@ else
     $(document).on('click', "#removeRow", function () {
         var idContainer = $('#container').val();
         @*var path = '@Url.Action("RemoveRow")' + "?idContainer=" + idContainer;
-        window.location.href = path;*@
+            window.location.href = path;*@
 
         $.ajax({
             url: "/Pallets/RemoveRow",
@@ -817,7 +836,7 @@ else
         var palletId = this.id;
         var idContainer = $('#container').val();
         @*var path = '@Url.Action("RemovePallet")' + "?idContainer=" + idContainer + "&palletId=" + palletId;
-        window.location.href = path;*@
+            window.location.href = path;*@
 
         $.ajax({
             url: "/Pallets/RemovePallet",
@@ -839,20 +858,20 @@ else
         });
 
     });
-    </script>
+</script>
 }
 
 @*<style>
-        table {
-            display: table;
-            empty-cells: show;
-        }
+    table {
+    display: table;
+    empty-cells: show;
+    }
 
-        table tr {
-            display: table-cell;
-        }
+    table tr {
+    display: table-cell;
+    }
 
-        table tr td {
-            display: block;
-        }
+    table tr td {
+    display: block;
+    }
     </style>*@

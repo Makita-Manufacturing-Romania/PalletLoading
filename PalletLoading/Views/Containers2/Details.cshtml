@@ -1,8 +1,24 @@
 ﻿@model PalletLoading.ViewModels.ContainerDetailsViewModel
 
-@{ ViewData["Title"] = "Details";
+@{
+    ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout_Full.cshtml";
     var templistContainer = "";
+
+    var volumeTotal = Model.Type.volume;
+
+    var anyPallets = Model.Pallets.Any(c => c.PalletImportData != null);
+    var anyPalletsHistory = Model.Pallets.Any(c => c.PalletImportDataHistory != null);
+    decimal volumePallets = 0.00M;
+    if (anyPallets)
+    {
+        volumePallets = Model.Pallets.Sum(c => c.PalletImportData.volume);
+    }
+    else
+    {
+        volumePallets = Model.Pallets.Sum(c => c.PalletImportDataHistory.volume);
+        
+    }
 }
 
 
@@ -31,7 +47,7 @@
 <div width="100%;" align="center" style="padding:0; display:flex; align-items:center; justify-content: center;">
     <div style="position:relative;">
 
-        <p style="padding:0; display:inline-block; font-weight:bold; font-size:25px; position:relative;top:7px;">Details - @templistContainer</p>
+        <p style="padding:0; display:inline-block; font-weight:bold; font-size:25px; position:relative;top:7px;">Details - @templistContainer  </p>
     </div>
 </div>
 <div width="100%" align="center" style="margin-bottom:10px;">
@@ -69,6 +85,7 @@
         }
         templistContainer = String.Join(", ", listNames);
     }
+
     <div class="container" style="margin-top:10px">
         <div class="row">
             <div class="col-6" align="right" style="font-weight:bold;">
@@ -85,6 +102,15 @@
 
             <div class="col-6" align="left">
                 @templistContainer
+            </div>
+        </div>
+                <div class="row">
+            <div class="col-6" align="right" style="font-weight:bold;">
+                Volume 
+            </div>
+
+            <div class="col-6" align="left">
+                @volumePallets.ToString("N2") (m3) / @volumeTotal.ToString("N2") (m3)
             </div>
         </div>
     </div>
@@ -206,15 +232,15 @@
                                     {
                                         if (palet.PalletImportData != null)
                                         {
-                                            <input type="button" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px;height:6vh;text-align:center" class="detailsBtn btn-info">
+                                            <input type="button" data-volume="@palet.PalletImportData.volume" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px;height:6vh;text-align:center" class="detailsBtn btn-info">
                                         }
                                         else if (palet.PalletImportDataHistory != null)
                                         {
-                                            <input type="button" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px; height:6vh; text-align:center" class="detailsBtn btn-info"> }
+                                            <input type="button" data-volume="@palet.PalletImportDataHistory.volume" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px; height:6vh; text-align:center" class="detailsBtn btn-info"> }
                                         else
                                         {
 
-                                            <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width: 3vw; margin-top:5px; margin-bottom:5px; min-height:40px; border-radius:5px; height:6vh; min-width: 30px; text-align:center" class="detailsBtn btn-info">
+                                            <input type="button" data-volume="" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width: 3vw; margin-top:5px; margin-bottom:5px; min-height:40px; border-radius:5px; height:6vh; min-width: 30px; text-align:center" class="detailsBtn btn-info">
 
                                         }
                                     }
@@ -278,6 +304,7 @@
                     <th>Serial to</th>
                     <th>Quantity</th>
                     <th>Weight</th>
+                    <th>Volume</th>
                 </tr>
                 @foreach (var pallet in Model.Pallets.OrderBy(c => c.OrderNo))
                 {
@@ -292,6 +319,7 @@
                             <td>@pallet.PalletImportData.serial_to</td>
                             <td>@pallet.PalletImportData.picking_qty</td>
                             <td>@pallet.PalletImportData.weight</td>
+                            <td>@pallet.PalletImportData.volume</td>
                         </tr>
                     }
                     else if (pallet.PalletImportDataHistory != null)
@@ -305,6 +333,7 @@
                             <td>@pallet.PalletImportDataHistory.serial_to</td>
                             <td>@pallet.PalletImportDataHistory.picking_qty</td>
                             <td>@pallet.PalletImportDataHistory.weight</td>
+                            <td>@pallet.PalletImportDataHistory.volume</td>
                         </tr>
                     }
                 }
@@ -335,6 +364,7 @@
             + "<div align='left'> <span style='float:left;font-weight:bold;'>Serial to:</span> <span style='float: right'> " + $(this).attr("data-serialto") + "</span></div > </br>"
             + "<div align='left'><span style='float:left;font-weight:bold;'> Quantity: </span><span style='float: right'> " + $(this).attr("data-qty") + "</span></div ></br> "
             + "<div align='left'><span style='float:left;font-weight:bold;'> Weight: </span><span style='float: right'> " + $(this).attr("data-weight") + "</span></div > </br>"
+            + "<div align='left'><span style='float:left;font-weight:bold;'> Volume: </span><span style='float: right'> " + $(this).attr("data-volume") + "</span></div > </br>"
         $("#palletContent").empty();
         $("#palletContent").append(palletTxt)
         //console.log($(this).attr("data-serialto"))
