@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PalletLoading.Data;
 using Rotativa.AspNetCore;
+using System.Globalization;
 
 namespace PalletLoading
 {
@@ -31,6 +32,12 @@ namespace PalletLoading
             services.AddDbContext<PalletLoadingContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("PalletLoadingContext")));
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en-GB");
+                options.SupportedCultures = new List<CultureInfo> { new CultureInfo("en-GB") };
+                services.AddMvc();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

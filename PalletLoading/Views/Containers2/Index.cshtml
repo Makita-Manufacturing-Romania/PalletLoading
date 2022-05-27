@@ -1,17 +1,18 @@
-﻿@model PalletLoading.Models.PaginatedList<PalletLoading.Models.ContainerVM>
+﻿@model PalletLoading.Models.PaginatedList<PalletLoading.Models.Container>
+@inject PalletLoading.Data.PalletLoadingContext _context;
 
 @{
     ViewData["Title"] = "Container list";
 }
 <h1 style="text-align:center">Container list</h1>
 <style>
-    #searchBtn{
+    #searchBtn {
         transition: transform 0.2s ease-out;
     }
 
-    #searchBtn:active{
-        transform:scale(0.95);
-    }
+        #searchBtn:active {
+            transform: scale(0.95);
+        }
 </style>
 
 <div style="display:flex; justify-content:space-between">
@@ -25,9 +26,17 @@
     @using (Html.BeginForm("Index", "Containers2", FormMethod.Get))
     {
         <p style="display:inline-block">
-            @*@Html.TextBox("SearchString")*@
-            <input type="text" class="form-control" style="display:inline;width:10vw;min-width:100px;" id="SearchString" name="SearchString" />
+            @*@Html.TextBox("SearchString")*@<label>
+                De la: <input type="text" class="form-control" style="display:inline;width:10vw;min-width:100px;" name="datetimepickerStartDate" id="datetimepickerStartDate" />
+
+            </label>
+            <label>
+
+                Pana la: <input type="text" class="form-control" style="display:inline;width:10vw;min-width:100px;" name="datetimepickerEndDate" id="datetimepickerEndDate" />
+            </label>
+            <input type="text" class="form-control" style="display:inline;width:10vw;min-width:100px;" id="SearchString" name="SearchString" value="@ViewBag.currentSearch" />
             <input type="submit" id="searchBtn" class="" style="display:inline; border:none; background-color:#b82e00; border-radius:5px; color:white" value="Search" />
+            <input type="button" id="downloadBtn" class="" style="display:inline; border:none; background-color:#b82e00; border-radius:5px; color:white" value="Download" />
         </p>
     }
 </div>
@@ -44,63 +53,107 @@
             <th>
                 Country
             </th>
-            <th></th>
+            <th>
+                Volume (mc3)
+            </th>
+            <th style="width:150px;">Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var container in Model)
         {
-        <tr>
-            <td>
-                @if (container.Container.ContainerAT != null)
-                {
-                    var listNames = new List<String>();
-                    @foreach (var containerName in container.Container.ContainerAT)
-                    {
-                        listNames.Add(containerName.ContainerName);
-                    }
-                    var templistContainer = String.Join(", ", listNames);
-                    @:@templistContainer
-                }
-
-
-            </td>
-            <td>
-
-                @Html.DisplayFor(modelItem => container.ContainerType.Name)
-            </td>
-            <td>
-                @if (container.Container.ContainerAT != null)
-                {
-                    var listNames = new List<String>();
-                    @foreach (var containerName in container.Container.ContainerAT)
-                    {
-                        listNames.Add(containerName.Country.Name);
-                    }
-                    var templistContainer = String.Join(", ", listNames);
-                    @:@templistContainer
-                }
-            </td>
-            @if (ViewBag.UserRightLevel > 0)
-            {
-        <td>
-            <a asp-action="Details" asp-route-id="@container.Container.Id">Details</a> |
-            <a asp-action="Delete" asp-route-id="@container.Container.Id">Delete</a>
-            @if (container.Container.CmrId != null)
-            {
-                <span> | </span>
-                @*<a asp-action="GeneratePDF" asp-controller="CMR" asp-route-id="@container.Container.CmrId">CMR</a>*@
-                <a asp-action="CmrReport" asp-controller="CMR" asp-route-id="@container.Container.CmrId">CMR</a>
-            }
-        </td>
-            }
-            else
-            {
+            <tr>
                 <td>
-                    <a asp-action="Details" asp-route-id="@container.Container.Id">Details</a> 
+                    @if (container.ContainerAT != null)
+                    {
+                        var listNames = new List<String>();
+                        @foreach (var containerName in container.ContainerAT)
+                        {
+                            listNames.Add(containerName.ContainerName);
+                        }
+                        var templistContainer = String.Join(", ", listNames);
+                        @:@templistContainer
+                    }
+
+
                 </td>
-            }
-        </tr>
+                <td>
+
+                    @Html.DisplayFor(modelItem => container.Type.Name)
+                </td>
+                <td>
+                    @if (container.ContainerAT != null)
+                    {
+                        var listNames = new List<String>();
+                        @foreach (var containerName in container.ContainerAT)
+                        {
+                            listNames.Add(containerName.Country.Name);
+                        }
+                        var templistContainer = String.Join(", ", listNames);
+                        @:@templistContainer
+                    }
+                </td>
+                <td>
+                    @{
+                        decimal volumTotal = 0;
+                        var tempPID = container.Pallets.Where(c => c.PalletImportData != null && c.PalletImportData.serial_from != 0).Sum(c => c.PalletImportData.volume * c.PalletImportData.picking_qty);
+                        var tempPIDH = container.Pallets.Where(c => c.PalletImportDataHistory != null && c.PalletImportDataHistory.serial_from != 0).Sum(c => c.PalletImportDataHistory.volume * c.PalletImportDataHistory.picking_qty);
+                        var tempPIDHPC = container.Pallets.Where(c => c.PalletImportDataHistory != null && c.PalletImportDataHistory.serial_from == 0)
+                        .Join(_context.PartCenterPallets, c => c.PalletImportDataHistory.id, c => c.ImportDataHistoryId, (c, d) => new { ImportData = c, PartCenterPallets = d })
+                        .Sum(c => c.PartCenterPallets.Volume);
+                        var tempPIDPC = container.Pallets.Where(c => c.PalletImportData != null && c.PalletImportData.serial_from == 0)
+                        .Join(_context.PartCenterPallets, c => c.PalletImportData.id, c => c.ImportDataId, (c, d) => new { ImportData = c, PartCenterPallets = d })
+                        .Sum(c => c.PartCenterPallets.Volume);
+                        volumTotal = tempPID + tempPIDH + tempPIDHPC + tempPIDPC;
+                        //foreach (var tempPal in container.Pallets)
+                        //{
+
+                        //    if (tempPal.PalletImportData != null)
+                        //    {
+                        //        if (tempPal.PalletImportData.serial_from == 0)
+                        //        {
+                        //            volumTotal += _context.PartCenterPallets.Where(c => c.Container_no == tempPal.PalletImportData.container_no && c.Destination == tempPal.PalletImportData.consignee_code && c.Pallet_number == tempPal.PalletImportData.pallet_no).Select(c => c.Volume).FirstOrDefault();
+                        //        }
+                        //        else
+                        //        {
+                        //            volumTotal += (tempPal.PalletImportData.volume * tempPal.PalletImportData.picking_qty);
+                        //        }
+                        //    }
+                        //    else if (tempPal.PalletImportDataHistory != null)
+                        //    {
+                        //        if (tempPal.PalletImportDataHistory.serial_from == 0)
+                        //        {
+                        //            volumTotal += _context.PartCenterPallets.Where(c => c.Container_no == tempPal.PalletImportDataHistory.container_no && c.Destination == tempPal.PalletImportDataHistory.consignee_code && c.Pallet_number == tempPal.PalletImportDataHistory.pallet_no).Select(c => c.Volume).FirstOrDefault();
+                        //        }
+                        //        else
+                        //        {
+                        //            volumTotal += (tempPal.PalletImportDataHistory.volume * tempPal.PalletImportDataHistory.picking_qty);
+                        //        }
+                        //    }
+                        //}
+                    }
+                    @(volumTotal.ToString("N2") +"/" +container.Type.volume.ToString("N2")+" ("+ (volumTotal*100 / container.Type.volume).ToString("N2") + "%)")
+                </td>
+                @if (ViewBag.UserRightLevel > 0)
+                {
+                    <td style="width:150px;">
+                        <a asp-action="Details" asp-route-id="@container.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@container.Id">Delete</a>
+                        @if (container.CmrId != null)
+                        {
+                            <span> | </span>
+                            @*<a asp-action="GeneratePDF" asp-controller="CMR" asp-route-id="@container.Container.CmrId">CMR</a>*@
+                            <a asp-action="CmrReport" asp-controller="CMR" asp-route-id="@container.CmrId">CMR</a>
+                        }
+                    </td>
+                }
+                else
+                {
+                    <td style="width:150px;">
+                        <a asp-action="Details" asp-route-id="@container.Id">Details</a>
+                    </td>
+                }
+            </tr>
         }
     </tbody>
 </table>
@@ -112,7 +165,9 @@
 
 <a asp-action="Index"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
-   class=" @prevDisabled">
+   asp-route-datetimepickerEndDate="@(Model.PageIndex - 1)"
+   class=" @prevDisabled"
+    id = "prevBtn">
     Previous
 </a>
 
@@ -120,6 +175,82 @@
 
 <a asp-action="Index"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
-   class=" @nextDisabled">
+   class=" @nextDisabled"
+   id = "nextBtn">
     Next
 </a>
+@section Scripts {
+<link rel="stylesheet" href="~/jquery-ui-1.12.1/jquery-ui.css" />
+<script src="~/jquery-ui-1.12.1/jquery-ui.js"></script>
+<script>
+    $(document).ready(function () {
+
+            @{
+                var startdate = DateTime.ParseExact( ViewBag.currentdatetimepickerStartDate.ToString(),"dd-MM-yyyy",null);
+                var enddate = DateTime.ParseExact( ViewBag.currentdatetimepickerEndDate.ToString(),"dd-MM-yyyy",null);
+            }
+    $('#btnGoTo').click(function () {
+        var pageNum = $('#pageText').val();
+        var locationUrl ="@Url.Action("Index", "Containers2", new { pageNumber = "__pageNumber__", searchString = "__searchString__",datetimepickerStartDate = "__datetimepickerStartDate__", datetimepickerEndDate = "__datetimepickerEndDate__"  })"
+        locationUrl =   locationUrl.replace("__pageNumber__",pageNum)
+        window.location.href = locationUrl
+    })
+
+    $('#datetimepickerStartDate').datepicker({ dateFormat: 'dd-mm-yy' });
+    $('#datetimepickerEndDate').datepicker({ dateFormat: 'dd-mm-yy' });
+    var d_day = @startdate.Day  <10 ? "0" +@startdate.Day : @startdate.Day;
+    var d_month =  @startdate.Month  <10 ? "0" +@startdate.Month : @startdate.Month;
+    var d_year = @startdate.Year  <10 ? "0" +@startdate.Year : @startdate.Year;
+
+    var todayDate = d_day + "-" + d_month + "-" + d_year;
+
+    var d_day1 = @enddate.Day  <10 ? "0" +@enddate.Day : @enddate.Day;
+    var d_month1 = @enddate.Month  <10 ? "0" +@enddate.Month : @enddate.Month;
+    var d_year1 = @enddate.Year  <10 ? "0" +@enddate.Year : @enddate.Year;
+
+    var todayDate1 = d_day1 + "-" + d_month1 + "-" + d_year1;
+
+
+        console.log(d_day + "-" + d_month + "-" + d_year)
+    $("#datetimepickerStartDate").ready(function () {
+        $("#datetimepickerStartDate").val(todayDate)
+    })
+    $("#datetimepickerEndtDate").ready(function () {
+        $("#datetimepickerEndDate").val(todayDate1)
+    })
+
+        //$('#send').click(function () {
+        //    //var id = $('#userId').val(); chestia asta nu e necesara
+        //    window.location.href = '@Url.Action("List_Confirmed")' /*+ "?id=" + id*/;
+        //});
+    });
+    $("#downloadBtn").click(function(){
+       var sDate = $('#datetimepickerStartDate').val();
+        var eDate = $('#datetimepickerEndDate').val();
+        var searchString = $('#SearchString').val();
+        var locationUrl ='@Url.Action("GetExcel", "Containers2")' + "?sdate=" + sDate + "&edate=" + eDate + "&searchString=" + searchString ;
+        window.location.href = locationUrl
+
+    });
+    $("#nextBtn").click(function(){
+        var sDate = $('#datetimepickerStartDate').val();
+        var eDate = $('#datetimepickerEndDate').val();
+        var searchString = $('#SearchString').val();
+        var pageNumber= (@Model.PageIndex + 1);
+        var locationUrl ='@Url.Action("Index", "Containers2")' + "?datetimepickerStartDate=" + sDate + "&datetimepickerEndDate=" + eDate + "&searchString=" + searchString + "&pageNumber=" + pageNumber ;
+        window.location.href = locationUrl
+        return false;
+    })
+
+        $("#prevBtn").click(function(){
+        var sDate = $('#datetimepickerStartDate').val();
+        var eDate = $('#datetimepickerEndDate').val();
+        var searchString = $('#SearchString').val();
+        var pageNumber= (@Model.PageIndex - 1);
+        var locationUrl ='@Url.Action("Index", "Containers2")' + "?datetimepickerStartDate=" + sDate + "&datetimepickerEndDate=" + eDate + "&searchString=" + searchString + "&pageNumber=" + pageNumber ;
+        window.location.href = locationUrl
+        return false;
+    })
+
+</script>
+}

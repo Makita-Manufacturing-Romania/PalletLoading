@@ -18,7 +18,7 @@ namespace PalletLoading.Controllers
     public class PalletsController : MainController
     {
 
-        public PalletsController(PalletLoadingContext context):base(null,context,null)
+        public PalletsController(PalletLoadingContext context) : base(null, context, null)
         {
         }
 
@@ -45,7 +45,7 @@ namespace PalletLoading.Controllers
 
         public IActionResult AddContainer(int id)
         {
-            ViewData["CountryId"] = new SelectList(_context.Countries.Select(c=> new { Id = c.Id, Name = (c.Name + " - " + c.Abbreviation) }).OrderBy(x => x.Name), "Id", "Name");
+            ViewData["CountryId"] = new SelectList(_context.Countries.Select(c => new { Id = c.Id, Name = (c.Name + " - " + c.Abbreviation) }).OrderBy(x => x.Name), "Id", "Name");
 
             var tempContainerAt = new ContainerAT
             {
@@ -59,7 +59,7 @@ namespace PalletLoading.Controllers
             ViewData["CountryId"] = new SelectList(_context.Countries.OrderBy(x => x.Name), "Id", "Name");
             _context.Add(containerAt);
             _context.SaveChanges();
-            return RedirectToAction("CountryList",new { id = containerAt.ContainerId });
+            return RedirectToAction("CountryList", new { id = containerAt.ContainerId });
         }
 
 
@@ -97,12 +97,18 @@ namespace PalletLoading.Controllers
             TempData["containerId"] = id.ToString();
 
             var container = _context.Containers.Include(c => c.Country).First(x => x.Id == id);
-            List<Pallet> pallets = _context.Pallets.Include(c=>c.PalletImportData).Include(c=>c.PalletImportDataHistory).Where(x => x.Container2Id == container.Id).ToList();
+            List<Pallet> pallets = _context.Pallets.Include(c => c.PalletImportData).Include(c => c.PalletImportDataHistory).Where(x => x.Container2Id == container.Id).ToList();
+            List<ModelImportDataPccPallets> PccPallets = _context.Pallets.Include(c => c.PalletImportData).Include(c => c.PalletImportDataHistory).Where(x => x.Container2Id == container.Id)
+                .GroupJoin(_context.PartCenterPallets, c => c.PalletImportDataId, c => c.ImportDataId, (c, d) => new { pallet = c, PartCenterPallets = d })
+                .SelectMany(c => c.PartCenterPallets.DefaultIfEmpty(), (c, d) => new ModelImportDataPccPallets { pallet = c.pallet, PartCenterPallets = d })
+                .GroupJoin(_context.PartCenterPallets, c => c.pallet.PalletImportDataHistoryId, c => c.ImportDataHistoryId, (c, d) => new { pallet = c.pallet, PartCenterPalletsHistory = d, PartCenterPallets = c.PartCenterPallets })
+                .SelectMany(c => c.PartCenterPalletsHistory.DefaultIfEmpty(), (c, d) => new ModelImportDataPccPallets { pallet = c.pallet, PartCenterPalletsHistory = d, PartCenterPallets = c.PartCenterPallets })
+                .ToList();
             ContainerType type = _context.ContainerTypes.First(x => x.Id == container.TypeId);
             List<SwitchedPallet> switchedPallets = _context.SwitchedPallets.Where(x => x.IdContainer == container.Id).ToList();
             var pickedPallets = _context.ImportData.Where(x => x.container_no == container.Name).Count();
             ViewData["pickedPallets"] = pickedPallets;
-            List<ContainerAT> containerATs = _context.ContainerATs.Include(c=>c.Country).Where(x => x.ContainerId == container.Id).ToList();
+            List<ContainerAT> containerATs = _context.ContainerATs.Include(c => c.Country).Where(x => x.ContainerId == container.Id).ToList();
             //List<Countries> countries = containerATs.Select(c => c.Country).ToList();
             //foreach(var containerAT in containerATs)
             //{
@@ -127,7 +133,7 @@ namespace PalletLoading.Controllers
                     cmd.Connection.Close();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
             }
@@ -143,6 +149,7 @@ namespace PalletLoading.Controllers
                 Type = type,
                 SwitchedPallets = switchedPallets,
                 //Countries = countries,
+                ModelImportDataPccPallets = PccPallets,
                 ContainerAT = containerATs,
                 idplp = idplpList
             };
@@ -168,14 +175,14 @@ namespace PalletLoading.Controllers
                 cmd.Connection.Close();
             }
 
-            var listOfCountryAbv = _context.ContainerATs.Where(c=>c.ContainerId == containerId).Select(c => c.Country.Abbreviation.Trim()).ToList();
+            var listOfCountryAbv = _context.ContainerATs.Where(c => c.ContainerId == containerId).Select(c => c.Country.Abbreviation.Trim()).ToList();
 
             //var importLP = _context.ImportDataPalletsLP.Where(c => c.CustomerCode180P.Equals(country) || c.CustomerCode250P.Equals(country)).FirstOrDefault();
             List<ImportDataPalletsLP> idplpList = _context.ImportDataPalletsLP.Where(c => listOfCountryAbv.Contains(c.CustomerCode180P.Trim()) || listOfCountryAbv.Contains(c.CustomerCode250P.Trim())).ToList();
 
             if (idplpList == null)
             {
-                idplpList.Add( new ImportDataPalletsLP { CustomerCode180P = "", CustomerCode250P = "", LOADED180 = 0, LOADED250 = 0, PICKED180 = 0, PICKED250 = 0 });
+                idplpList.Add(new ImportDataPalletsLP { CustomerCode180P = "", CustomerCode250P = "", LOADED180 = 0, LOADED250 = 0, PICKED180 = 0, PICKED250 = 0 });
             }
 
             return Json(new { importLP = idplpList });
@@ -202,31 +209,83 @@ namespace PalletLoading.Controllers
 
 
             var dateContainer = _context.Containers.Any(c => c.CreatedDate == DateTime.Today && c.Id == containerId);
-            var containerAt = _context.ContainerATs.Include(c=>c.Country).Where(c => c.ContainerId == containerId).ToList();
+            var containerAt = _context.ContainerATs.Include(c => c.Country).Where(c => c.ContainerId == containerId).ToList();
 
             var listPalletsMap = _context.ImportData.Where(c => containerAt.Select(c => c.Country.Abbreviation).ToList().Contains(c.consignee_code) && containerAt.Select(c => c.ContainerName).ToList().Contains(c.container_no)).OrderBy(c => c.loading_time).ToList();
             var switches = _context.SwitchedPallets.Where(c => c.IdContainer == containerId).ToList();
-
+            decimal volumOcupat = 0.000000M;
             if (dateContainer && listPalletsMap.Count != 0)
             {
-                 
+
                 var listPalletsApp = _context.Pallets.Include(x => x.PalletImportData).Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
-                
+
                 var mvcp = new List<ModelViewCreatePallet>();
                 int i = 0;
+                decimal tempVolume = 0;
+
                 for (; i < listPalletsApp.Count && i < listPalletsMap.Count; i++)
                 {
 
-                        listPalletsApp[i].PalletImportDataId = listPalletsMap[i].id;
-                        //listPalletsMap[i].Pallet = null;
-                        var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMap = listPalletsMap[i] };
-                        mvcp.Add(tempMVID);
-                    
+                    listPalletsApp[i].PalletImportDataId = listPalletsMap[i].id;
+
+                    if (listPalletsMap[i].serial_from == 0)
+                    {
+                        if (_context.PartCenterPallets.Any(c => c.Destination == listPalletsMap[i].consignee_code  && c.Pallet_number == listPalletsMap[i].pallet_no && c.Status == false))
+                        {
+                            var tempPcPallet = _context.PartCenterPallets.Where(c => c.Destination == listPalletsMap[i].consignee_code && c.Pallet_number == listPalletsMap[i].pallet_no && c.Status == false).FirstOrDefault();
+                            tempVolume = tempPcPallet.Volume;
+                            tempPcPallet.Status = true;
+                            tempPcPallet.ImportDataId = listPalletsMap[i].id;
+                            volumOcupat = volumOcupat + tempPcPallet.Volume;
+                        }
+                        else if (_context.PartCenterPallets.Any(c => c.ImportDataId == listPalletsMap[i].id))
+                        {
+                            var tempPcPallet = _context.PartCenterPallets.Where(c => c.ImportDataId == listPalletsMap[i].id).FirstOrDefault();
+                            tempVolume = tempPcPallet.Volume;
+                            volumOcupat = volumOcupat + tempPcPallet.Volume;
+                        }
+                        else
+                        {
+                            tempVolume = 0;
+
+                        }
+                    }
+                    else
+                    {
+                        volumOcupat = volumOcupat + listPalletsMap[i].volume * listPalletsMap[i].picking_qty;
+                    }
+
+                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMap = listPalletsMap[i], VolumPcPallet =  tempVolume};
+                    mvcp.Add(tempMVID);
 
                 }
                 for (; i < listPalletsMap.Count; i++)
                 {
-                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = -1, PalletMap = listPalletsMap[i] };
+                    if (listPalletsMap[i].serial_from == 0)
+                    {
+                        if (_context.PartCenterPallets.Any(c => c.Destination == listPalletsMap[i].consignee_code  && c.Pallet_number == listPalletsMap[i].pallet_no && c.Status == false))
+                        {
+                            var tempPcPallet = _context.PartCenterPallets.Where(c => c.Destination == listPalletsMap[i].consignee_code && c.Pallet_number == listPalletsMap[i].pallet_no).FirstOrDefault();
+                            tempPcPallet.ImportDataId = listPalletsMap[i].id;
+                            tempPcPallet.Status = true;
+                            tempVolume = tempPcPallet.Volume;
+
+
+                        }
+                        else if(_context.PartCenterPallets.Any(c=>c.ImportDataId == listPalletsMap[i].id))
+                        {
+                            var tempPcPallet = _context.PartCenterPallets.Where(c => c.ImportDataId == listPalletsMap[i].id).FirstOrDefault();
+                            tempVolume = tempPcPallet.Volume;
+                            volumOcupat = volumOcupat + tempPcPallet.Volume;
+                        }
+                        else
+                        {
+                            tempVolume = 0;
+
+                        }
+                    }
+
+                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = -1, PalletMap = listPalletsMap[i], VolumPcPallet = tempVolume };
                     //listPalletsMap[i].Pallet = null;
 
                     mvcp.Add(tempMVID);
@@ -261,7 +320,7 @@ namespace PalletLoading.Controllers
                     ViewBag.motricaWeight = motricaWeight;
                 }
 
-                return Json(new { listPallets = mvcp, motrica = motricaWeight });
+                return Json(new { listPallets = mvcp, motrica = motricaWeight, volumOcupat = volumOcupat.ToString("N2") });
             }
             else
             {
@@ -275,18 +334,69 @@ namespace PalletLoading.Controllers
                     return Json(new { listPallets = mvcp });
 
                 }
+                decimal tempVolume = 0;
 
                 int i = 0;
-                for (; i < listPalletsApp.Count && i<listPalletsMap2.Count ; i++)
+                for (; i < listPalletsApp.Count && i < listPalletsMap2.Count; i++)
                 {
                     listPalletsApp[i].PalletImportDataHistoryId = listPalletsMap2[i].id;
-                    //listPalletsMap[i].Pallet = null;
-                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMapHistory = listPalletsMap2[i] };
+
+                    volumOcupat = volumOcupat + listPalletsMap2[i].volume * listPalletsMap2[i].picking_qty;
+                    if (listPalletsMap2[i].serial_from == 0)
+                    {
+                        if (_context.PartCenterPallets.Any(c => c.Destination == listPalletsMap2[i].consignee_code  && c.Pallet_number == listPalletsMap2[i].pallet_no && c.Status == false))
+                        {
+                            var tempPcPallet = _context.PartCenterPallets.Where(c => c.Destination == listPalletsMap2[i].consignee_code && c.Pallet_number == listPalletsMap2[i].pallet_no).FirstOrDefault();
+                            tempVolume = tempPcPallet.Volume;
+                            tempPcPallet.Status = true;
+                            tempPcPallet.ImportDataHistoryId = listPalletsMap2[i].id;
+                            volumOcupat = volumOcupat + tempPcPallet.Volume;
+                        }
+                        else if (_context.PartCenterPallets.Any(c => c.ImportDataHistoryId == listPalletsMap2[i].id))
+                        {
+                            var tempPcPallet = _context.PartCenterPallets.Where(c => c.ImportDataHistoryId == listPalletsMap2[i].id).FirstOrDefault();
+                            tempVolume = tempPcPallet.Volume;
+                            volumOcupat = volumOcupat + tempPcPallet.Volume;
+                        }
+                        else
+                        {
+                            tempVolume = 0;
+
+                        }
+                    }
+                    else
+                    {
+                        volumOcupat = volumOcupat + listPalletsMap2[i].volume * listPalletsMap2[i].picking_qty;
+                    }
+                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = listPalletsApp[i].OrderNo, PalletMapHistory = listPalletsMap2[i],VolumPcPallet = tempVolume };
+
                     mvcp.Add(tempMVID);
                 }
                 for (; i < listPalletsMap2.Count; i++)
                 {
-                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = -1, PalletMapHistory = listPalletsMap2[i] };
+                    if (listPalletsMap2[i].serial_from == 0)
+                    {
+                        if (_context.PartCenterPallets.Any(c => c.Destination == listPalletsMap2[i].consignee_code && c.Pallet_number == listPalletsMap2[i].pallet_no))
+                        {
+                            var tempPcPallet = _context.PartCenterPallets.Where(c => c.Destination == listPalletsMap2[i].consignee_code  && c.Pallet_number == listPalletsMap2[i].pallet_no && c.Status == false).FirstOrDefault();
+                            tempVolume = tempPcPallet.Volume;
+                            tempPcPallet.Status = true;
+                            tempPcPallet.ImportDataHistoryId = listPalletsMap2[i].id;
+                        }
+                        else if (_context.PartCenterPallets.Any(c => c.ImportDataHistoryId == listPalletsMap2[i].id))
+                        {
+                            var tempPcPallet = _context.PartCenterPallets.Where(c => c.ImportDataHistoryId == listPalletsMap2[i].id).FirstOrDefault();
+                            tempVolume = tempPcPallet.Volume;
+                            volumOcupat = volumOcupat + tempPcPallet.Volume;
+                        }
+                        else
+                        {
+                            tempVolume = 0;
+
+                        }
+                    }
+
+                    var tempMVID = new ModelViewCreatePallet { OrderNoApp = -1, PalletMapHistory = listPalletsMap2[i],VolumPcPallet=tempVolume };
                     //listPalletsMap[i].Pallet = null;
 
                     mvcp.Add(tempMVID);
@@ -299,8 +409,8 @@ namespace PalletLoading.Controllers
                     var firstPalletTemp = listPalletsApp.Where(c => c.Id == item.FirstPalletId).FirstOrDefault();
                     var secondPalletTemp = listPalletsApp.Where(c => c.Id == item.SecondPalletId).FirstOrDefault();
 
-                    var firstMapPallet = mvcp.Where(c => c.PalletMapHistory.id == firstPalletTemp.PalletImportDataHistoryId).Select(c=>c.OrderNoApp).FirstOrDefault();
-                    var secondMapPallet = mvcp.Where(c => c.PalletMapHistory.id == secondPalletTemp.PalletImportDataHistoryId).Select(c=>c.OrderNoApp).FirstOrDefault();
+                    var firstMapPallet = mvcp.Where(c => c.PalletMapHistory.id == firstPalletTemp.PalletImportDataHistoryId).Select(c => c.OrderNoApp).FirstOrDefault();
+                    var secondMapPallet = mvcp.Where(c => c.PalletMapHistory.id == secondPalletTemp.PalletImportDataHistoryId).Select(c => c.OrderNoApp).FirstOrDefault();
                     mvcp.Where(c => c.PalletMapHistory.id == firstPalletTemp.PalletImportDataHistoryId).ToList().ForEach(c => c.OrderNoApp = secondMapPallet);
                     mvcp.Where(c => c.PalletMapHistory.id == secondPalletTemp.PalletImportDataHistoryId).ToList().ForEach(c => c.OrderNoApp = firstMapPallet);
                     var auxId = firstPalletTemp.PalletImportDataHistoryId;
@@ -327,7 +437,7 @@ namespace PalletLoading.Controllers
                     ViewBag.motricaWeight = motricaWeight;
                 }
 
-                return Json(new { listPallets = mvcp, motrica = motricaWeight });
+                return Json(new { listPallets = mvcp, motrica = motricaWeight, volumOcupat = volumOcupat.ToString("N2") });
 
             }
         }
@@ -396,7 +506,7 @@ namespace PalletLoading.Controllers
             _context.ContainerATs.Add(containerAT);
             _context.SaveChanges();
 
-            return RedirectToAction("Create", new { id = containerId});
+            return RedirectToAction("Create", new { id = containerId });
         }
 
         public ActionResult SwitchPallets(string idContainer, string draggedPallet, string droppedPallet)
@@ -449,7 +559,7 @@ namespace PalletLoading.Controllers
             }
             _context.SaveChanges();
             _context.Update(dragged);
-            _context.Update(dropped) ;
+            _context.Update(dropped);
             return RedirectToAction("GetTable", new { id = containerId });
         }
 
@@ -469,7 +579,7 @@ namespace PalletLoading.Controllers
             pallet.Name = palletName;
             pallet.DataInsert = DateTime.Now;
             pallet.CreatedBy = User.Identity.Name.Replace("MMRMAKITA\\", "");
-            pallet.OrderNo = _context.Pallets.Where(x => x.Container2Id == container.Id).Count() + 1;
+            pallet.OrderNo = _context.Pallets.Where(x => x.Container2Id == container.Id).OrderByDescending(c=>c.Id).Select(c=>c.OrderNo).FirstOrDefault() + 1;
             //if (_context.Pallets.Any(x => x.OrderNo == 1) && _context.Pallets.Any(x => x.Container2Id == container.Id))
             //{
 
@@ -498,7 +608,7 @@ namespace PalletLoading.Controllers
                 Pallets = pallets2
             };
 
-            return View( viewModel);
+            return View(viewModel);
         }
 
         public ActionResult RemovePallet(string idContainer, string palletId)
@@ -561,7 +671,7 @@ namespace PalletLoading.Controllers
             Container container = _context.Containers.First(x => x.Id == containerId);
             List<Pallet> pallets = new();
             var colToRemove = container.NoOfColumns - 1;
-            if(_context.Pallets.Any(x => x.Column == colToRemove && x.Container2Id == containerId) )
+            if (_context.Pallets.Any(x => x.Column == colToRemove && x.Container2Id == containerId))
             {
                 pallets = _context.Pallets.Where(x => x.Column == colToRemove && x.Container2Id == containerId).ToList();
                 _context.RemoveRange(pallets);

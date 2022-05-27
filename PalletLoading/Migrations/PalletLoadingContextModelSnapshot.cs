@@ -16,7 +16,7 @@ namespace PalletLoading.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.6")
+                .HasAnnotation("ProductVersion", "5.0.16")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("PalletLoading.Models.CmrData", b =>
@@ -68,9 +68,6 @@ namespace PalletLoading.Migrations
                     b.Property<int?>("CmrId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ContainerTypeId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("CountryId")
                         .HasColumnType("int");
 
@@ -86,19 +83,14 @@ namespace PalletLoading.Migrations
                     b.Property<int>("NoOfRows")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PalletId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TypeId")
+                    b.Property<int>("TypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ContainerTypeId");
-
                     b.HasIndex("CountryId");
 
-                    b.HasIndex("PalletId");
+                    b.HasIndex("TypeId");
 
                     b.ToTable("Containers");
                 });
@@ -521,6 +513,8 @@ namespace PalletLoading.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Container2Id");
+
                     b.HasIndex("PalletImportDataHistoryId");
 
                     b.HasIndex("PalletImportDataId");
@@ -552,6 +546,60 @@ namespace PalletLoading.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PalletTypes");
+                });
+
+            modelBuilder.Entity("PalletLoading.Models.PartCenterPallets", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Destination")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<decimal>("Height")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("ImportDataHistoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ImportDataId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("InputTimestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Length")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Mass")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Pallet_number")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Shift")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Volume")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Width")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImportDataHistoryId");
+
+                    b.HasIndex("ImportDataId");
+
+                    b.ToTable("PartCenterPallets");
                 });
 
             modelBuilder.Entity("PalletLoading.Models.SwitchedPallet", b =>
@@ -627,23 +675,19 @@ namespace PalletLoading.Migrations
 
             modelBuilder.Entity("PalletLoading.Models.Container", b =>
                 {
-                    b.HasOne("PalletLoading.Models.ContainerType", "ContainerType")
-                        .WithMany("Containers")
-                        .HasForeignKey("ContainerTypeId");
-
                     b.HasOne("PalletLoading.Models.Countries", "Country")
                         .WithMany("Containers")
                         .HasForeignKey("CountryId");
 
-                    b.HasOne("PalletLoading.Models.Pallet", "Pallet")
+                    b.HasOne("PalletLoading.Models.ContainerType", "Type")
                         .WithMany("Containers")
-                        .HasForeignKey("PalletId");
-
-                    b.Navigation("ContainerType");
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Country");
 
-                    b.Navigation("Pallet");
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("PalletLoading.Models.ContainerAT", b =>
@@ -667,6 +711,12 @@ namespace PalletLoading.Migrations
 
             modelBuilder.Entity("PalletLoading.Models.Pallet", b =>
                 {
+                    b.HasOne("PalletLoading.Models.Container", "Container2")
+                        .WithMany("Pallets")
+                        .HasForeignKey("Container2Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PalletLoading.Models.ImportDataHistory", "PalletImportDataHistory")
                         .WithMany()
                         .HasForeignKey("PalletImportDataHistoryId");
@@ -679,6 +729,8 @@ namespace PalletLoading.Migrations
                         .WithMany("Pallets")
                         .HasForeignKey("PalletTypeId");
 
+                    b.Navigation("Container2");
+
                     b.Navigation("PalletImportData");
 
                     b.Navigation("PalletImportDataHistory");
@@ -686,10 +738,25 @@ namespace PalletLoading.Migrations
                     b.Navigation("PalletType");
                 });
 
+            modelBuilder.Entity("PalletLoading.Models.PartCenterPallets", b =>
+                {
+                    b.HasOne("PalletLoading.Models.ImportDataHistory", "ImportDataHistory")
+                        .WithMany()
+                        .HasForeignKey("ImportDataHistoryId");
+
+                    b.HasOne("PalletLoading.Models.ImportData", "ImportData")
+                        .WithMany()
+                        .HasForeignKey("ImportDataId");
+
+                    b.Navigation("ImportData");
+
+                    b.Navigation("ImportDataHistory");
+                });
+
             modelBuilder.Entity("PalletLoading.Models.User", b =>
                 {
                     b.HasOne("PalletLoading.Models.UserRight", "UserRight")
-                        .WithMany()
+                        .WithMany("Userslist")
                         .HasForeignKey("UserRightId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -700,6 +767,8 @@ namespace PalletLoading.Migrations
             modelBuilder.Entity("PalletLoading.Models.Container", b =>
                 {
                     b.Navigation("ContainerAT");
+
+                    b.Navigation("Pallets");
                 });
 
             modelBuilder.Entity("PalletLoading.Models.ContainerType", b =>
@@ -712,14 +781,14 @@ namespace PalletLoading.Migrations
                     b.Navigation("Containers");
                 });
 
-            modelBuilder.Entity("PalletLoading.Models.Pallet", b =>
-                {
-                    b.Navigation("Containers");
-                });
-
             modelBuilder.Entity("PalletLoading.Models.PalletType", b =>
                 {
                     b.Navigation("Pallets");
+                });
+
+            modelBuilder.Entity("PalletLoading.Models.UserRight", b =>
+                {
+                    b.Navigation("Userslist");
                 });
 #pragma warning restore 612, 618
         }

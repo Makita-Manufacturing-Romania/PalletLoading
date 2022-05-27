@@ -12,6 +12,7 @@ namespace PalletLoading.ViewModels
         public Countries Country { get; set; }
         public ContainerType Type { get; set; }
         public List<Pallet> Pallets { get; set; }
+        public List<ModelImportDataPccPallets> ModelImportDataPccPallets { get; set; }
         public Pallet Pallet { get; set; }
     }
 }

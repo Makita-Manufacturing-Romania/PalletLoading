@@ -12,5 +12,6 @@ namespace PalletLoading.Models
         public int Id{ get; set; }
         public string Right{ get; set; }
         public int RightLevel{ get; set; }
+        public ICollection<User> Userslist { get; set; }
     }
 }

@@ -1,0 +1,122 @@
+﻿@model PalletLoading.Models.PartCenterPallets
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>PartCenterPallets</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" id="editForm">
+            <input type="hidden" asp-for="InputTimestamp" value="@Model.InputTimestamp" />
+            <input type="hidden" asp-for="Status" value="@Model.InputTimestamp" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+@*            <div class="form-group">
+                <label asp-for="Container_no" class="control-label"></label>
+                <input asp-for="Container_no" class="form-control" style="pointer-events: none;background-color:#E9ECEF" />
+                <span asp-validation-for="Container_no" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="Destination" class="control-label"></label>
+                <input asp-for="Destination" class="form-control" style="pointer-events: none;background-color:#E9ECEF" />
+                <span asp-validation-for="Destination" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pallet_number" class="control-label"></label>
+                <input asp-for="Pallet_number" class="form-control" style="pointer-events: none;background-color:#E9ECEF" value="@Model.Pallet_number.ToString("G29")" />
+                <span asp-validation-for="Pallet_number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Length" class="control-label">Lungimea (metrii)</label>
+                <input asp-for="Length" class="form-control" />
+                <span asp-validation-for="Length" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Width" class="control-label">Latimea (metrii)</label>
+                <input asp-for="Width" class="form-control" />
+                <span asp-validation-for="Width" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Height" class="control-label">Inaltimea (metrii)</label>
+                <input asp-for="Height" class="form-control" />
+                <span asp-validation-for="Height" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Mass" class="control-label">Mass (kg)</label>
+                <input asp-for="Mass" class="form-control" />
+                <span asp-validation-for="Mass" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Shift" class="control-label"></label>
+                <input asp-for="Shift" class="form-control"value="@Model.Shift.ToString("G29")" />
+                <span asp-validation-for="Shift" class="text-danger"  ></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" id="editBtn" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/sweetalert/sweetalert.min.js"></script>
+    <script>
+        $('#editBtn').click(function (e) {
+            //if ($("#Container_no").val() == null || $("#Container_no").val() == "") {
+            //    swal("Eroare", "Completati numarul containerului!", "error")
+            //    $("#Container_no").focus();
+            //    return false;
+            //}
+            if ($("#Destination").val() == null || $("#Destination").val() == "") {
+                swal("Eroare", "Completati destinatia!", "error")
+                $("#Destination").focus();
+                return false;
+            }
+            if ($("#Pallet_number").val() == null || $("#Pallet_number").val() == "") {
+                swal("Eroare", "Completati numarul paletului!", "error")
+                $("#Pallet_number").focus();
+                return false;
+            }
+            if ($("#Length").val() == null || $("#Length").val() == "") {
+                swal("Eroare", "Completati lungimea paletului!", "error")
+                $("#Length").focus();
+                return false;
+            }
+            if ($("#Width").val() == null || $("#Width").val() == "") {
+                swal("Eroare", "Completati latimea paletului!", "error")
+                $("#Width").focus();
+                return false;
+            }
+            if ($("#Height").val() == null || $("#Height").val() == "") {
+                swal("Eroare", "Completati inaltimea paletului!", "error")
+                $("#Height").focus();
+                return false;
+            }
+            if ($("#Mass").val() == null || $("#Mass").val() == "") {
+                swal("Eroare", "Completati greutatea paletului!", "error")
+                $("#Mass").focus();
+                return false;
+            }
+            if ($("#Shift").val() == null || $("#Shift").val() == "") {
+                swal("Eroare", "Completati schimbul!", "error")
+                $("#Shift").focus();
+                return false;
+            }
+            //var tempContainer = $("#Container_no").val();
+            //var tempDestionation = $("#Destination").val();
+            //var tempPalletNo = $("#Pallet_number").val();
+            //$("#editForm").submit();
+
+            //return false;
+        });
+    </script>
+}

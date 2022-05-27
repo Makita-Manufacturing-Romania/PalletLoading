@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj": {}
+    "C:\\Users\\r.tanase\\Source\\Repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj": {}
   },
   "projects": {
-    "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj": {
+    "C:\\Users\\r.tanase\\Source\\Repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
+        "projectUniqueName": "C:\\Users\\r.tanase\\Source\\Repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
         "projectName": "PalletLoading",
-        "projectPath": "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
-        "packagesPath": "C:\\Users\\r.cioroba\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\r.cioroba\\source\\repos\\PalletLoading\\PalletLoading\\obj\\",
+        "projectPath": "C:\\Users\\r.tanase\\Source\\Repos\\PalletLoading\\PalletLoading\\PalletLoading.csproj",
+        "packagesPath": "C:\\Users\\r.tanase\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\r.tanase\\Source\\Repos\\PalletLoading\\PalletLoading\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\r.cioroba\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\r.tanase\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -43,9 +40,13 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "EPPlus.Core": {
+              "target": "Package",
+              "version": "[1.5.4, )"
+            },
             "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": {
               "target": "Package",
-              "version": "[5.0.7, )"
+              "version": "[5.0.16, )"
             },
             "Microsoft.AspNetCore.Razor.Runtime": {
               "target": "Package",
@@ -53,17 +54,17 @@
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[5.0.6, )"
+              "version": "[5.0.16, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[5.0.6, )"
+              "version": "[5.0.16, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[5.0.6, )"
+              "version": "[5.0.16, )"
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
@@ -71,7 +72,7 @@
             },
             "Rotativa.AspNetCore": {
               "target": "Package",
-              "version": "[1.1.1, )"
+              "version": "[1.2.0, )"
             }
           },
           "imports": [
@@ -92,7 +93,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }

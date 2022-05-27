@@ -11,10 +11,11 @@ namespace PalletLoading.Models
         public int Id { get; set; }
         [Display(Name = "Pallet")]
         public string Name { get; set; }
-        public virtual ICollection<Container> Containers { get; set; }
         public int? TypeId { get; set; }
         public virtual PalletType PalletType { get; set; }
         public int Container2Id { get; set; }
+        public virtual Container Container2 { get; set; }
+
         public int OrderNo { get; set; }
         public int? Row  { get; set; }
         public int? Column { get; set; }

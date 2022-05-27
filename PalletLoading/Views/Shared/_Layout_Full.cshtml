@@ -12,10 +12,11 @@
 <body>
     <style>
         @@media print {
-          .hidden-print {
-            display: none !important;
-          }
+            .hidden-print {
+                display: none !important;
+            }
         }
+
         #containerImg {
             /*transition: transform 0.5ms linear;*/
         }
@@ -44,10 +45,25 @@
             }
         }
 
+                #pcPal:hover {
+            animation-name: scaleSettingsPcPal;
+            animation-duration: 0.2s;
+            animation-fill-mode: forwards;
+        }
+
+        @@keyframes scaleSettingsPcPal {
+
+
+            100% {
+                transform: scale(1.1);
+                /*text-decoration:underline;*/
+            }
+        }
+
         #settingsImg {
             /*transition: transform 0.5ms linear;*/
             /*            animation-name: rotateContainer;
-            animation-duration: 0.7s;*/
+                    animation-duration: 0.7s;*/
         }
 
             #settingsImg:hover {
@@ -79,7 +95,7 @@
 
                 @*<a href="~/Home/Index"><img src="~/Images/download.png" class="navbar-brand" style="width:100px; height:50px"></a>*@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation"  style="position:absolute; right:0; top:10px;">
+                        aria-expanded="false" aria-label="Toggle navigation" style="position:absolute; right:0; top:10px;">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -105,22 +121,24 @@
                                     </li>
                                     <li>
                                         <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Countries" asp-action="Index"><b>Countries</b></a>
-
                                     </li>
                                     <li>
                                         <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Users" asp-action="Index"><b>Users</b></a>
-
                                     </li>
                                 </ul>
                             </li>
                         }
+                                            <li>
+                        <a class="nav-link text-dark" style="color:black; margin-left:15px;" id="pcPal" asp-area="" asp-controller="PartCenterPallets" asp-action="Index"><b> PC pallets</b></a>
+                    </li>
                     </ul>
+
                     @{
                         var nume = @User.Identity.Name.Split('.').Last();
                         string altceva = nume;
                         altceva = char.ToUpper(nume[0]) + nume.Substring(1);
                     }
-                    <p class="nav navbar-text">Hello, @ViewBag.FullName!</p>
+                    <p class="nav navbar-text text-dark">Hello, @ViewBag.FullName!</p>
 
                 </div>
             </div>

@@ -160,19 +160,13 @@
     var containerId = Model.Container.Id;
     var containerVolume = Model.Type.volume;
     decimal completedVolume = 0.000000M;
-    var anyPallets = Model.Pallets.Any(c => c.PalletImportData != null);
-    var anyPalletsHistory = Model.Pallets.Any(c => c.PalletImportDataHistory != null);
+    var tempSumPcPalletVolume = Model.ModelImportDataPccPallets.Where(c => c.PartCenterPallets != null).Sum(c => c.PartCenterPallets.Volume);
+    var tempSum = Model.ModelImportDataPccPallets.Where(c => c.pallet.PalletImportData != null).Sum(c => c.pallet.PalletImportData.volume * c.pallet.PalletImportData.picking_qty);
+    var tempSumPcPalletVolumeHistory = Model.ModelImportDataPccPallets.Where(c => c.PartCenterPalletsHistory != null).Sum(c => c.PartCenterPalletsHistory.Volume);
+    var tempSumHistory = Model.ModelImportDataPccPallets.Where(c => c.pallet.PalletImportDataHistory != null  ).Sum(c => c.pallet.PalletImportDataHistory.volume * c.pallet.PalletImportDataHistory.picking_qty);
+    completedVolume = tempSumPcPalletVolume + tempSumPcPalletVolumeHistory + tempSumHistory + tempSum;
 
-    if (anyPallets)
-    {
-        completedVolume = Model.Pallets.Sum(c => c.PalletImportData.volume);
-    }
-    else
-    {
-        completedVolume = Model.Pallets.Sum(c => c.PalletImportDataHistory.volume);
-    }
-
-        string countryName = "default";
+    string countryName = "default";
     if (Model.Container.Country != null)
         countryName = Model.Container.Country.Abbreviation;
 
@@ -223,7 +217,7 @@
         </h5>
         <a class="btn btn-info" asp-action="CountryList" asp-controller="Pallets" asp-route-id="@Model.Container.Id" style="margin-bottom:15px;" />Edit clients & containers </a>
         <h5> <span style="font-weight:bold; letter-spacing:1.5px;">Picked pallets:</span> @ViewData["pickedPallets"]</h5>
-        <h5> <span style="font-weight:bold; letter-spacing:1.5px;">Volume:</span> @completedVolume / @containerVolume</h5>
+        <h5> <span style="font-weight:bold; letter-spacing:1.5px;">Volume:</span> <span id="volumOcupat">@(completedVolume.ToString("N2"))(m3) / @(containerVolume.ToString("N2"))(m3) (@((@completedVolume*100/@containerVolume).ToString("N2"))%) </span> </h5>
 
     </div>
 
@@ -300,29 +294,29 @@ else
 }
 
 @*@if(Model.Pallets.Any(x => x.Column <= 3))
-{
+    {
     var pallets = Model.Pallets.Where(x => x.Column <= 3).ToList();
     decimal palletsTotalMotrica = 0;
 
     var firstPallet = pallets.First();
 
     if (firstPallet.PalletImportData != null)
-        palletsTotalMotrica = pallets.Sum(x => x.PalletImportData.weight);
+    palletsTotalMotrica = pallets.Sum(x => x.PalletImportData.weight);
     else
-        palletsTotalMotrica = pallets.Sum(x => x.PalletImportDataHistory.weight);
-    <h5>Motrica: @palletsTotalMotrica kg</h5>    
-}*@
+    palletsTotalMotrica = pallets.Sum(x => x.PalletImportDataHistory.weight);
+    <h5>Motrica: @palletsTotalMotrica kg</h5>
+    }*@
 
-@*@{ 
+@*@{
     var motricaWeight = ViewBag.motricaWeight;
 
     if(motricaWeight != null)
-    { 
-        <h5>@motricaWeight</h5>
+    {
+    <h5>@motricaWeight</h5>
     }
-}*@
+    }*@
 
-<h5 >Motrica: <span id="motrica">0</span> kg</h5>
+<h5>Motrica: <span id="motrica">0</span> kg</h5>
 
 
 <input type="hidden" value="@Model.Container.Id" id="container" />
@@ -509,38 +503,68 @@ else
 <div id="tableSection">
     <table class='table' style='margin-top:25px;'>
         <tr><th>Order no</th><th>Container</th><th>Sales part</th><th>Pallet no</th><th>Serial from</th><th>Serial to</th><th>Quantity</th><th>Weight</th><th>Volume</th></tr>
-        @foreach (var pallet in Model.Pallets.OrderBy(c => c.OrderNo))
+        @foreach (var pallet in Model.ModelImportDataPccPallets.OrderBy(c => c.pallet.OrderNo))
         {
-            if (pallet.PalletImportData != null)
+            if (pallet.pallet.PalletImportData != null)
             {
                 <tr>
-                    <td>@pallet.OrderNo</td>
-                    <td>@pallet.PalletImportData.consignee_code - @pallet.PalletImportData.container_no </td>
+                    <td>@pallet.pallet.OrderNo</td>
+                    <td>@pallet.pallet.PalletImportData.consignee_code - @pallet.pallet.PalletImportData.container_no </td>
 
-                    <td>@pallet.PalletImportData.salse_part</td>
-                    <td>@((int)pallet.PalletImportData.pallet_no)</td>
-                    <td>@((int)pallet.PalletImportData.serial_from)</td>
-                    <td>@((int)pallet.PalletImportData.serial_to)</td>
+                    <td>@pallet.pallet.PalletImportData.salse_part</td>
+                    <td>@((int)pallet.pallet.PalletImportData.pallet_no)</td>
+                    <td>@((int)pallet.pallet.PalletImportData.serial_from)</td>
+                    <td>@((int)pallet.pallet.PalletImportData.serial_to)</td>
 
-                    <td>@pallet.PalletImportData.picking_qty</td>
-                    <td>@pallet.PalletImportData.weight</td>
-                    <td>@pallet.PalletImportData.volume</td>
+                    <td>@pallet.pallet.PalletImportData.picking_qty</td>
+                    <td>@pallet.pallet.PalletImportData.weight</td>
+                    @if (@pallet.pallet.PalletImportData.serial_from == 0)
+                    {
+                        @if (pallet.PartCenterPallets != null)
+                        {
+                            <td>@pallet.PartCenterPallets.Volume (m3)</td>
+                        }
+                        else
+                        {
+                            <td>0 (m3)</td>
+                        }
+                    }
+                    else
+                    {
+                        <td>@((pallet.pallet.PalletImportData.volume * pallet.pallet.PalletImportData.picking_qty).ToString("N2")) (m3)</td>
+
+                    }
                 </tr>
             }
-            else if (pallet.PalletImportDataHistory != null)
+            else if (pallet.pallet.PalletImportDataHistory != null)
             {
                 <tr>
-                    <td>@pallet.OrderNo</td>
-                    <td>@pallet.PalletImportDataHistory.consignee_code - @pallet.PalletImportDataHistory.container_no </td>
+                    <td>@pallet.pallet.OrderNo</td>
+                    <td>@pallet.pallet.PalletImportDataHistory.consignee_code - @pallet.pallet.PalletImportDataHistory.container_no </td>
 
-                    <td>@pallet.PalletImportDataHistory.salse_part</td>
-                    <td>@((int)pallet.PalletImportDataHistory.pallet_no)</td>
-                    <td>@((int)pallet.PalletImportDataHistory.serial_from)</td>
-                    <td>@((int)pallet.PalletImportDataHistory.serial_to)</td>
+                    <td>@pallet.pallet.PalletImportDataHistory.salse_part</td>
+                    <td>@((int)pallet.pallet.PalletImportDataHistory.pallet_no)</td>
+                    <td>@((int)pallet.pallet.PalletImportDataHistory.serial_from)</td>
+                    <td>@((int)pallet.pallet.PalletImportDataHistory.serial_to)</td>
 
-                    <td>@pallet.PalletImportDataHistory.picking_qty</td>
-                    <td>@pallet.PalletImportDataHistory.weight</td>
-                    <td>@pallet.PalletImportDataHistory.volume</td>
+                    <td>@pallet.pallet.PalletImportDataHistory.picking_qty</td>
+                    <td>@pallet.pallet.PalletImportDataHistory.weight</td>
+                    @if (@pallet.pallet.PalletImportDataHistory.serial_from == 0)
+                    {
+                        @if (pallet.PartCenterPalletsHistory != null)
+                        {
+                            <td>@pallet.PartCenterPalletsHistory.Volume.ToString("N2") (m3)</td>
+                        }
+                        else
+                        {
+                            <td>0 (m3)</td>
+                        }
+                    }
+                    else
+                    {
+                        <td>@((pallet.pallet.PalletImportDataHistory.volume * pallet.pallet.PalletImportDataHistory.picking_qty).ToString("N2")) (m3)</td>
+
+                    }
                 </tr>
             }
         }
@@ -601,7 +625,7 @@ else
 
 
         @*var path = '@Url.Action("SwitchPallets")' + "?idContainer=" + idContainer + "&draggedPallet=" + draggedPallet + "&droppedPallet=" + droppedPallet;
-            window.location.href = path;*@
+                                window.location.href = path;*@
 
         $.ajax({
             url: "/Pallets/SwitchPallets",
@@ -627,7 +651,7 @@ else
      $(document).on('click', "#newRow",function () {
         var idContainer = $('#container').val();
         @*var path = '@Url.Action("AddRow")' + "?idContainer=" + idContainer;
-            window.location.href = path;*@
+                                window.location.href = path;*@
 
 
         $.ajax({
@@ -705,18 +729,23 @@ else
             contentType: "application/json;charset=UTF-8",
             dataType: "json",
             success: function (data) {
-
                 var noPallets = data.listPallets.length;
-                var tableTxt = "<table class='table' style='margin-top:25px;'><tr><th>Order no</th><th>Container</th><th>Sales part</th><th>Pallet no</th><th>Serial from</th><th>Serial to</th><th>Quantity</th><th>Weight</th></tr>"
+                var tableTxt = "<table class='table' style='margin-top:25px;'><tr><th>Order no</th><th>Container</th><th>Sales part</th><th>Pallet no</th><th>Serial from</th><th>Serial to</th><th>Quantity</th><th>Weight</th><th>Volume</th></tr>"
                 var motrica = data.motrica;
-
+                var volumOcupat = data.volumOcupat;
                 $("#motrica").text(motrica+"");
+                $("#volumOcupat").text(volumOcupat +"(m3) / "+ @containerVolume.ToString("N2") +"(m3) (" + volumOcupat*@containerVolume.ToString("N2")/100 +"%)");
 
                 for (var i = 0; i < noPallets; i++) {
                     var orderNo = data.listPallets[i].orderNoApp;
                     if (orderNo == -1) orderNo = "N/A"
                     /*console.log(data.listPallets[i].palletMapHistory)*/
                     if (data.listPallets[i].palletMapHistory == null) {
+                       var test =  data.listPallets[i].palletMap.volume * data.listPallets[i].palletMap.picking_qty
+                            if(data.listPallets[i].palletMap.serial_from == 0){
+                                test =  data.listPallets[i].volumPcPallet;
+                            }
+
                         tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
                             + "<td>" + data.listPallets[i].palletMap.consignee_code + " - " + data.listPallets[i].palletMap.container_no + "</td>"
                             + "<td>" + data.listPallets[i].palletMap.salse_part + "</td>"
@@ -724,17 +753,23 @@ else
                             + "<td>" + data.listPallets[i].palletMap.serial_from + "</td>"
                             + "<td>" + data.listPallets[i].palletMap.serial_to + "</td>"
                             + "<td>" + data.listPallets[i].palletMap.picking_qty + "</td>"
-                            + "<td>" + data.listPallets[i].palletMap.weight + "</td></tr>"
+                            + "<td>" + data.listPallets[i].palletMap.weight + "</td>"
+                            + "<td>" + Number.parseFloat(test).toFixed(2).replace(/\.0+$/,'')+ " (m3)</td></tr>"
                     } else {
-
-                        tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
-                            + "<td>" + data.listPallets[i].palletMapHistory.consignee_code + " - " + data.listPallets[i].palletMapHistory.container_no + "</td>"
-                            + "<td>" + data.listPallets[i].palletMapHistory.salse_part + "</td>"
-                            + "<td>" + data.listPallets[i].palletMapHistory.pallet_no + "</td>"
-                            + "<td>" + data.listPallets[i].palletMapHistory.serial_from + "</td>"
-                            + "<td>" + data.listPallets[i].palletMapHistory.serial_to + "</td>"
-                            + "<td>" + data.listPallets[i].palletMapHistory.picking_qty + "</td>"
-                            + "<td>" + data.listPallets[i].palletMapHistory.weight + "</td></tr>"
+                       var test = data.listPallets[i].palletMapHistory.volume *data.listPallets[i].palletMapHistory.picking_qty
+                            console.log(data.listPallets[i])
+                            if(data.listPallets[i].palletMapHistory.serial_from == 0){
+                                test =  data.listPallets[i].volumPcPallet;
+                            }
+                       tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
+                           + "<td>" + data.listPallets[i].palletMapHistory.consignee_code + " - " + data.listPallets[i].palletMapHistory.container_no + "</td>"
+                           + "<td>" + data.listPallets[i].palletMapHistory.salse_part + "</td>"
+                           + "<td>" + data.listPallets[i].palletMapHistory.pallet_no + "</td>"
+                           + "<td>" + data.listPallets[i].palletMapHistory.serial_from + "</td>"
+                           + "<td>" + data.listPallets[i].palletMapHistory.serial_to + "</td>"
+                           + "<td>" + data.listPallets[i].palletMapHistory.picking_qty + "</td>"
+                           + "<td>" + data.listPallets[i].palletMapHistory.weight + "</td>"
+                           + "<td>" + Number.parseFloat(test).toFixed(2).replace(/\.0+$/,'')+ " (m3)</td></tr>"
                     }
 
                 }
@@ -756,7 +791,7 @@ else
     $(document).on('click', "#removeRow", function () {
         var idContainer = $('#container').val();
         @*var path = '@Url.Action("RemoveRow")' + "?idContainer=" + idContainer;
-            window.location.href = path;*@
+                                window.location.href = path;*@
 
         $.ajax({
             url: "/Pallets/RemoveRow",
@@ -851,7 +886,7 @@ else
         var palletId = this.id;
         var idContainer = $('#container').val();
         @*var path = '@Url.Action("RemovePallet")' + "?idContainer=" + idContainer + "&palletId=" + palletId;
-            window.location.href = path;*@
+                                window.location.href = path;*@
 
         $.ajax({
             url: "/Pallets/RemovePallet",

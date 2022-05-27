@@ -43,7 +43,7 @@
         #settingsImg {
             /*transition: transform 0.5ms linear;*/
             /*            animation-name: rotateContainer;
-            animation-duration: 0.7s;*/
+                            animation-duration: 0.7s;*/
         }
 
             #settingsImg:hover {
@@ -52,6 +52,21 @@
                 animation-duration: 0.2s;
                 animation-fill-mode: forwards;
             }
+
+        #pcPal:hover {
+            animation-name: scaleSettingsPcPal;
+            animation-duration: 0.2s;
+            animation-fill-mode: forwards;
+        }
+
+        @@keyframes scaleSettingsPcPal {
+
+
+            100% {
+                transform: scale(1.1);
+                /*text-decoration:underline;*/
+            }
+        }
 
         @@keyframes scaleSettings {
             0% {
@@ -69,70 +84,74 @@
     </style>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                <img src="~/MakitaLogo.png" style="height: 46px; margin-left: 20px; top: 0 !important; margin-top: -8px !important;">
-                <div class="container" >
+            <img src="~/MakitaLogo.png" style="height: 46px; margin-left: 20px; top: 0 !important; margin-top: -8px !important;">
+            <div class="container">
 
-                    @* <a href="~/Home/Index"><img src="~/Images/download.png" class="navbar-brand" style="width:100px; height:50px"></a>*@
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation" style="position:absolute; right:0; top:10px;">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                @* <a href="~/Home/Index"><img src="~/Images/download.png" class="navbar-brand" style="width:100px; height:50px"></a>*@
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation" style="position:absolute; right:0; top:10px;">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
 
-                    <div class="navbar-collapse collapse">
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="uk-active">
-                                <a href='@Url.Action("Index","Containers2")'>
-                                    <img alt="Check" id="containerImg" src="@Url.Content("~/Images/cargo-container-crane.png")" style="width: 45px;height: 45px;  padding:" 10, 10, 10, 10";filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="uk-active">
+                            <a href='@Url.Action("Index","Containers2")'>
+                                <img alt="Check" id="containerImg" src="@Url.Content("~/Images/cargo-container-crane.png")" style="width: 45px;height: 45px;  padding:" 10, 10, 10, 10";filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
+                            </a>
+                        </li>
+
+                        @if (ViewBag.UserRightLevel > 1)
+                        {
+                            <li class="dropdown" style="padding-left:25px">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="text-decoration:none;">
+                                    <img alt="Check" id="settingsImg" src="@Url.Content("~/Images/cogs-solid.svg")" style="width: 45px; height: 45px; filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
                                 </a>
+
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown dropdown-submenu">
+                                    <li>
+                                        <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="ContainerTypes" asp-action="Index"><b>Container type</b></a>
+                                    </li>
+                                    <li>
+                                        <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="PalletTypes" asp-action="Index"><b>Pallet type</b></a>
+                                    </li>
+
+                                    <li>
+                                        <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Countries" asp-action="Index"><b>Countries</b></a>
+
+                                    </li>
+                                    <li>
+                                        <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Users" asp-action="Index"><b>Users</b></a>
+
+                                    </li>
+                                </ul>
                             </li>
-
-                            @if (ViewBag.UserRightLevel > 1)
-                            {
-                                <li class="dropdown" style="padding-left:25px">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="text-decoration:none;">
-                                        <img alt="Check" id="settingsImg" src="@Url.Content("~/Images/cogs-solid.svg")" style="width: 45px; height: 45px; filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
-                                    </a>
-
-                                    <ul class="dropdown-menu">
-                                        <li class="dropdown dropdown-submenu">
-                                        <li>
-                                            <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="ContainerTypes" asp-action="Index"><b>Container type</b></a>
-                                        </li>
-                                        <li>
-                                            <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="PalletTypes" asp-action="Index"><b>Pallet type</b></a>
-                                        </li>
-                                        <li>
-                                            <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Countries" asp-action="Index"><b>Countries</b></a>
-
-                                        </li>
-                                        <li>
-                                            <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Users" asp-action="Index"><b>Users</b></a>
-
-                                        </li>
-                                    </ul>
-                                </li>
-                            }
-
-                            @*                        <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="ContainerTypes" asp-action="Index">Container Types</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="PalletTypes" asp-action="Index">Pallet Types</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Countries" asp-action="Index">Countries</a>
-                                </li>*@
-                        </ul>
-                        @{
-                            var nume = @User.Identity.Name.Split('.').Last();
-                            string altceva = nume;
-                            altceva = char.ToUpper(nume[0]) + nume.Substring(1);
                         }
-                        <p class="nav navbar-text">Hello, @ViewBag.FullName!</p>
+                        <li>
+                            <a class="nav-link text-dark" id="pcPal" style="color:black; margin-left:15px;" asp-area="" asp-controller="PartCenterPallets" asp-action="Index"><b> PC pallets</b></a>
+                        </li>
 
-                    </div>
+                        @*                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="ContainerTypes" asp-action="Index">Container Types</a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="PalletTypes" asp-action="Index">Pallet Types</a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Countries" asp-action="Index">Countries</a>
+                            </li>*@
+                    </ul>
+                    @{
+                        var nume = @User.Identity.Name.Split('.').Last();
+                        string altceva = nume;
+                        altceva = char.ToUpper(nume[0]) + nume.Substring(1);
+                    }
+                    <p class="nav navbar-text text-dark">Hello, @ViewBag.FullName!</p>
+
                 </div>
+            </div>
             </div>
         </nav>
     </header>

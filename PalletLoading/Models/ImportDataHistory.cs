@@ -35,7 +35,7 @@ namespace PalletLoading.Models
         public string IPPLNO { get; set; }
         [Column(TypeName = "decimal(18, 6)")]
         public decimal volume { get; set; }
-
+        //public ICollection<PartCenterPallets> PCPallet { get; set; }
         //public virtual Pallet? Pallet { get; set; }
     }
 }

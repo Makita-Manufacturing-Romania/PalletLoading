@@ -15,12 +15,10 @@ namespace PalletLoading.Data
         }
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
-        //    modelBuilder
-        //        .Entity<ImportData>(
-        //            eb =>
-        //            {
-        //                eb.HasNoKey();
-        //            });
+        //    modelBuilder.Entity<ImportData>().HasOne(c => c.PCPallet).WithOne(c => c.ImportDataId);
+        //    //modelBuilder.Entity<Pallet>().HasMany(c => c.PCPallet).WithOne()
+        //    //   .HasForeignKey(con => con.ImportDataId);
+        //    base.OnModelCreating(modelBuilder);
         //}
         public DbSet<PalletLoading.Models.Pallet> Pallets { get; set; }
 
@@ -37,5 +35,6 @@ namespace PalletLoading.Data
         public DbSet<PalletLoading.Models.UserRight> UserRight { get; set; }
         public DbSet<PalletLoading.Models.CountryDescriptionImportData> CountryDescriptionImportData { get; set; }
         public DbSet<PalletLoading.Models.CmrData> CmrDatas { get; set; }
+        public DbSet<PalletLoading.Models.PartCenterPallets> PartCenterPallets { get; set; }
     }
 }

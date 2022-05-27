@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\PalletLoading",
+    "\\PalletLoading\\Controllers",
+    "\\PalletLoading\\Models"
   ],
   "SelectedNode": "\\PalletLoading.sln",
   "PreviewInSolutionExplorer": false

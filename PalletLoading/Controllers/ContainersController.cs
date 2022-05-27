@@ -20,7 +20,7 @@ namespace PalletLoading.Controllers
         // GET: Containers
         public async Task<IActionResult> Index()
         {
-            var palletLoadingContext = _context.Containers.Include(c => c.Pallet);
+            var palletLoadingContext = _context.Containers;
             return View(await palletLoadingContext.ToListAsync());
         }
 
@@ -33,7 +33,6 @@ namespace PalletLoading.Controllers
             }
 
             var container = await _context.Containers
-                .Include(c => c.Pallet)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (container == null)
             {
@@ -86,7 +85,6 @@ namespace PalletLoading.Controllers
                 _context.Containers.Add(container);
                 await _context.SaveChangesAsync();
             }
-            ViewData["PalletId"] = new SelectList(_context.Pallets, "Name", "Name", container.Pallet);
             return View(container);
         }
 
@@ -103,7 +101,6 @@ namespace PalletLoading.Controllers
             {
                 return NotFound();
             }
-            ViewData["PalletId"] = new SelectList(_context.Pallets, "Id", "Id", container.PalletId);
             return View(container);
         }
 
@@ -139,7 +136,6 @@ namespace PalletLoading.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PalletId"] = new SelectList(_context.Pallets, "Id", "Id", container.PalletId);
             return View(container);
         }
 
@@ -152,7 +148,6 @@ namespace PalletLoading.Controllers
             }
 
             var container = await _context.Containers
-                .Include(c => c.Pallet)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (container == null)
             {

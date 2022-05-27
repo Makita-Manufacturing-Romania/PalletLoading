@@ -12,13 +12,11 @@ namespace PalletLoading.Models
         public int Id { get; set; }
         [Display(Name ="Client name")]
         public string Name { get; set; }
-        [Display(Name="Pallet name")]
-        public virtual Pallet Pallet { get; set; }
-        public int? PalletId { get; set; }
+
         [Display(Name="Container type")]
-        public virtual ContainerType ContainerType { get; set; }
+        public virtual ContainerType Type { get; set; }
         [Display(Name ="Type")]
-        public int? TypeId { get; set; }
+        public int TypeId { get; set; }
         public virtual Countries Country { get; set; }
         [Display(Name="Country")]
         public int? CountryId { get; set; }
@@ -26,6 +24,7 @@ namespace PalletLoading.Models
         public int NoOfColumns { get; set; }
         public DateTime CreatedDate { get; set; }
         public virtual List<ContainerAT> ContainerAT { get; set; }
+        public virtual List<Pallet> Pallets { get; set; }
 
         public static implicit operator List<object>(Container v)
         {

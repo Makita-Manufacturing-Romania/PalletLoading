@@ -10,5 +10,6 @@ namespace PalletLoading.Models
         public ImportData PalletMap{ get; set; }
         public ImportDataHistory PalletMapHistory{ get; set; }
         public int OrderNoApp { get; set; }
+        public decimal VolumPcPallet { get; set; }
     }
 }
