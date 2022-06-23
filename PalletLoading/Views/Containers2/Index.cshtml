@@ -171,7 +171,9 @@
     Previous
 </a>
 
-@Model.PageIndex / @Model.TotalPages
+<input style="width:50px;" type="text" id="pageText" value="@Model.PageIndex" />  / @Model.TotalPages
+<input type="button" value="Go to" id="btnGoTo" />
+
 
 <a asp-action="Index"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
@@ -189,12 +191,7 @@
                 var startdate = DateTime.ParseExact( ViewBag.currentdatetimepickerStartDate.ToString(),"dd-MM-yyyy",null);
                 var enddate = DateTime.ParseExact( ViewBag.currentdatetimepickerEndDate.ToString(),"dd-MM-yyyy",null);
             }
-    $('#btnGoTo').click(function () {
-        var pageNum = $('#pageText').val();
-        var locationUrl ="@Url.Action("Index", "Containers2", new { pageNumber = "__pageNumber__", searchString = "__searchString__",datetimepickerStartDate = "__datetimepickerStartDate__", datetimepickerEndDate = "__datetimepickerEndDate__"  })"
-        locationUrl =   locationUrl.replace("__pageNumber__",pageNum)
-        window.location.href = locationUrl
-    })
+
 
     $('#datetimepickerStartDate').datepicker({ dateFormat: 'dd-mm-yy' });
     $('#datetimepickerEndDate').datepicker({ dateFormat: 'dd-mm-yy' });
@@ -242,7 +239,7 @@
         return false;
     })
 
-        $("#prevBtn").click(function(){
+    $("#prevBtn").click(function(){
         var sDate = $('#datetimepickerStartDate').val();
         var eDate = $('#datetimepickerEndDate').val();
         var searchString = $('#SearchString').val();
@@ -251,6 +248,16 @@
         window.location.href = locationUrl
         return false;
     })
+
+    $('#btnGoTo').click(function () {
+        var pageNum = $('#pageText').val();
+        var sDate = '@ViewBag.currentdatetimepickerStartDate'
+        var eDate = '@ViewBag.currentdatetimepickerEndDate'
+        var searchString = $('#SearchString').val();
+        var locationUrl ='@Url.Action("Index", "Containers2")' + "?datetimepickerStartDate=" + sDate + "&datetimepickerEndDate=" + eDate + "&searchString=" + searchString + "&pageNumber=" + pageNum ;
+        window.location.href = locationUrl
+        return false;
+     })
 
 </script>
 }

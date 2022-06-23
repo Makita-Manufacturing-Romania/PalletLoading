@@ -6,10 +6,10 @@
 
 <h1>Index</h1>
 
-        <p>
-            <a asp-action="Create" class=" btn btn-success btn-sm  "> Add new pallet <i class="fas fa-plus" width="10px" heigth="10px" style="background-color:white; text-align:center; font-size:13px; padding:3px; border-radius:50%; color:forestgreen;"></i></a>
-        </p>
-    
+<p>
+    <a asp-action="Create" class=" btn btn-success btn-sm  "> Add new pallet <i class="fas fa-plus" width="10px" heigth="10px" style="background-color:white; text-align:center; font-size:13px; padding:3px; border-radius:50%; color:forestgreen;"></i></a>
+</p>
+
 
 <div style="display:flex; justify-content:space-between">
 
@@ -25,8 +25,8 @@
 
                 Pana la: <input type="text" class="form-control" style="display:inline;width:10vw;min-width:100px;" name="datetimepickerEndDate" id="datetimepickerEndDate" />
             </label>
-            <input type="text" class="form-control" style="display:inline;width:10vw;min-width:100px;" id="SearchString" name="SearchString"  value="@ViewBag.currentSearch" />
-            <input type="submit" id="searchBtn" class="" style="display:inline; border:none; background-color:#b82e00; border-radius:5px; color:white" value="Search"  />
+            <input type="text" class="form-control" style="display:inline;width:10vw;min-width:100px;" id="SearchString" name="SearchString" value="@ViewBag.currentSearch" />
+            <input type="submit" id="searchBtn" class="" style="display:inline; border:none; background-color:#b82e00; border-radius:5px; color:white" value="Search" />
             <input type="button" id="downloadBtn" class="" style="display:inline; border:none; background-color:#b82e00; border-radius:5px; color:white" value="Download" />
         </p>
     }
@@ -35,9 +35,9 @@
 <table class="table">
     <thead>
         <tr>
-@*            <th>
+            @*            <th>
                 @Html.DisplayNameFor(model => model.Container_no)
-            </th>*@
+                </th>*@
             <th>
                 Destination
             </th>
@@ -63,42 +63,44 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-@*            <td>
-                @Html.DisplayFor(modelItem => item.Container_no)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.Destination)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Pallet_number)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mass)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Shift)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Volume)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.InputTimestamp)
-            </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @*            <td>
+                    @Html.DisplayFor(modelItem => item.Container_no)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Destination)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Pallet_number)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mass)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Shift)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Volume)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InputTimestamp)
+                </td>
 
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
-                @if (item.Status == false){
-                @:|
-               <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                }
-            </td>
-        </tr>
-}
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    @if (item.Status == false)
+                    {
+                        @:|
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 
@@ -111,18 +113,19 @@
 <a asp-action="Index"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    class=" @prevDisabled"
-    id="prevBtn"
->
+   id="prevBtn">
     Previous
 </a>
 
-@Model.PageIndex / @Model.TotalPages
+
+
+<input style="width:50px;" type="text" id="pageText" value="@Model.PageIndex" />  / @Model.TotalPages
+<input type="button" value="Go to" id="btnGoTo" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)" asp-route-datetimepickerStartDate="@ViewBag.currentdatetimepickerStartDate" asp-route-datetimepickerEndDate="@ViewBag.currentdatetimepickerEndDate" />
 
 <a asp-action="Index"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    class=" @nextDisabled"
-    id="nextBtn"
-                >
+   id="nextBtn">
     Next
 </a>
 
@@ -131,73 +134,78 @@
 <link rel="stylesheet" href="~/jquery-ui-1.12.1/jquery-ui.css" />
 <script src="~/jquery-ui-1.12.1/jquery-ui.js"></script>
 <script>
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-            @{
-                var startdate = DateTime.ParseExact( ViewBag.currentdatetimepickerStartDate.ToString(),"dd-MM-yyyy",null);
-                var enddate = DateTime.ParseExact( ViewBag.currentdatetimepickerEndDate.ToString(),"dd-MM-yyyy",null);
-            }
-    $('#btnGoTo').click(function () {
-        var pageNum = $('#pageText').val();
-        var locationUrl ="@Url.Action("Index", "PartCenterPallets", new { pageNumber = "__pageNumber__" })"
-        locationUrl =   locationUrl.replace("__pageNumber__",pageNum)
-        window.location.href = locationUrl
-    })
+                @{
+                    var startdate = DateTime.ParseExact( ViewBag.currentdatetimepickerStartDate.ToString(),"dd-MM-yyyy",null);
+                    var enddate = DateTime.ParseExact( ViewBag.currentdatetimepickerEndDate.ToString(),"dd-MM-yyyy",null);
+                }
+        $('#btnGoTo').click(function () {
+            var pageNum = $('#pageText').val();
+            var sDate = $('#datetimepickerStartDate').val();
+            var eDate = $('#datetimepickerEndDate').val();
+            var searchString = $('#SearchString').val();
+            var locationUrl ='@Url.Action("Index", "PartCenterPallets")' + "?datetimepickerStartDate=" + sDate + "&datetimepickerEndDate=" + eDate + "&searchString=" + searchString + "&pageNumber=" + pageNum ;
+            locationUrl =   locationUrl.replace("__pageNumber__",pageNum)
+            window.location.href = locationUrl
+    return false;
 
-    $('#datetimepickerStartDate').datepicker({ dateFormat: 'dd-mm-yy' });
-    $('#datetimepickerEndDate').datepicker({ dateFormat: 'dd-mm-yy' });
-    var d_day = @startdate.Day  <10 ? "0" +@startdate.Day : @startdate.Day;
-    var d_month =  @startdate.Month  <10 ? "0" +@startdate.Month : @startdate.Month;
-    var d_year = @startdate.Year  <10 ? "0" +@startdate.Year : @startdate.Year;
+        })
 
-    var todayDate = d_day + "-" + d_month + "-" + d_year;
+        $('#datetimepickerStartDate').datepicker({ dateFormat: 'dd-mm-yy' });
+        $('#datetimepickerEndDate').datepicker({ dateFormat: 'dd-mm-yy' });
+        var d_day = @startdate.Day  <10 ? "0" +@startdate.Day : @startdate.Day;
+        var d_month =  @startdate.Month  <10 ? "0" +@startdate.Month : @startdate.Month;
+        var d_year = @startdate.Year  <10 ? "0" +@startdate.Year : @startdate.Year;
 
-    var d_day1 = @enddate.Day  <10 ? "0" +@enddate.Day : @enddate.Day;
-    var d_month1 = @enddate.Month  <10 ? "0" +@enddate.Month : @enddate.Month;
-    var d_year1 = @enddate.Year  <10 ? "0" +@enddate.Year : @enddate.Year;
+        var todayDate = d_day + "-" + d_month + "-" + d_year;
 
-    var todayDate1 = d_day1 + "-" + d_month1 + "-" + d_year1;
+        var d_day1 = @enddate.Day  <10 ? "0" +@enddate.Day : @enddate.Day;
+        var d_month1 = @enddate.Month  <10 ? "0" +@enddate.Month : @enddate.Month;
+        var d_year1 = @enddate.Year  <10 ? "0" +@enddate.Year : @enddate.Year;
+
+        var todayDate1 = d_day1 + "-" + d_month1 + "-" + d_year1;
 
 
-        console.log(d_day + "-" + d_month + "-" + d_year)
-    $("#datetimepickerStartDate").ready(function () {
-        $("#datetimepickerStartDate").val(todayDate)
-    })
-    $("#datetimepickerEndtDate").ready(function () {
-        $("#datetimepickerEndDate").val(todayDate1)
-    })
+            console.log(d_day + "-" + d_month + "-" + d_year)
+        $("#datetimepickerStartDate").ready(function () {
+            $("#datetimepickerStartDate").val(todayDate)
+        })
+        $("#datetimepickerEndtDate").ready(function () {
+            $("#datetimepickerEndDate").val(todayDate1)
+        })
 
-        //$('#send').click(function () {
-        //    //var id = $('#userId').val(); chestia asta nu e necesara
-        //    window.location.href = '@Url.Action("List_Confirmed")' /*+ "?id=" + id*/;
-        //});
-    });
-    $("#downloadBtn").click(function(){
-       var sDate = $('#datetimepickerStartDate').val();
-        var eDate = $('#datetimepickerEndDate').val();
-        var searchString = $('#SearchString').val();
-        var locationUrl ='@Url.Action("GetExcel", "PartCenterPallets")' + "?sdate=" + sDate + "&edate=" + eDate + "&searchString=" + searchString ;
-        window.location.href = locationUrl
+            //$('#send').click(function () {
+            //    //var id = $('#userId').val(); chestia asta nu e necesara
+            //    window.location.href = '@Url.Action("List_Confirmed")' /*+ "?id=" + id*/;
+            //});
+        });
+        $("#downloadBtn").click(function(){
+           var sDate = $('#datetimepickerStartDate').val();
+            var eDate = $('#datetimepickerEndDate').val();
+            var searchString = $('#SearchString').val();
+            var locationUrl ='@Url.Action("GetExcel", "PartCenterPallets")' + "?sdate=" + sDate + "&edate=" + eDate + "&searchString=" + searchString ;
+            window.location.href = locationUrl
 
-    });
-        $("#nextBtn").click(function(){
-        var sDate = $('#datetimepickerStartDate').val();
-        var eDate = $('#datetimepickerEndDate').val();
-        var searchString = $('#SearchString').val();
-        var pageNumber= (@Model.PageIndex + 1);
-        var locationUrl ='@Url.Action("Index", "PartCenterPallets")' + "?datetimepickerStartDate=" + sDate + "&datetimepickerEndDate=" + eDate + "&searchString=" + searchString + "&pageNumber=" + pageNumber ;
-        window.location.href = locationUrl
-        return false;
-    })
+        });
+            $("#nextBtn").click(function(){
+            var sDate = $('#datetimepickerStartDate').val();
+            var eDate = $('#datetimepickerEndDate').val();
+            var searchString = $('#SearchString').val();
+            var pageNumber= (@Model.PageIndex + 1);
+            var locationUrl ='@Url.Action("Index", "PartCenterPallets")' + "?datetimepickerStartDate=" + sDate + "&datetimepickerEndDate=" + eDate + "&searchString=" + searchString + "&pageNumber=" + pageNumber ;
+            window.location.href = locationUrl
+            return false;
+        })
 
-        $("#prevBtn").click(function(){
-        var sDate = $('#datetimepickerStartDate').val();
-        var eDate = $('#datetimepickerEndDate').val();
-        var searchString = $('#SearchString').val();
-        var pageNumber= (@Model.PageIndex - 1);
-        var locationUrl ='@Url.Action("Index", "PartCenterPallets")' + "?datetimepickerStartDate=" + sDate + "&datetimepickerEndDate=" + eDate + "&searchString=" + searchString + "&pageNumber=" + pageNumber ;
-        window.location.href = locationUrl
-        return false;
-    })
+            $("#prevBtn").click(function(){
+            var sDate = $('#datetimepickerStartDate').val();
+            var eDate = $('#datetimepickerEndDate').val();
+            var searchString = $('#SearchString').val();
+            var pageNumber= (@Model.PageIndex - 1);
+            var locationUrl ='@Url.Action("Index", "PartCenterPallets")' + "?datetimepickerStartDate=" + sDate + "&datetimepickerEndDate=" + eDate + "&searchString=" + searchString + "&pageNumber=" + pageNumber ;
+            window.location.href = locationUrl
+            return false;
+        })
 </script>
 }

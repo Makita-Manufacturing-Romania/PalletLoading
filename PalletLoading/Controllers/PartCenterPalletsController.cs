@@ -68,7 +68,7 @@ namespace PalletLoading.Controllers
                 palletLoadingContext = palletLoadingContext.Where(x => x.Destination.Contains(searchString) || x.Pallet_number.ToString().Contains(searchString)).ToList();
             }
 
-            int pageSize = 15;
+            int pageSize = 10;
             if (pageNumber < 1)
                 pageNumber = 1;
             else if (pageNumber > ((palletLoadingContext.Count() - 1) / pageSize) + 1)
@@ -93,7 +93,7 @@ namespace PalletLoading.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 searchString = searchString.ToUpper();
-                palletLoadingContext = palletLoadingContext.Where(x => x.Destination.Contains(searchString) || x.Pallet_number.ToString().Contains(searchString)).ToList();
+                palletLoadingContext = palletLoadingContext.Where(x => (x.Destination.Contains(searchString) || x.Pallet_number.ToString().Contains(searchString) ) && x.Status == false).ToList();
             }
 
             var stream = new System.IO.MemoryStream();
@@ -126,6 +126,7 @@ namespace PalletLoading.Controllers
                     worksheet.Cells[c, 5].Value = palletLoadingContext[c - 7].Shift;
                     worksheet.Cells[c, 6].Value = palletLoadingContext[c - 7].Volume;
                     worksheet.Cells[c, 7].Value = palletLoadingContext[c - 7].InputTimestamp;
+                    worksheet.Cells[c, 7].Style.Numberformat.Format = "dd/MM/yyyy HH:mm";
 
                 }
                 package.Save();

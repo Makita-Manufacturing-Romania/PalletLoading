@@ -87,6 +87,22 @@
         }
     });
 
+    $('#Shift').keypress(function(e) {
+        if (e.which == '13') {
+            e.preventDefault();
+        }
+    });
+    $(document).keypress(function(e) {
+        if (e.which == '13') {
+            e.preventDefault();
+        }
+    });
+    $('#saveBtn').keypress(function(e) {
+        if (e.which == '13') {
+            e.preventDefault();
+        }
+    });
+
     $('#saveBtn').click(function (e) {
         //if ($("#Container_no").val() == null || $("#Container_no").val() == "") {
         //    swal("Eroare", "Completati numarul containerului!", "error")
