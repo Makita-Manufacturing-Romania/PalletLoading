@@ -10769,7 +10769,8 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\r.tanase\\.nuget\\packages\\": {}
+    "C:\\Users\\r.tanase\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
@@ -10780,9 +10781,13 @@
       "packagesPath": "C:\\Users\\r.tanase\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\r.tanase\\Source\\Repos\\PalletLoading\\PalletLoading\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
+      ],
       "configFilePaths": [
         "C:\\Users\\r.tanase\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"

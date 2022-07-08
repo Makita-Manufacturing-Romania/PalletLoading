@@ -109,7 +109,7 @@ namespace PalletLoading.Controllers
                 worksheet.Cells[6, 2].Value = "Destination";
                 worksheet.Cells[6, 3].Value = "Pallet number";
                 worksheet.Cells[6, 4].Value = "Mass (kg)";
-                worksheet.Cells[6, 5].Value = "Shift";
+                worksheet.Cells[6, 5].Value = "Loading date";
                 worksheet.Cells[6, 6].Value = "Volume";
                 worksheet.Cells[6, 7].Value = "Input date";
 
@@ -123,7 +123,9 @@ namespace PalletLoading.Controllers
                     worksheet.Cells[c, 2].Value = palletLoadingContext[c - 7].Destination;
                     worksheet.Cells[c, 3].Value = palletLoadingContext[c - 7].Pallet_number;
                     worksheet.Cells[c, 4].Value = palletLoadingContext[c - 7].Mass;
-                    worksheet.Cells[c, 5].Value = palletLoadingContext[c - 7].Shift;
+                    worksheet.Cells[c, 5].Value = palletLoadingContext[c - 7].LoadDate;
+                    worksheet.Cells[c, 5].Style.Numberformat.Format = "dd/MM/yyyy HH:mm";
+
                     worksheet.Cells[c, 6].Value = palletLoadingContext[c - 7].Volume;
                     worksheet.Cells[c, 7].Value = palletLoadingContext[c - 7].InputTimestamp;
                     worksheet.Cells[c, 7].Style.Numberformat.Format = "dd/MM/yyyy HH:mm";
@@ -158,9 +160,25 @@ namespace PalletLoading.Controllers
             return View(partCenterPallets);
         }
 
+        public IActionResult PrintView(int id)
+        {
+            var pcPallet = _context.PartCenterPallets.FirstOrDefault(p => p.Id == id);
+
+            return View(pcPallet);
+        }
+
+        public IActionResult PrintViewCreate(string palletNo, string country, decimal length, string mass, decimal theight, string width)
+        {
+            var pcPallet = new PartCenterPallets { Destination = country, Height = theight, Length = length, Mass = Decimal.Parse(mass), Pallet_number = Decimal.Parse(palletNo) ,Width = Decimal.Parse(width)};
+
+            return View(pcPallet);
+        }
+
         // GET: PartCenterPallets/Create
         public IActionResult Create()
         {
+            var cultureGB = new CultureInfo("en-GB");
+            ViewBag.currentdatetimepickerStartDate = DateTime.Now.ToString("dd-MM-yyyy");
             ViewData["ImportDataId"] = new SelectList(_context.ImportData, "id", "id");
             ViewData["ImportDataHistoryId"] = new SelectList(_context.ImportData, "id", "id");
             return View();
@@ -171,7 +189,7 @@ namespace PalletLoading.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Container_no,Destination,Pallet_number,Length,Width,Height,Mass,Shift,Status,Volume,InputTimestamp,ImportDataId,ImportDataHistoryId")] PartCenterPallets partCenterPallets)
+        public async Task<IActionResult> Create([Bind("Id,Container_no,Destination,Pallet_number,Length,Width,Height,Mass,Status,Volume,InputTimestamp,ImportDataId,ImportDataHistoryId")] PartCenterPallets partCenterPallets,string loadDate)
         {
             if (ModelState.IsValid)
             {
@@ -186,7 +204,11 @@ namespace PalletLoading.Controllers
                 //    partCenterPallets.ImportDataHistoryId = tempImportData.id;
                 //    partCenterPallets.ImportDataId = null;
                 //}
+                var cultureGB = new CultureInfo("en-GB");
+
+                var startDateTemp = DateTime.ParseExact(loadDate, "dd-MM-yyyy", cultureGB);
                 partCenterPallets.Destination = partCenterPallets.Destination.ToUpper();
+                partCenterPallets.LoadDate = startDateTemp;
                 partCenterPallets.InputTimestamp = DateTime.Now;
                 partCenterPallets.Status = false;
                 partCenterPallets.Volume = partCenterPallets.Length * partCenterPallets.Height * partCenterPallets.Width;
@@ -222,7 +244,7 @@ namespace PalletLoading.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Container_no,Destination,Pallet_number,Length,Width,Height,Mass,Shift,Status,Volume,InputTimestamp")] PartCenterPallets partCenterPallets)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Container_no,Destination,Pallet_number,Length,Width,Height,Mass,LoadDate,Status,Volume,InputTimestamp")] PartCenterPallets partCenterPallets, string loadDate)
         {
             if (id != partCenterPallets.Id)
             {
@@ -242,6 +264,10 @@ namespace PalletLoading.Controllers
             //    partCenterPallets.ImportDataHistoryId = tempImportData.id;
             //    partCenterPallets.ImportData = null;
             //}
+            var cultureGB = new CultureInfo("en-GB");
+
+            var startDateTemp = DateTime.ParseExact(loadDate, "dd-MM-yyyy", cultureGB);
+            partCenterPallets.LoadDate = startDateTemp;
             partCenterPallets.Volume = partCenterPallets.Length * partCenterPallets.Height * partCenterPallets.Width;
 
             _context.Update(partCenterPallets);
@@ -266,7 +292,7 @@ namespace PalletLoading.Controllers
         }
 
         // GET: PartCenterPallets/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, int pageNumber)
         {
             if (id == null)
             {
@@ -281,19 +307,19 @@ namespace PalletLoading.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.PageNumber = pageNumber;
             return View(partCenterPallets);
         }
 
         // POST: PartCenterPallets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, int pageNumber)
         {
             var partCenterPallets = await _context.PartCenterPallets.FindAsync(id);
             _context.PartCenterPallets.Remove(partCenterPallets);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new {pageNumber = pageNumber });
         }
 
         private bool PartCenterPalletsExists(int id)

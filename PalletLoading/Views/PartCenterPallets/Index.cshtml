@@ -48,7 +48,7 @@
                 Mass (kg)
             </th>
             <th>
-                Shift
+                Data incarcare
             </th>
             <th>
                 Loaded
@@ -79,7 +79,7 @@
                     @Html.DisplayFor(modelItem => item.Mass)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Shift)
+                     @item.LoadDate.ToString("dd-MM-yyyy")
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
@@ -88,7 +88,7 @@
                     @Html.DisplayFor(modelItem => item.Volume)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.InputTimestamp)
+                    @item.InputTimestamp.ToString("dd-MM-yyyy")
                 </td>
 
                 <td>
@@ -96,8 +96,9 @@
                     @if (item.Status == false)
                     {
                         @:|
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" asp-route-pageNumber="@Model.PageIndex">Delete</a>
                     }
+                   | <a href="#" class="printBtn" id="@item.Id" target="">Print</a>
                 </td>
             </tr>
         }
@@ -180,6 +181,14 @@
             //    window.location.href = '@Url.Action("List_Confirmed")' /*+ "?id=" + id*/;
             //});
         });
+
+        $('.printBtn').click(function(){
+            var id = $(this).prop("id");
+
+          window.open( '@Url.Action("PrintView", "PartCenterPallets")' + "?id=" + id ,'Print', "width=480, height=720");
+          return false;
+        });
+
         $("#downloadBtn").click(function(){
            var sDate = $('#datetimepickerStartDate').val();
             var eDate = $('#datetimepickerEndDate').val();

@@ -2,7 +2,8 @@
   "runtimeOptions": {
     "additionalProbingPaths": [
       "C:\\Users\\r.tanase\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\r.tanase\\.nuget\\packages"
+      "C:\\Users\\r.tanase\\.nuget\\packages",
+      "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet"
     ]
   }
 }

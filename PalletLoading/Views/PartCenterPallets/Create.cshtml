@@ -48,9 +48,9 @@
                 <span asp-validation-for="Mass" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Shift" class="control-label"></label>
-                <input asp-for="Shift" type="number" class="form-control" />
-                <span asp-validation-for="Shift" class="text-danger"></span>
+                <label asp-for="LoadDate" class="control-label ">Data incarcare</label>
+                <input asp-for="LoadDate" name="loadDate" type="text" class="form-control" id="datetimepickerStartDate" />
+                <span asp-validation-for="LoadDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" id="saveBtn" />
@@ -66,125 +66,147 @@
 @section Scripts {
     @{
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
-}
-<script src="~/lib/sweetalert/sweetalert.min.js"></script>
-<script>
-    $( document ).ready(function() {
-        $('#Destination').focus();
-});
-    $('#Destination').keyup(function(){
-
-        if($('#Destination').val().length > 2){
-           $("#Pallet_number").focus()
-
-        }
-    });
-        $('#Pallet_number').keyup(function(){
-
-        if($('#Pallet_number').val().length > 3){
-           $("#Length").focus()
-
-        }
-    });
-
-    $('#Shift').keypress(function(e) {
-        if (e.which == '13') {
-            e.preventDefault();
-        }
-    });
-    $(document).keypress(function(e) {
-        if (e.which == '13') {
-            e.preventDefault();
-        }
-    });
-    $('#saveBtn').keypress(function(e) {
-        if (e.which == '13') {
-            e.preventDefault();
-        }
-    });
-
-    $('#saveBtn').click(function (e) {
-        //if ($("#Container_no").val() == null || $("#Container_no").val() == "") {
-        //    swal("Eroare", "Completati numarul containerului!", "error")
-        //    $("#Container_no").focus();
-        //    return false;
-        //}
-        if ($("#Destination").val() == null || $("#Destination").val() == "") {
-            swal("Eroare", "Completati destinatia!", "error")
-            $("#Destination").focus();
-            return false;
-        }
-        if ($("#Pallet_number").val() == null || $("#Pallet_number").val() == "") {
-            swal("Eroare", "Completati numarul paletului!", "error")
-            $("#Pallet_number").focus();
-            return false;
-        }
-        if ($("#Length").val() == null || $("#Length").val() == "") {
-            swal("Eroare", "Completati lungimea paletului!", "error")
-            $("#Length").focus();
-            return false;
-        }
-        if ($("#Width").val() == null || $("#Width").val() == "") {
-            swal("Eroare", "Completati latimea paletului!", "error")
-            $("#Width").focus();
-            return false;
-        }
-        if ($("#Height").val() == null || $("#Height").val() == "") {
-            swal("Eroare", "Completati inaltimea paletului!", "error")
-            $("#Height").focus();
-            return false;
-        }
-        if ($("#Mass").val() == null || $("#Mass").val() == "") {
-            swal("Eroare", "Completati greutatea paletului!", "error")
-            $("#Mass").focus();
-            return false;
-        }
-        if ($("#Shift").val() == null || $("#Shift").val() == "") {
-            swal("Eroare", "Completati schimbul!", "error")
-            $("#Shift").focus();
-            return false;
-        }
-        var tempContainer = $("#Container_no").val();
-        var tempDestionation = $("#Destination").val();
-        var tempPalletNo = $("#Pallet_number").val();
-
-        var tempLength = $("#Length").val();
-        var tempWidth = $("#Width").val();
-        var tempHeight = $("#Height").val();
-        var tempMass = $("#Mass").val();
-        var tempShift = $("#Shift").val();
-
-        $.ajax({
-            url: "/PartCenterPallets/CheckPCPallet",
-
-            data: {
-                container: tempContainer, destination: tempDestionation, palletNo: tempPalletNo
-            },
-
-            cache: false,
-            success: function (data) {
-                if (data.res == 'false') {
-                    swal("Eroare", "Paletul este deja adaugat!", "error")
-
-                } else if (data.res == 'notfound') {
-                    swal("Eroare", "Palet eronat!", "error")
-
+    }
+    <script src="~/lib/sweetalert/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="~/jquery-ui-1.12.1/jquery-ui.css" />
+    <script src="~/jquery-ui-1.12.1/jquery-ui.js"></script>
+    <script>
+        $( document ).ready(function() {
+            $('#Destination').focus();
+                @{
+                    var startdate = DateTime.ParseExact( ViewBag.currentdatetimepickerStartDate.ToString(),"dd-MM-yyyy",null);
                 }
-                else if (data.res == 'true') {
-                    @*var path = '@Url.Action("Create")' + "?Container_no=" + tempContainer + "&Destination=" + tempDestionation + "&Pallet_number=" + tempPalletNo
-                            + "&Length=" + tempLength + "&Width=" + tempWidth + "&Height=" + tempHeight + "&Mass=" + tempMass + "&Shift=" + tempShift;
-                        alert(path)
-                         window.location.href = path;*@
-                    $("#createPCPalletForm").submit();
-                }
-            },
-            error: function (data) {
-                console.log(data);
+
+        $('#datetimepickerStartDate').datepicker({ dateFormat: 'dd-mm-yy' });
+        var d_day = @startdate.Day  <10 ? "0" +@startdate.Day : @startdate.Day;
+        var d_month =  @startdate.Month  <10 ? "0" +@startdate.Month : @startdate.Month;
+        var d_year = @startdate.Year  <10 ? "0" +@startdate.Year : @startdate.Year;
+
+        var todayDate = d_day + "-" + d_month + "-" + d_year;
+        $("#datetimepickerStartDate").ready(function () {
+            $("#datetimepickerStartDate").val(todayDate)
+        })
+    });
+        $('#Destination').keyup(function(){
+
+            if($('#Destination').val().length > 2){
+               $("#Pallet_number").focus()
+
             }
         });
-        return false;
-    });
+            $('#Pallet_number').keyup(function(){
 
-</script>
+            if($('#Pallet_number').val().length > 3){
+               $("#Length").focus()
+
+            }
+        });
+
+        $('#datetimepickerStartDate').keypress(function(e) {
+            if (e.which == '13') {
+                e.preventDefault();
+            }
+        });
+        $(document).keypress(function(e) {
+            if (e.which == '13') {
+                e.preventDefault();
+            }
+        });
+        $('#saveBtn').keypress(function(e) {
+            if (e.which == '13') {
+                e.preventDefault();
+            }
+        });
+
+        $('#saveBtn').click(function (e) {
+            //if ($("#Container_no").val() == null || $("#Container_no").val() == "") {
+            //    swal("Eroare", "Completati numarul containerului!", "error")
+            //    $("#Container_no").focus();
+            //    return false;
+            //}
+            if ($("#Destination").val() == null || $("#Destination").val() == "") {
+                swal("Eroare", "Completati destinatia!", "error")
+                $("#Destination").focus();
+                return false;
+            }
+            if ($("#Pallet_number").val() == null || $("#Pallet_number").val() == "") {
+                swal("Eroare", "Completati numarul paletului!", "error")
+                $("#Pallet_number").focus();
+                return false;
+            }
+            if ($("#Length").val() == null || $("#Length").val() == "") {
+                swal("Eroare", "Completati lungimea paletului!", "error")
+                $("#Length").focus();
+                return false;
+            }
+            if ($("#Width").val() == null || $("#Width").val() == "") {
+                swal("Eroare", "Completati latimea paletului!", "error")
+                $("#Width").focus();
+                return false;
+            }
+            if ($("#Height").val() == null || $("#Height").val() == "") {
+                swal("Eroare", "Completati inaltimea paletului!", "error")
+                $("#Height").focus();
+                return false;
+            }
+            if ($("#Mass").val() == null || $("#Mass").val() == "") {
+                swal("Eroare", "Completati greutatea paletului!", "error")
+                $("#Mass").focus();
+                return false;
+            }
+            //if ($("#Shift").val() == null || $("#Shift").val() == "") {
+            //    swal("Eroare", "Completati schimbul!", "error")
+            //    $("#Shift").focus();
+            //    return false;
+            //}
+            var tempContainer = $("#Container_no").val();
+            var tempDestionation = $("#Destination").val();
+            var tempPalletNo = $("#Pallet_number").val();
+
+            var tempLength = $("#Length").val();
+            var tempWidth = $("#Width").val();
+            var tempHeight = $("#Height").val();
+            var tempMass = $("#Mass").val();
+            var tempShift = $("#datetimepickerStartDate").val();
+            var tHeight = $("#Height").val();
+            var tLength = $("#Length").val();
+
+            $.ajax({
+                url: "/PartCenterPallets/CheckPCPallet",
+
+                data: {
+                    container: tempContainer, destination: tempDestionation, palletNo: tempPalletNo
+                },
+
+                cache: false,
+                success: function (data) {
+                    if (data.res == 'false') {
+                        swal("Eroare", "Paletul este deja adaugat!", "error")
+
+                    } else if (data.res == 'notfound') {
+                        swal("Eroare", "Palet eronat!", "error")
+
+                    }
+                    else if (data.res == 'true') {
+                        @*var path = '@Url.Action("Create")' + "?Container_no=" + tempContainer + "&Destination=" + tempDestionation + "&Pallet_number=" + tempPalletNo
+                                            + "&Length=" + tempLength + "&Width=" + tempWidth + "&Height=" + tempHeight + "&Mass=" + tempMass + "&LoadDate=" + tempShift;
+                                        alert(path)
+                                         window.location.href = path;*@
+
+
+
+                                                                        window.open('@Url.Action("PrintViewCreate", "PartCenterPallets")' + "?palletNo=" + tempPalletNo + "&country=" + tempDestionation + "&length=" + tLength +"&theight=" + tHeight +"&width=" + tempWidth + "&mass=" + tempMass,'Print', "width=480, height=720");
+                        $("#createPCPalletForm").submit();
+
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+            return false;
+        });
+
+    </script>
 
 }

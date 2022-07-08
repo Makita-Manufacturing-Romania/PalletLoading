@@ -575,13 +575,13 @@ namespace PalletLoading.Migrations
                     b.Property<decimal>("Length")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<DateTime>("LoadDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<decimal>("Mass")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Pallet_number")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("Shift")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("Status")

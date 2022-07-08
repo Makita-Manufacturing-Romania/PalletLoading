@@ -497,4 +497,6 @@ C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\Ra
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\Razor\Views\Users\Details.cshtml.g.cs
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\Razor\Views\Users\Edit.cshtml.g.cs
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\Razor\Views\Users\Index.cshtml.g.cs
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\Razor\Views\PartCenterPallets\PrintView.cshtml.g.cs
+C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\Razor\Views\PartCenterPallets\PrintViewCreate.cshtml.g.cs
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\refint\PalletLoading.dll

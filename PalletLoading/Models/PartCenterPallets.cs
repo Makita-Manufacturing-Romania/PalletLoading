@@ -21,7 +21,7 @@ namespace PalletLoading.Models
         [Required]
         public decimal Mass { get; set; }
         [Required]
-        public decimal Shift { get; set; }
+        public DateTime LoadDate { get; set; }
         public bool Status { get; set; }
         public decimal Volume { get; set; }
         public DateTime InputTimestamp{ get; set; }

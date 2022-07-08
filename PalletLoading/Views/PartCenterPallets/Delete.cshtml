@@ -54,10 +54,10 @@
             @Html.DisplayFor(model => model.Mass)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Shift)
+            @Html.DisplayNameFor(model => model.LoadDate)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Shift)
+            @Html.DisplayFor(model => model.LoadDate)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Status)
@@ -92,6 +92,8 @@
     </dl>
     
     <form asp-action="Delete">
+        <input type="hidden" name= "pageNumber" value = "@ViewBag.PageNumber"/>
+
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
