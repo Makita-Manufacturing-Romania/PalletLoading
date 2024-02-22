@@ -3,6 +3,6 @@
 ################################################################################
 
 /PalletLoading/obj/Debug/net5.0/Razor/Views/Containers2/Create2.cshtml.g.cs
-/PalletLoading/bin/
-/PalletLoading/obj/
-/.vs/
+bin
+obj
+packages
