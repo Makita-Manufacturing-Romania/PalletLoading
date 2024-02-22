@@ -31,5 +31,16 @@ namespace PalletLoading.Models
             throw new NotImplementedException();
         }
         public int? CmrId { get; set; }
+
+        public int? LoadingTypeId { get; set; }
+        public int? FormTypeId { get; set; }
+        public bool? securingLoadConfirm { get; set; }
+        public bool? loadingTypeConfirm { get; set; }
+        public bool? formDefinitionConfirm { get; set; }
+
+        public string? operatorName { get; set; }
+        public string? forklifterName { get; set; }
+        public string? tlName { get; set; }
+        public string? svName { get; set; }
     }
 }

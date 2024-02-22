@@ -1,0 +1,63 @@
+﻿@model IEnumerable<PalletLoading.Models.SecuringLoad>
+
+@{
+    ViewData["Title"] = "Securing Load Types";
+}
+
+
+<link rel="stylesheet" href="~/css/background.css" />
+
+<h1>Securing Load Type</h1>
+
+<p>
+    <a asp-action="Create">New Form type</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Chingi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Coltare)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BareFixare)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Absorgel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SaciProtectie)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Chingi)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Coltare)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BareFixare)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Absorgel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SaciProtectie)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

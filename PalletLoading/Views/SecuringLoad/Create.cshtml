@@ -1,0 +1,51 @@
+﻿@model PalletLoading.Models.SecuringLoad
+
+@{
+    ViewData["Title"] = "New securing load";
+}
+
+
+<link rel="stylesheet" href="~/css/background.css" />
+
+<h1>New Securing Load Type</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Chingi" class="control-label"></label>
+                <input asp-for="Chingi" class="form-control" />
+                <span asp-validation-for="Chingi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Coltare" class="control-label"></label>
+                <input asp-for="Coltare" class="form-control" />
+                <span asp-validation-for="Coltare" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BareFixare" class="control-label"></label>
+                <input asp-for="BareFixare" class="form-control" />
+                <span asp-validation-for="BareFixare" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Absorgel" class="control-label"></label>
+                <input asp-for="Absorgel" class="form-control" />
+                <span asp-validation-for="Absorgel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SaciProtectie" class="control-label"></label>
+                <input asp-for="SaciProtectie" class="form-control" />
+                <span asp-validation-for="SaciProtectie" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

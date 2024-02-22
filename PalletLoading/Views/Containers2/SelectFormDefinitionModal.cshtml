@@ -1,0 +1,91 @@
+﻿@model PalletLoading.Models.FormDefinition
+
+@{
+    Layout = "_Modal";
+}
+
+<link rel="stylesheet" href="~/css/background.css" />
+
+<div class="modal-fade" id="ModalCreate">
+    <div class="modal-dialog" >
+        <div class="modal-content" style="border: 1.5vh solid #264653; border-radius: 5px; width:60vh;margin-left:-10vh">
+      
+            <div class="modal-body">
+                <form asp-action="EditFormDefinitionData">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input asp-for="Id" style="font-size:3vh" class="form-control" hidden />
+                    <input asp-for="ContainerId" style="font-size:3vh" class="form-control" hidden />
+
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label asp-for="PDF_Name" style="font-size:2.5vh; margin-top: 10px;" class="control-label">PDF Name</label>
+                            </div>
+                            <div class="col-sm-7">
+                                <input asp-for="PDF_Name" style="font-size:3vh" class="form-control" />
+                                <span asp-validation-for="PDF_Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label asp-for="DocRefNumber" style="font-size: 2.5vh; margin-top: 10px;" class="control-label">Doc Ref Number</label>
+                            </div>
+                            <div class="col-sm-7">
+                                <input asp-for="DocRefNumber" style="font-size: 3vh" class="form-control" />
+                                <span asp-validation-for="DocRefNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <label asp-for="Department" style="font-size:2.5vh; margin-top: 10px;" class="control-label">Department</label>
+                            </div>
+                            <div class="col-sm-7">
+                                <input asp-for="Department" style="font-size:3vh" class="form-control" />
+                                <span asp-validation-for="Department" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <hr>
+                    <div class="form-group text-end" style="margin-top:5vh">
+                        <input type="submit" style="font-size:4vh" value="Salveaza" class="btn btn-success" />
+                        <button id="closeModal" type="button" style="font-size:4vh" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('closeModal').addEventListener('click', function () {
+        
+        $("#selectFormDefinitionModal").hide();
+
+        // Find the element with the specified classes
+        const backdropElement = document.querySelector('.modal-backdrop.fade.show');
+
+        if (backdropElement) {
+            // Remove the element
+            backdropElement.remove();
+        }
+
+        const body = document.body;
+        // Remove the "modal-open" class from the body
+        body.classList.remove("modal-open");
+        body.style.paddingRight = "";
+    });
+
+</script>

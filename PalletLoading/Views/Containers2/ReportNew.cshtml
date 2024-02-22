@@ -1,0 +1,877 @@
+﻿@model PalletLoading.ViewModels.ContainerDetailsViewModel
+@{
+Layout=null;
+}
+
+<style>
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .qty-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 100px;
+
+
+    }
+
+
+
+</style>
+
+@* Form Data *@
+<img alt="img" width="225" height="121" src="data:image/png;base64,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" />
+
+<div class="form-container" width="100%">
+    <h2 style="margin-left:10%;"></h2>
+    <table class='table' style="width:80%; margin-top: -60px;" align="center">
+        <tr>
+            <th style ="font-size: 20px;">Doc.Ref. @Model.FormDefinition.DocRefNumber</thstyle>
+            <th style ="font-size: 20px;">Dep. @Model.FormDefinition.Department</th>
+        </tr>
+    </table>
+</div>
+
+<div style="text-align: center; font-size: 25px;">
+    <h3>TABEL INCARCARE CAMION</h3>
+</div>
+
+@* date *@
+<div>
+    <table border="1">
+        <tr>
+            <td colspan="3" style="font-size: 25px;">
+                DATA: @Model.loadingData
+            </td>
+            <td colspan="12" style="font-size: 25px;">
+                CLIENT: @Model.totalClients
+            </td>
+            <td colspan="1" style="color: black; font-size: 25px;">
+                RAMPA NR: <span style="color: white;">X</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="4" style="color: black; width:370px; font-size: 25px;">
+                ORA INTRARE:
+            </td>
+            <td colspan="4" style="color: black; width:270px; font-size: 25px;">
+                START:
+            </td>
+            <td colspan="4" style="color: black; width:270px; font-size: 25px;">
+                STOP:
+            </td>
+            <td colspan="4" style="color: black; width:370px; font-size: 25px;">
+                ORA IESIRE:
+            </td>
+        </tr>
+
+@*         <tr>
+            <td colspan="4" style="font-size:25px;">
+                PRELATA:
+            </td>
+            <td colspan="4" style="font-size:25px;">
+                DUBA:
+            </td>
+            <td colspan="8" style="font-size:25px;">
+                CONTAINER:
+            </td>
+        </tr> *@
+
+        <tr>
+            <td colspan="8" style="font-size:25px;">
+                NR. CAMION:
+            </td>
+            <td colspan="8" style="font-size:25px;">
+                NR. CONTAINER:
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="16" style="font-size:25px;">
+                NR PALETI PICK PE TEMP:
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="8" style="font-size:25px;">
+                VERIFICARE INTEGRITATE REMORCA/CONTAINER <input type="checkbox" disabled="disabled" />
+            </td>
+            <td colspan="8" style="font-size:25px;">
+                VERIFICARE SISTEM SIGILARE <input type="checkbox" disabled="disabled" />
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="8" style="font-size:25px;">
+                TIP CAMION: @Model.truckType
+            </td>
+            <td colspan="8" style="font-size:25px;">
+                TIPUL INCARCARII: @Model.loadingType
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="3" style="font-size:25px;">
+                CHINGI ANCORARE <input type="checkbox" disabled="disabled" @(Model.SecuringLoad.Chingi ? "checked='checked'" : "") />
+            </td>
+            <td colspan="2" style="font-size:25px;">
+                COLTARE <input type="checkbox" disabled="disabled" @(Model.SecuringLoad.Coltare ? "checked='checked'" : "") />
+            </td>
+            <td colspan="3" style="font-size:25px;">
+                BARE FIXARE <input type="checkbox" disabled="disabled" @(Model.SecuringLoad.BareFixare ? "checked='checked'" : "") />
+            </td>
+            <td colspan="3" style="font-size:25px;">
+                SACI PROTECTIE <input type="checkbox" disabled="disabled" @(Model.SecuringLoad.SaciProtectie ? "checked='checked'" : "") />
+            </td>
+            <td colspan="5" style="font-size:25px;">
+                ABSORPOLE/ABSORGEL <input type="checkbox" disabled="disabled" @(Model.SecuringLoad.Absorgel ? "checked='checked'" : "") />
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2" style="font-size:25px;">
+                NR PAL SCANNER 
+            </td>
+            <td colspan="14" style="font-size:25px;">
+                NR AVIZ
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="16" style="font-size:25px;">
+                NR SIGILIU
+            </td>
+        </tr>
+
+
+    </table>
+</div>
+
+@* Tabel status paletii *@
+  @*  Page 1 *@
+@* <p class="breakhere"></p>
+    <div style="margin: 40px 0px 0px 0px;">
+        <table>
+            <tr style="vertical-align:top">
+                <th>
+                    <table border="1">
+
+                        <tr>
+                            <th style="font-size: 18px;">NR.</th>
+                            <th style="font-size: 18px;">STANGA</th>
+                            <th style="font-size: 18px;">CENTRU</th>
+                            <th style="font-size: 18px;">DREAPTA</th>
+                        </tr>
+                        @for (int i = 1; i <= 15; i++)
+                        {
+                            <tr>
+                            <td rowspan="2" style="font-size: 18px;">
+                                    &nbsp;&nbsp;@i &nbsp;
+                                </td>
+                            <td style="font-size: 18px;">
+                                    &nbsp;
+                                </td>
+                            <td style="font-size: 18px;">
+                                    &nbsp;
+                                </td>
+                            <td style="font-size: 18px;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                            <td style="font-size: 18px;">
+                                    &nbsp;
+                                </td>
+                            <td style="font-size: 18px;">
+                                    &nbsp;
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            @if (Model.palletCount == i)
+                            {
+                                break;
+                            }
+                        }
+
+
+
+                    </table>
+                </th>
+                <th>
+                        @if (Model.palletCount > 15)
+                {
+                    <table border="1">
+
+                        <tr>
+                            <th style="font-size: 18px;">NR.</th>
+                            <th style="font-size: 18px;">STANGA</th>
+                            <th style="font-size: 18px;">CENTRU</th>
+                            <th style="font-size: 18px;">DREAPTA</th>
+                        </tr>
+                            @for (int i = 16; i <= 30; i++)
+                            {
+                                <tr>
+                                <td rowspan="2" style="font-size: 18px;">
+                                        &nbsp;&nbsp;@i &nbsp;
+                                    </td>
+                                <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                @if (Model.palletCount == i)
+                                {
+                                    break;
+                                }
+                            }
+                    </table>
+                        }
+
+
+                </th>
+                <th>
+
+                        @if (Model.palletCount > 30)
+                {
+                    <table border="1">
+
+                        <tr>
+                            <th style="font-size: 18px;">NR.</th>
+                            <th style="font-size: 18px;">STANGA</th>
+                            <th style="font-size: 18px;">CENTRU</th>
+                            <th style="font-size: 18px;">DREAPTA</th>
+                        </tr>
+                            @for (int i = 31; i <= 45; i++)
+                            {
+                                <tr>
+                                <td rowspan="2" style="font-size: 18px;">
+                                        &nbsp;&nbsp;@i &nbsp;
+                                    </td>
+                                <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                @if (Model.palletCount == i)
+                                {
+                                    break;
+                                }
+                            }
+                    </table>
+                        }
+
+
+                </th>
+                <th>
+
+                        @if (Model.palletCount > 45)
+                {
+                    <table border="1">
+
+                        <tr>
+                            <th style="font-size: 18px;">NR.</th>
+                            <th style="font-size: 18px;">STANGA</th>
+                            <th style="font-size: 18px;">CENTRU</th>
+                            <th style="font-size: 18px;">DREAPTA</th>
+                        </tr>
+                        @for (int i = 46; i <= 60; i++)
+                        {
+                            @if (Model.palletCount > i)
+                            {
+                                <tr>
+                                    <td rowspan="2" style="font-size: 18px;">
+                                        &nbsp;&nbsp;@i &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    </table>
+                        }
+
+
+                </th>
+            </tr>
+        </table>
+
+
+    </div>
+ *@
+    @*  Page 2 *@
+   @*  @if (Model.palletCount > 60)
+    {
+    <div style="margin: 50px 0px 0px 0px;">
+        <table>
+            <tr style="vertical-align:top">
+                <th>
+                    <table border="1">
+
+                        <tr>
+                            <th style="font-size: 18px;">NR.</th>
+                            <th style="font-size: 18px;">STANGA</th>
+                            <th style="font-size: 18px;">CENTRU</th>
+                            <th style="font-size: 18px;">DREAPTA</th>
+                        </tr>
+                            @for (int i = 61; i <= 75; i++)
+                    {
+                            <tr>
+                                <td rowspan="2" style="font-size: 18px;">
+                                    &nbsp;&nbsp;@i &nbsp;
+                                </td>
+                                <td style="font-size: 18px;">
+                                    &nbsp;
+                                </td>
+                                <td style="font-size: 18px;">
+                                    &nbsp;
+                                </td>
+                                <td style="font-size: 18px;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 18px;">
+                                    &nbsp;
+                                </td>
+                                <td style="font-size: 18px;">
+                                    &nbsp;
+                                </td>
+                                <td style="font-size: 18px;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                                @if (Model.palletCount == i)
+                                {
+                                    break;
+                            }
+                        }
+                    </table>
+
+
+
+                </th>
+                <th>
+                            @if (Model.palletCount > 75)
+                    {
+                        <table border="1">
+
+                            <tr>
+                                <th style="font-size: 18px;">NR.</th>
+                                <th style="font-size: 18px;">STANGA</th>
+                                <th style="font-size: 18px;">CENTRU</th>
+                                <th style="font-size: 18px;">DREAPTA</th>
+                            </tr>
+                                @for (int i = 76; i <= 90; i++)
+                                {
+                                <tr>
+                                    <td rowspan="2" style="font-size: 18px;">
+                                        &nbsp;&nbsp;@i &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                    @if (Model.palletCount == i)
+                                    {
+                                        break;
+                                    }
+                            }
+                        </table>
+                            }
+
+
+                </th>
+                <th>
+
+                            @if (Model.palletCount > 90)
+                    {
+                        <table border="1">
+
+                            <tr>
+                                <th style="font-size: 18px;">NR.</th>
+                                <th style="font-size: 18px;">STANGA</th>
+                                <th style="font-size: 18px;">CENTRU</th>
+                                <th style="font-size: 18px;">DREAPTA</th>
+                            </tr>
+                                @for (int i = 91; i <= 105; i++)
+                                {
+                                <tr>
+                                    <td rowspan="2" style="font-size: 18px;">
+                                        &nbsp;&nbsp;@i &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                    @if (Model.palletCount == i)
+                                    {
+                                        break;
+                                    }
+                            }
+                        </table>
+                            }
+
+
+                </th>
+                <th>
+
+                            @if (Model.palletCount > 105)
+                            {
+
+                        <table border="1">
+
+                            <tr>
+                                <th style="font-size: 18px;">NR.</th>
+                                <th style="font-size: 18px;">STANGA</th>
+                                <th style="font-size: 18px;">CENTRU</th>
+                                <th style="font-size: 18px;">DREAPTA</th>
+                            </tr>
+                                @for (int i = 106; i <= 120; i++)
+                                {
+                                <tr>
+                                    <td rowspan="2" style="font-size: 18px;">
+                                        &nbsp;&nbsp;@i &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                    <td style="font-size: 18px;">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                    @if (Model.palletCount == i)
+                                    {
+                                        break;
+                                    }
+                            }
+                        </table>
+                            }
+
+
+                </th>
+            </tr>
+        </table>
+
+
+    </div>
+    } *@
+
+@* Old Code *@
+<P CLASS="breakhere"></p>
+<div width="100%;" align="center" style="padding:0; display:flex; align-items:center; justify-content: center;">
+    <div style="position:relative;">
+        <p style="padding:0; display:inline-block; font-weight:bold; font-size:30px; position:relative;top:7px;">Details - @Model.Container.Name</p>
+    </div>
+</div>
+<div width="100%" align="center" style="margin-bottom:10px;">
+    <input type="hidden" value="@Model.Container.Id" id="container" />
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => Model.Type.Name) - @Html.DisplayFor(model => Model.Type.Name)
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    @* Country - @Html.DisplayFor(model => Model.Country.Name) *@
+                    Country - @Html.DisplayFor(model => Model.countryText)
+                </th>
+            </tr>
+        </thead>
+    </table>
+
+    <br />
+    <div class="mb-2 mr-2" style="float:right">
+    </div>
+
+
+    @{ var lengthContainer = Model.Container.NoOfColumns;
+        var widthContainer = Model.Container.NoOfRows;
+        var totalLayer = lengthContainer * widthContainer;
+        var palletsAux = Model.Pallets; }
+
+    <br />
+
+    <div style="width:100%; padding-bottom:150px; overflow-x:auto; position:relative;">
+        <table border="1" class="table-bordered" style="border:2px solid; width:100%; border-right-style:dotted; max-width:1106px; margin-left:370px;  text-align: center; align-content: center;">
+            <tbody>
+                @{
+                    var colNo = 1;
+                    var currentRow = 1; 
+                    @for (int row = 0; row < widthContainer; row++)
+                    {
+                        <tr style="vertical-align: top;">
+                            @for (int col = 0; col < lengthContainer; col++)
+                            {
+                                string idPallet = row.ToString() + "," + col.ToString();
+                                var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
+
+                                if (currentPallets != null)
+                                {
+                                    @if (currentPallets.Count() == 1)
+                                    {
+                                        <td style="min-width:85px; text-align:center; position:relative; min-height:250px">
+                                            @if (currentRow == 1)
+                                            {
+                                                <p style="font-size:25px">@colNo</p>
+                                                colNo++;
+                                            }
+                                            @{
+                                                var palet = currentPallets.First();
+
+                                                if (palet.PalletImportData != null)
+                                                {
+                                                    @if (currentRow == 1)
+                                                    {
+                                                    <div style="width:100%; margin-top:120px; margin-bottom:0px; border-radius:5px; height:65px; text-align:center">
+                                                        <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.PalletImportData.pallet_no" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                    </div>
+                                                    }
+                                                    else
+                                                    {
+                                                    <div style="width:100%; margin-top:94px; margin-bottom:0px; border-radius:5px; height:65px; text-align:center">
+                                                        <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.PalletImportData.pallet_no" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                    </div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    @if (currentRow == 1)
+                                                    {
+                                                    <div style="width:90%; margin-top:120px; margin-bottom:0px; border-radius:5px; height:65px; text-align:center">
+                                                        <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                    </div>
+                                                    }
+                                                    else
+                                                    {
+                                                    <div style="width:90%; margin-top:94px; margin-bottom:0px; border-radius:5px; height:65px; text-align:center">
+                                                        <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                    </div>
+                                                    }
+                                                }
+                                                <br />
+                                            }
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="min-width:75px; text-align:center; height:150px">
+                                            @if (currentRow == 1)
+                                            {
+                                                <p style="font-size:25px">@colNo</p>
+                                                colNo++;
+                                            }
+                                            <br />
+                                            @foreach (var palet in currentPallets)
+                                            {
+                                                if (palet.PalletImportData != null)
+                                                {
+                                                    <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.PalletImportData.pallet_no" style="width:75%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                }
+                                                else
+                                                {
+                                                    <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width:75%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                }
+                            }
+                            @{
+                                currentRow++;
+                            }
+                        </tr>
+                    } }
+            </tbody>
+        </table>
+    </div>
+    <br />
+
+  </div>
+    </tr>
+</table>
+ <P CLASS="breakhere"></p>
+    @if (Model.Pallets != null)
+    {
+
+        <div style="margin-top:-80px; width=100%; margin-top:50px;">
+            <h1 style="margin-left:40%;">Pallets details</h1>
+            <table class='table' style="width:80%;"  align="center" >
+                <tr>
+                    <th>Order no</th>
+                    <th>Container</th>
+                    <th>Sales part</th>
+                    <th>Pallet no</th>
+                    <th>Serial from</th>
+                    <th>Serial to</th>
+                    <th>Quantity</th>
+                    <th>Weight</th>
+                </tr>
+                @foreach (var pallet in Model.PalletsDataForPDF)
+                {
+                    if (pallet.orderNo != null)
+                    {
+                        <tr>
+                            
+                        @if (pallet.orderNo == "New")
+                        {
+                            @* Total Row *@
+                            <td></td>
+                            <td style="font-size:20px">@pallet.consigneAndContainer</td>
+                            <td></td>
+                            <td>@pallet.pallet_no</td>
+                            <td></td>
+                            <td></td>
+                            <td>@pallet.picking_qty</td>
+                            <td></td>
+                        }
+                        else if (pallet.orderNo == "Line")
+                        {
+                            @* Line Row *@
+                            <td style="margin-left:-200px;" colspan="12"><hr></td>
+                        }
+                        else if (pallet.orderNo == "Empty")
+                        {
+                            @* Empty Row *@
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        }
+                        else
+                        {
+                            @* Regular Row *@
+                            <td>@pallet.orderNo</td>
+                            <td>@pallet.consigneAndContainer</td>
+                            <td>@pallet.salesPart</td>
+                            <td>@pallet.pallet_no</td>
+                            <td>@pallet.serial_from</td>
+                            <td>@pallet.serial_to</td>
+                            <td>@pallet.picking_qty</td>
+                            <td>@pallet.weight</td>
+                        }
+
+
+                        </tr>
+                    }
+                }
+            </table>
+        </div>}
+    <STYLE TYPE="text/css">
+        .breakhere {
+            page-break-after: always
+        }
+    </STYLE>
+
+    @* Clients Total Quantities *@
+    @* <div style="width: max-content; margin-left:500px; margin-top:100px;">
+        <table border="1">
+            @if (Model.TotalQuantities != null)
+            {
+                <tr>
+                    <th>Client Name</th>
+                    <th>Total Qty</th>
+                    <th>Total Pallets</th>
+                </tr>
+
+                @foreach (var clientData in Model.ClientsData)
+                {
+                    <tr>
+                        <th>@clientData.name</th>
+                        <th>@clientData.quantity</th>
+                        <th>@clientData.pallets</th>
+                    </tr>
+                }
+            }
+        </table>
+    </div> *@
+
+
+    @* Total Quantities *@
+    <div style="width: max-content; margin-top:50px;">
+        <table border="1" style="page-break-inside: avoid; margin-left:420px;">
+            @if (Model.TotalQuantities != null)
+            {
+                <tr>
+                    <th style="font-size:25px">Total Tools Qty</th>
+                    <th style="font-size:25px">Total Spares Qty</th>
+                    <th style="font-size:25px">Total Qty</th>
+                </tr>
+
+                <tr>
+                    <th style="font-size:25px">@Model.TotalQuantities.TotalTools</th>
+                    <th style="font-size:25px">@Model.TotalQuantities.TotalSpares</th>
+                    <th style="font-size:25px">@Model.TotalQuantities.TotalQuantity</th>
+                </tr>
+            }
+        </table>
+        <br></br>
+        <table border="1" style="page-break-inside: avoid; margin-left:350px;">
+            @if (Model.TotalQuantities != null)
+            {
+                <tr>
+                    <th style="font-size:25px">Total Tools Pallets</th>
+                    <th style="font-size:25px">Total Spares Pallets</th>
+                    <th style="font-size:25px">Total Pallets</th>
+                </tr>
+
+                <tr>
+                    <th style="font-size:25px">@Model.TotalQuantities.TotalToolsPallets</th>
+                    <th style="font-size:25px">@Model.TotalQuantities.TotalSparesPallets</th>
+                    <th style="font-size:25px">@Model.TotalQuantities.TotalPallets</th>
+                </tr>
+            }
+        </table>
+    </div>
+
+
+    @* Signatures (username) *@
+    <div style="width: max-content; margin-left:100px; margin-top:50px">
+        <table border="1" style="page-break-inside: avoid">
+            <tr>
+                <th style="font-size:44px">&nbsp;Emis de operator&nbsp;</th>
+                <th style="font-size:44px">&nbsp;Stivuitorist&nbsp;</th>
+                <th style="font-size:44px">&nbsp;Verificat&nbsp;</th>
+                <th style="font-size:44px">&nbsp;Verificat de SV&nbsp;</th>
+            </tr>
+
+            <tr>
+                <th style="font-size:44px"> <span style="color: white;">WWWW</span> </th>
+                <th style ="font-size:44px"> <span style="color: white;">WWWW</span> </th>
+                <th style="font-size:44px"> <span style="color: white;">WWWW</span> </th>
+                <th style="font-size:44px"> <span style="color: white;">WWWW</span> </th>
+                
+    @*          @if (Model.Container.operatorName != null)
+                {
+                    <th style="font-size:44px"> @Model.Container.operatorName  <span style="color: white;">WWWW</span> </th>
+                }
+                @if (Model.Container.forklifterName != null)
+                {
+                    <th style ="font-size:44px"> @Model.Container.forklifterName  <span style="color: white;">WWWW</span> </th>
+                }
+                @if (Model.Container.tlName != null)
+                {
+                    <th style="font-size:44px"> @Model.Container.tlName  <span style="color: white;">WWWW</span> </th>
+                }
+                @if (Model.Container.svName != null)
+                {
+                    <th style="font-size:44px"> @Model.Container.svName  <span style="color: white;">WWWW</span> </th>
+                }   *@
+            </tr>
+        </table>
+    </div>

@@ -36,5 +36,17 @@ namespace PalletLoading.Data
         public DbSet<PalletLoading.Models.CountryDescriptionImportData> CountryDescriptionImportData { get; set; }
         public DbSet<PalletLoading.Models.CmrData> CmrDatas { get; set; }
         public DbSet<PalletLoading.Models.PartCenterPallets> PartCenterPallets { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<LoadingType> LoadingTypes { get; set; }
+        public DbSet<SecuringLoad> SecuringLoads { get; set; }
+        public DbSet<FormDefinition> FormDefinitions { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Role)
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.RoleId);
+        }
     }
 }

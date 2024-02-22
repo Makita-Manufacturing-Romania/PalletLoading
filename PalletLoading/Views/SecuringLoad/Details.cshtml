@@ -1,0 +1,51 @@
+﻿@model PalletLoading.Models.SecuringLoad
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<link rel="stylesheet" href="~/css/background.css" />
+
+<h1>Details</h1>
+
+<div>
+    <h4>Securing Load Type</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Chingi)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Chingi)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Coltare)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Coltare)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BareFixare)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BareFixare)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Absorgel)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Absorgel)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SaciProtectie)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SaciProtectie)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

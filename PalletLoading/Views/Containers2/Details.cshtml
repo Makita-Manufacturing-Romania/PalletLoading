@@ -43,6 +43,12 @@
             //}
 }
 
+<link rel="stylesheet" href="~/css/background.css" />
+
+<!-- Hidden field to store the buton ID's and other C# variables' -->
+<input type="hidden" id="containerId" name="containerId" value="@ViewBag.containerId" />
+<input type="hidden" id="selectedLoadType" name="selectedLoadType" value="@ViewBag.selectedLoadType" />
+@* <input type="hidden" id="formTypeId" name="formTypeId" value="@ViewBag.formTypeId" /> *@
 
 <style>
     .detailsBtn:focus {
@@ -56,7 +62,36 @@
         box-shadow: none !important;
         outline: 0 !important;
     }
+
+
+    .modalClassSecuringLoad {
+        padding-right: 30px;
+    }
+
+
+    .confirmData {
+        background-color: green;
+        color: white;
+    }
+
+    .previewClass {
+        background-color: darkcyan;
+        color: white;
+    }
+
+    .exportClass {
+        background-color: darkorange;
+        color: white;
+    }
+
+    .errorData {
+        background-color: darkred;
+        color: white;
+    }
+
 </style>
+
+
 @if (Model.Container.ContainerAT != null)
 {
     var listNames = new List<String>();
@@ -75,9 +110,16 @@
 <div width="100%" align="center" style="margin-bottom:10px;">
     @if (ViewBag.UserRightLevel > 0)
     {
-        <a class="btn btn-success " asp-action="Create" asp-controller="Pallets" asp-route-id="@Model.Container.Id">Modify</a>
+        <a class="btn btn-success" asp-action="Create" asp-controller="Pallets" asp-route-id="@Model.Container.Id">Modify</a>
     }
-    <a type="button" asp-action="GeneratePDF" asp-controller="Containers2" asp-route-id="@Model.Container.Id" target="_blank" class="btn btn-danger">Export PDF</a>
+   @*  <a type="button" asp-action="GeneratePDF" asp-controller="Containers2" asp-route-id="@Model.Container.Id" target="_blank" class="btn btn-danger">Export PDF</a>
+ *@
+    @if (ViewBag.ExportPDFConfirmation == true)
+    {
+        <a class="btn previewClass" type="button" asp-action="GeneratePDFNew" asp-controller="Containers2" asp-route-id="@Model.Container.Id" asp-route-actionType="Preview" target="_blank" class="btn btn-danger">Preview PDF</a>
+        <a class="btn exportClass" type="button" asp-action="GeneratePDFNew" asp-controller="Containers2" asp-route-id="@Model.Container.Id" asp-route-actionType="Download" target="_blank" class="btn btn-danger">Download PDF</a>
+    }
+
 
     @*<h1 style="text-align:center">Details - <a class="nav-link text-dark" asp-area="" asp-controller="CMR" asp-action="Index">@Model.Container.Name</a></h1>*@
     <input type="hidden" value="@Model.Container.Id" id="container" />
@@ -150,6 +192,9 @@
     }
 
     <br />
+
+
+
     @*@{Html.BeginForm("CreateDocument", "Containers2", FormMethod.Get);
         {
         <div>
@@ -158,7 +203,7 @@
         }
         Html.EndForm();
         }*@
-    <div style="width:100%; padding-bottom:150px; overflow-x:auto; position:relative;">
+    <div style="width:100%; padding-bottom:120px; overflow-x:auto; position:relative;">
         <img src="~/unnamed2.png" style="position:absolute; z-index:-1; bottom:0;left:0;" min-width="900px" width="1800px" />
         <table border="1" class="table-bordered" style="border:2px solid; border-right-style:dotted; max-width:1106px; margin-left:370px; float:left;  text-align: center; align-content: center;">
             <tbody>
@@ -368,7 +413,102 @@
             </tbody>
         </table>
     </div>
+
+    @* New Modal Elements *@
+    @if (ViewBag.UserRightLevel > 1)
+    {
+        <div style="display: flex; justify-content: center; gap: 20px;">
+            @if (ViewBag.SecuringLoadConfirmation == true)
+            {
+                <button type="button" class="btn btn-outline-dark btn-lg shadow-button confirmData" onclick="ShowSecuringLoadModal()">
+                    Change Securing Load
+                </button>
+            }
+            else
+            {
+                <button type="button" class="btn btn-outline-dark btn-lg shadow-button" onclick="ShowSecuringLoadModal()">
+                    Change Securing Load
+                </button>
+            }
+            <div>
+                @if (ViewBag.LoadingTypeConfirmation == true)
+                {
+                    <select name="loadingType" id="loadingType" class="confirmData" style="font-size:33px;">
+                        @foreach (var type in ViewBag.LoadingTypes)
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </select>
+                }
+                else
+                {
+                    <select name="loadingType" id="loadingType" style="font-size:33px;">
+                        @foreach (var type in ViewBag.LoadingTypes)
+                        {
+                            <option value="@type">@type</option>
+                        }
+                    </select>
+                }
+            </div>
+            @if (ViewBag.FormDefinitionConfirmation == true)
+            {
+                <button type="button" class="btn btn-outline-dark btn-lg shadow-button confirmData" onclick="ShowFormDefinitionModal()">
+                    Change Form Definition
+                </button>
+            }
+            else
+            {
+                <button type="button" class="btn btn-outline-dark btn-lg shadow-button" onclick="ShowFormDefinitionModal()">
+                    Change Form Definition
+                </button>
+            }
+        </div>
+    }
+   
+   @*  <br />
+    <div style="display: flex; justify-content: center; gap: 20px;">
+        @if (ViewBag.OperatorSignatureValidation == true)
+        {
+            <a class="btn exportClass" type="button" asp-action="OperatorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Operator Signature</a>
+        }
+        else
+        {
+            <a class="btn errorData" type="button" asp-action="OperatorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Operator Signature</a>
+        }
+        
+        @if (ViewBag.ForklifterSignatureValidation == true)
+        {
+            <a class="btn exportClass" type="button" asp-action="ForklifterSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Forklifter Signature</a>
+        }
+        else
+        {
+            <a class="btn errorData" type="button" asp-action="ForklifterSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Forklifter Signature</a>
+        }
+        
+        @if (ViewBag.TeamLeaderSignatureValidation == true)
+        {
+            <a class="btn exportClass" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Team Leader Signature</a>
+        }
+        else
+        {
+            <a class="btn errorData" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Team Leader Signature</a>
+        }
+
+        @if (ViewBag.SupervisorSignatureValidation == true)
+        {
+            <a class="btn exportClass" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Supervisor Signature</a>
+        }
+        else
+        {
+            <a class="btn errorData" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Supervisor Signature</a>
+        }
+    </div> *@
+
+
     <br />
+
+    <br />
+
 
     <table class="table-bordered" border="1" width="50%" ; style="min-width:400px; box-shadow:0 10px 20px rgba(0,0,0,0.1), 0 6px 6px rgba(0,0,0,0.1); max-width:600px;  height:300px; border:2px solid" align="center">
         <tr style="background-color: antiquewhite; border:none; ">
@@ -402,6 +542,8 @@
         </tr>
     </table>
 <br />
+
+
 <br />
     @if (Model.Pallets != null)
     {
@@ -485,9 +627,38 @@
                 }
         </table>
     </div>
+
+    <div class="modal fade modalClassSecuringLoad" id="selectSecuringLoadModal" role="dialog">
+        <div class="modal-dialog" id="selectSecuringLoadModalDialog">
+            <!-- Modal content in partial view-->
+        </div>
+    </div>
+
+    <div class="modal fade modalClassFormDefinition" id="selectFormDefinitionModal" role="dialog">
+        <div class="modal-dialog modal-large" id="selectFormDefinitionModalDialog">
+            <!-- Modal content in partial view-->
+        </div>
+    </div>
+
     }
+
+
+
     @section Scripts {
 <script>
+
+    // Wait for the document to be fully loaded
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the <select> element
+        var selectElement = document.getElementById('loadingType');
+
+        // Set the second option as selected (index 1)
+        var selectedLoadType = $("#selectedLoadType").val();
+        selectElement.selectedIndex = selectedLoadType;
+    });
+
+
+
     @*$(".detailsBtn").click(function () {
                                                                 var palletId = this.id;
                                                                 var idContainer = $('#container').val();
@@ -525,5 +696,62 @@
     });
 
 
+    function ShowSecuringLoadModal(id) 
+    {
+            // Construct the URL with the id parameter
+            var containerId = $("#containerId").val();
+            var url = "@Url.Action("ShowSelectSecuringLoadModal", "Containers2")" + "?id1=" + containerId;
+
+            $.get(url, function (data)
+            {
+                $("#selectSecuringLoadModalDialog").html(data);
+            });
+
+        $("#selectSecuringLoadModal").modal("show");
+    }
+
+
+
+    // Handle dropdown change event
+    document.getElementById('loadingType').addEventListener('change', function () {
+        var selectedType = this.value;
+        var containerId = $("#containerId").val();
+
+        // Make an AJAX call to the controller function
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("ChangeLoadingType", "Containers2")',
+            data: { containerId: containerId, selectedType: selectedType },
+            dataType: "json", // Expect JSON response
+            success: function (data) {
+                // Handle success (e.g., show a message)
+                //alert('Loading type saved successfully!');
+                window.location.href = '/Containers2/Details?id=' + containerId;
+            },
+            error: function () {
+                // Handle error (e.g., show an error message)
+                //alert('Error saving loading type.');
+            }
+        });
+    });
+
+
+        function ShowFormDefinitionModal(id) {
+            // Construct the URL with the id parameter
+            var containerId = $("#containerId").val();
+            console.log('error1');
+            var url = "@Url.Action("ShowFormDefinitionModal", "Containers2")" + "?id1=" + containerId;
+            console.log('error2');
+
+            $.get(url, function (data) {
+                console.log('error3');
+                $("#selectFormDefinitionModalDialog").html(data);
+            });
+
+            $("#selectFormDefinitionModal").modal("show");
+        }
+
+
 </script>
     }
+

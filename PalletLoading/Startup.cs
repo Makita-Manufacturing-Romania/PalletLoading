@@ -12,6 +12,10 @@ using Microsoft.EntityFrameworkCore;
 using PalletLoading.Data;
 using Rotativa.AspNetCore;
 using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
+using PalletLoading.Helpers;
+using Part_Center_Systems.Middleware;
+using Microsoft.AspNetCore.Authentication.Negotiate;
 
 namespace PalletLoading
 {
@@ -24,6 +28,7 @@ namespace PalletLoading
         }
 
         public IConfiguration Configuration { get; }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -38,6 +43,21 @@ namespace PalletLoading
                 options.SupportedCultures = new List<CultureInfo> { new CultureInfo("en-GB") };
                 services.AddMvc();
             });
+
+
+            services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
+            .AddNegotiate();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Manager", policy => policy.Requirements.Add(new RoleRequirement(new string[] { "Manager" })));
+                options.AddPolicy("Supervizor", policy => policy.Requirements.Add(new RoleRequirement(new string[] { "Manager", "Supervizor" })));
+                options.AddPolicy("User", policy => policy.Requirements.Add(new RoleRequirement(new string[] { "Manager", "Supervizor", "User" })));
+                options.AddPolicy("Guest", policy => policy.Requirements.Add(new RoleRequirement(new string[] { "Manager", "Supervizor", "User", "Guest" })));
+            });
+
+            services.AddScoped<IAuthorizationHandler, CustomAuthorization>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,7 +65,8 @@ namespace PalletLoading
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
+                app.UseStatusCodePagesWithReExecute("/Error/Index","?statusCode={0}");
             }
             else
             {
@@ -67,6 +88,8 @@ namespace PalletLoading
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
         }
     }
 }
