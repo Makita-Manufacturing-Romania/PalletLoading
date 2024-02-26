@@ -6,9 +6,16 @@
 
 <link rel="stylesheet" href="~/css/background.css" />
 
+<style>
+    .containerEdges {
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+
 <div class="modal-fade" id="ModalCreate">
     <div class="modal-dialog" >
-        <div class="modal-content" style="border: 1.5vh solid #264653; border-radius: 5px; max-width:50vh">
+        <div class="modal-content" style="width:70vh">
       
             <div class="modal-body">
                 <form asp-action="EditSecuringLoadData">
@@ -79,10 +86,9 @@
                     </div>
 
                     <hr>
-                    <div class="form-group text-end" style="margin-top:5vh">
-                        <input type="submit" style="font-size:4vh" value="Salveaza" class="btn btn-success" />
-                        <button id="closeModal" type="button" style="font-size:4vh" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-
+                    <div class="form-group containerEdges" style="margin-top:5vh">
+                        <button id="closeModal" type="button" style="font-size:4vh" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" style="font-size:4vh" value="Confirm" class="btn btn-success" />
                     </div>
                 </form>
             </div>
