@@ -786,12 +786,9 @@
         function ShowFormDefinitionModal(id) {
             // Construct the URL with the id parameter
             var containerId = $("#containerId").val();
-            console.log('error1');
             var url = "@Url.Action("ShowFormDefinitionModal", "Containers2")" + "?id1=" + containerId;
-            console.log('error2');
 
             $.get(url, function (data) {
-                console.log('error3');
                 $("#selectFormDefinitionModalDialog").html(data);
             });
 
