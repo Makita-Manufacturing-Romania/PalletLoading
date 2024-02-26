@@ -42,5 +42,6 @@ namespace PalletLoading.Models
         public string? forklifterName { get; set; }
         public string? tlName { get; set; }
         public string? svName { get; set; }
+        public int? securingLoadId { get; set; }
     }
 }

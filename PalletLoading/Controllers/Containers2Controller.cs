@@ -529,24 +529,40 @@ namespace PalletLoading.Controllers
 
         public IActionResult ShowSelectSecuringLoadModal(int id1)
         {
-            var securingLoadElement = _context.SecuringLoads
-                .Where(l => l.ContainerId == id1)
+            var securingLoadId = _context.Containers
+                .Where(l =>l.Id == id1)
+                .Select(l => l.securingLoadId)
                 .FirstOrDefault();
 
-            if (securingLoadElement == null)
+            var securingLoadData = new SecuringLoad();
+
+            if (securingLoadId == null)
             {
-                securingLoadElement = new SecuringLoad();
-                securingLoadElement.Coltare = false;
-                securingLoadElement.BareFixare = false;
-                securingLoadElement.SaciProtectie = false;
-                securingLoadElement.Chingi = false;
-                securingLoadElement.Absorgel = false;
-                securingLoadElement.ContainerId = id1;
-                _context.Add(securingLoadElement);
+                securingLoadData.Coltare = false;
+                securingLoadData.BareFixare = false;
+                securingLoadData.SaciProtectie = false;
+                securingLoadData.Chingi = false;
+                securingLoadData.Absorgel = false;
+                _context.Add(securingLoadData);
+                _context.SaveChanges();
+
+                var containerData = _context.Containers
+                    .Where(l => l.Id == id1)
+                    .FirstOrDefault();
+                containerData.securingLoadId = securingLoadData.Id;
+                _context.Update(containerData);
                 _context.SaveChanges();
             }
+            else
+            {
+                securingLoadData = _context.SecuringLoads
+                    .Where(l => l.Id == securingLoadId)
+                    .FirstOrDefault();
+            }
 
-            return View("SelectSecuringLoadModal", securingLoadElement);
+            securingLoadData.ContainerId = id1;
+
+            return View("SelectSecuringLoadModal", securingLoadData);
         }
 
 
@@ -558,6 +574,7 @@ namespace PalletLoading.Controllers
             var containerData = _context.Containers
                 .Where(l => l.Id == securingLoad.ContainerId)
                 .FirstOrDefault();
+            containerData.securingLoadId = securingLoad.Id;
             containerData.securingLoadConfirm = true;
 
             _context.Update(securingLoad);
@@ -1026,7 +1043,7 @@ namespace PalletLoading.Controllers
 
             //securing load data
             SecuringLoad securingLoad = _context.SecuringLoads
-                .Where(l => l.ContainerId == container.Id)
+                .Where(l => l.Id == container.securingLoadId)
                 .FirstOrDefault();
 
 

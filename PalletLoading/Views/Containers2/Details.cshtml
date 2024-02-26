@@ -19,6 +19,7 @@
     volumePallets = tempSumPcPalletVolume + tempSumPcPalletVolumeHistory + tempSumHistory + tempSum;
     //if (anyPallets)
     //{
+    //{
     //    try
     //    {
     //        volumePallets = Model.Pallets.Sum(c => c.PalletImportData.volume);
@@ -426,7 +427,7 @@
             }
             else
             {
-                <button type="button" class="btn btn-outline-dark btn-lg shadow-button" onclick="ShowSecuringLoadModal()">
+                <button type="button" class="btn btn-outline-dark btn-lg shadow-button btn-primary" onclick="ShowSecuringLoadModal()">
                     Change Securing Load
                 </button>
             }
@@ -442,7 +443,7 @@
                 }
                 else
                 {
-                    <select name="loadingType" id="loadingType" style="font-size:33px;">
+                    <select name="loadingType" id="loadingType" class="btn-primary" style="font-size:33px;">
                         @foreach (var type in ViewBag.LoadingTypes)
                         {
                             <option value="@type">@type</option>
@@ -458,7 +459,7 @@
             }
             else
             {
-                <button type="button" class="btn btn-outline-dark btn-lg shadow-button" onclick="ShowFormDefinitionModal()">
+                <button type="button" class="btn btn-outline-dark btn-lg shadow-button btn-primary" onclick="ShowFormDefinitionModal()">
                     Change Form Definition
                 </button>
             }

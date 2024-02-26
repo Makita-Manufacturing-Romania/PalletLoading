@@ -6,7 +6,7 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="~/mlogo.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/mlogo2.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
@@ -43,6 +43,61 @@
             }
         }
 
+
+        .loadingScreen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            opacity: 0.9;
+            z-index: 9999;
+        }
+
+        .lds-ring {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .lds-ring div {
+                box-sizing: border-box;
+                display: block;
+                position: absolute;
+                width: 350px;
+                height: 350px;
+                margin: 30px;
+                border: 30px solid #fff;
+                border-radius: 50%;
+                animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+                border-color: #fff transparent transparent transparent;
+            }
+
+                .lds-ring div:nth-child(1) {
+                    animation-delay: -0.45s;
+                }
+
+                .lds-ring div:nth-child(2) {
+                    animation-delay: -0.3s;
+                }
+
+                .lds-ring div:nth-child(3) {
+                    animation-delay: -0.15s;
+                }
+
+        @@keyframes lds-ring {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+
         #settingsImg {
             /*transition: transform 0.5ms linear;*/
             /*            animation-name: rotateContainer;
@@ -52,7 +107,7 @@
             #settingsImg:hover {
                 /*transform: scale(1.2);*/
                 animation-name: scaleSettings;
-                animation-duration: 0.2s;
+                animation-duration: 1s;
                 animation-fill-mode: forwards;
             }
 
@@ -61,6 +116,8 @@
             animation-duration: 0.2s;
             animation-fill-mode: forwards;
         }
+
+
 
         @@keyframes scaleSettingsPcPal {
 
@@ -87,7 +144,7 @@
     </style>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <img src="~/MakitaLogo.png" style="height: 46px; margin-left: 20px; top: 0 !important; margin-top: -8px !important;">
+            <img src="~/Makita_Logo_PlainRed_Transparent_HD.png" style="height: 80px; margin-left: 20px; top: 0 !important; margin-top: -8px !important; margin-bottom: -8px">
             <div class="container">
 
                 @* <a href="~/Home/Index"><img src="~/Images/download.png" class="navbar-brand" style="width:100px; height:50px"></a>*@
@@ -98,36 +155,43 @@
 
 
                 <div class="navbar-collapse collapse">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-2" style="margin-left:200px">
                         <li class="uk-active">
-                            <a href='@Url.Action("Index","Containers2")'>
-                                <img alt="Check" id="containerImg" src="@Url.Content("~/Images/cargo-container-crane.png")" style="width: 45px;height: 45px;  padding:" 10, 10, 10, 10";filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
+                            @* <a>
+                                <img alt="Check" id="containerImg" onclick="redirectToContainers()" src="@Url.Content("~/Images/Container.png")" style="width: 50px; height: 50px; margin-top:5px;" ;filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
+                            </a> *@
+                            <a class="nav-link text-dark" id="pcPal" style="color:black; margin-left:15px; font-size:25px;" onclick="redirectToContainers()">
+                                <b type="button"> Containers</b>
                             </a>
+
                         </li>
 
                         @if (ViewBag.UserRightLevel > 1)
                         {
                             <li class="dropdown" style="padding-left:25px">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="text-decoration:none;">
-                                    <img alt="Check" id="settingsImg" src="@Url.Content("~/Images/cogs-solid.svg")" style="width: 45px; height: 45px; filter: invert(15%) sepia(93%) saturate(3987%) hue-rotate(26deg) brightness(96%) contrast(102%);">
+                                @* <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="text-decoration:none;">
+                                    <img alt="Check" id="settingsImg" src="@Url.Content("~/Images/Settings.png")" style="width: 45px; height: 45px; margin-top:10px;">
+                                </a> *@
+                                <a class="nav-link text-dark" data-toggle="dropdown" id="pcPal" style="color:black; font-size:25px;">
+                                    <b type="button"> Definitions</b>
                                 </a>
 
                                 <ul class="dropdown-menu">
                                     <li class="dropdown dropdown-submenu">
                                     <li>
-                                        <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="ContainerTypes" asp-action="Index"><b>Container type</b></a>
+                                        <a style="font-family:'Book Antiqua'; font-size: 20px;" class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="ContainerTypes" asp-action="Index"><b>Container type</b></a>
                                     </li>
 
                                     <li>
-                                        <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="PalletTypes" asp-action="Index"><b>Pallet type</b></a>
+                                        <a style="font-family:'Book Antiqua'; font-size: 20px;" class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="PalletTypes" asp-action="Index"><b>Pallet type</b></a>
                                     </li>
 
                                     <li>
-                                        <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Countries" asp-action="Index"><b>Countries</b></a>
+                                        <a style="font-family:'Book Antiqua'; font-size: 20px;" class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Countries" asp-action="Index"><b>Countries</b></a>
 
                                     </li>
                                     <li>
-                                        <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Users" asp-action="Index"><b>Users</b></a>
+                                        <a style="font-family:'Book Antiqua'; font-size: 20px;" class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="Users" asp-action="Index"><b>Users</b></a>
 
                                     </li>
 
@@ -137,7 +201,7 @@
                                     </li> *@
 
                                     <li>
-                                        <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="LoadingType" asp-action="Index"><b>Loading Type</b></a>
+                                        <a style="font-family:'Book Antiqua'; font-size: 20px;" class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="LoadingType" asp-action="Index"><b>Loading Type</b></a>
 
                                     </li>
 
@@ -149,7 +213,12 @@
                             </li>
                         }
                         <li>
-                            <a class="nav-link text-dark" id="pcPal" style="color:black; margin-left:15px;" asp-area="" asp-controller="PartCenterPallets" asp-action="Index"><b> PC pallets</b></a>
+                            <a class="nav-link text-dark" id="pcPal" style="color:black; margin-left:15px; font-size:25px;" asp-area="" asp-controller="PartCenterPallets" asp-action="Index">
+                                <b type="button"> PC pallets</b>
+                            </a>
+                            @* <a href='@Url.Action("Index","PartCenterPallets")'>
+                                <img id="settingsImg" alt="Check" src="@Url.Content("~/Images/Pallet.png")" style="width: 80px; height: 60px; margin-left:20px;">
+                            </a> *@
                         </li>
 
                     </ul>
@@ -158,7 +227,7 @@
                         string altceva = nume;
                         altceva = char.ToUpper(nume[0]) + nume.Substring(1);
                     }
-                    <p class="nav navbar-text text-dark">Hello, @ViewBag.FullName!</p>
+                    <p style="font-family:'Roboto'; font-size: 20px; position: absolute; right: 20px;" class="nav navbar-text text-dark">Hello, @ViewBag.FullName!</p>
 
                 </div>
             </div>
@@ -172,8 +241,8 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 PalletLoading v2.0 - Designed & Developed by Production Systems Romania
+        <div style="font-family:'Roboto'; font-size: 20px; display: flex; justify-content: flex-end; align-items: flex-end; margin-right: 20px;">
+            <p>© 2024 PalletLoading v2.0 - Designed & Developed by Production Systems Romania</p>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -182,3 +251,18 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+
+<div class="loadingScreen">
+    <p style="font-size:5vh;margin-top:14%;color:#fff;text-align:center">Loading...</p>
+    <div class="lds-ring align-text-center"><div></div><div></div><div></div><div></div></div>
+</div>
+
+    <script>
+
+    function redirectToContainers() {
+        
+        window.location.href = '/Containers2/Index';
+        document.querySelector('.loadingScreen').style.display = 'block';
+    }
+    </script>

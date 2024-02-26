@@ -17,6 +17,62 @@
         #searchBtn:active {
             transform: scale(0.95);
         }
+
+
+
+    .loadingScreen {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        opacity: 0.9;
+        z-index: 9999;
+    }
+
+    .lds-ring {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .lds-ring div {
+            box-sizing: border-box;
+            display: block;
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            margin: 30px;
+            border: 30px solid #fff;
+            border-radius: 50%;
+            animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            border-color: #fff transparent transparent transparent;
+        }
+
+            .lds-ring div:nth-child(1) {
+                animation-delay: -0.45s;
+            }
+
+            .lds-ring div:nth-child(2) {
+                animation-delay: -0.3s;
+            }
+
+            .lds-ring div:nth-child(3) {
+                animation-delay: -0.15s;
+            }
+
+    @@keyframes lds-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
 </style>
 
 <div style="display:flex; justify-content:space-between">
@@ -39,7 +95,7 @@
                 Pana la: <input type="text" class="form-control" style="display:inline;width:10vw;min-width:100px;" name="datetimepickerEndDate" id="datetimepickerEndDate" />
             </label>
             <input type="text" class="form-control" style="display:inline;width:10vw;min-width:100px;" id="SearchString" name="SearchString" value="@ViewBag.currentSearch" />
-            <input type="submit" id="searchBtn" class="" style="display:inline; border:none; background-color:#b82e00; border-radius:5px; color:white" value="Search" />
+            <input type="submit" id="searchBtn" onclick="redirectToContainers()" class="" style="display:inline; border:none; background-color:#b82e00; border-radius:5px; color:white" value="Search" />
             <input type="button" id="downloadBtn" class="" style="display:inline; border:none; background-color:#b82e00; border-radius:5px; color:white" value="Download" />
         </p>
     }
@@ -140,9 +196,11 @@
                 </td>
                 @if (ViewBag.UserRightLevel > 0)
                 {
-                    <td style="width:150px;">
-                        <a asp-action="Details" asp-route-id="@container.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@container.Id">Delete</a>
+                    <td style="width:200px;">
+                        <a class="btn btn-info" asp-action="Details" asp-route-id="@container.Id">Details</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@container.Id">Delete</a>
+
+
                         @if (container.CmrId != null)
                         {
                             <span> | </span>
@@ -170,19 +228,21 @@
 <a asp-action="Index"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-datetimepickerEndDate="@(Model.PageIndex - 1)"
-   class=" @prevDisabled"
-    id = "prevBtn">
+   class=" @prevDisabled btn btn-secondary"
+   id = "prevBtn"
+   onclick="redirectToContainers()">
     Previous
 </a>
 
 <input style="width:50px;" type="text" id="pageText" value="@Model.PageIndex" />  / @Model.TotalPages
-<input type="button" value="Go to" id="btnGoTo" />
+<input type="button" value="Go to" onclick="redirectToContainers()" id="btnGoTo" />
 
 
 <a asp-action="Index"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
-   class=" @nextDisabled"
-   id = "nextBtn">
+   class=" @nextDisabled btn btn-secondary"
+   id = "nextBtn"
+   onclick="redirectToContainers()">
     Next
 </a>
 @section Scripts {
@@ -262,6 +322,11 @@
         window.location.href = locationUrl
         return false;
      })
+
+
+        function redirectToContainers() {
+            document.querySelector('.loadingScreen').style.display = 'block';
+        }
 
 </script>
 }

@@ -95,13 +95,13 @@
                 </td>
 
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     @if (item.Status == false)
                     {
-                        @:|
-                        <a asp-action="Delete" asp-route-id="@item.Id" asp-route-pageNumber="@Model.PageIndex">Delete</a>
+                        @:
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id" asp-route-pageNumber="@Model.PageIndex">Delete</a>
                     }
-                   | <a href="#" class="printBtn" id="@item.Id" target="">Print</a>
+                    <a href="#" class="printBtn btn btn-success" id="@item.Id" target="">Print</a>
                 </td>
             </tr>
         }
@@ -116,7 +116,7 @@
 
 <a asp-action="Index"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
-   class=" @prevDisabled"
+   class=" @prevDisabled btn btn-secondary"
    id="prevBtn">
     Previous
 </a>
@@ -128,7 +128,7 @@
 
 <a asp-action="Index"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
-   class=" @nextDisabled"
+   class=" @nextDisabled btn btn-secondary"
    id="nextBtn">
     Next
 </a>
