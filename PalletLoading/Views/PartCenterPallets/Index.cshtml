@@ -9,13 +9,20 @@
 
 <h1>PC Pallets</h1>
 
-<p>
-    <a asp-action="Create" class=" btn btn-success btn-sm  "> Add new pallet <i class="fas fa-plus" width="10px" heigth="10px" style="background-color:white; text-align:center; font-size:13px; padding:3px; border-radius:50%; color:forestgreen;"></i></a>
-</p>
 
+<style>
+
+    .btn-special {
+        background-color: #B82E00;
+        margin-bottom: 5px;
+    }
+</style>
 
 <div style="display:flex; justify-content:space-between">
 
+    <p>
+        <a asp-action="Create" class=" btn btn-success"> Add new pallet <i class="fas fa-plus" width="10px" heigth="10px" style="background-color:white; text-align:center; font-size:13px; padding:3px; border-radius:50%; color:forestgreen;"></i></a>
+    </p>
 
     @using (Html.BeginForm("Index", "PartCenterPallets", FormMethod.Get))
     {
@@ -29,8 +36,8 @@
                 Pana la: <input type="text" class="form-control" style="display:inline;width:10vw;min-width:100px;" name="datetimepickerEndDate" id="datetimepickerEndDate" />
             </label>
             <input type="text" class="form-control" style="display:inline;width:10vw;min-width:100px;" id="SearchString" name="SearchString" value="@ViewBag.currentSearch" />
-            <input type="submit" id="searchBtn" class="" style="display:inline; border:none; background-color:#b82e00; border-radius:5px; color:white" value="Search" />
-            <input type="button" id="downloadBtn" class="" style="display:inline; border:none; background-color:#b82e00; border-radius:5px; color:white" value="Download" />
+            <input type="submit" id="searchBtn" class="btn btn-special btn-danger" value="Search" />
+            <input type="button" id="downloadBtn" class="btn btn-special btn-danger" value="Download" />
         </p>
     }
 </div>

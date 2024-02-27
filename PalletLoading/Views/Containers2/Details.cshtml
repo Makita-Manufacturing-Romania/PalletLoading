@@ -98,42 +98,27 @@
 
     .btn-primary-new {
         background-color: #0D6EFD;
-        --bs-btn-color: #0D6EFD;
-        --bs-btn-bg: #0D6EFD;
-        --bs-btn-hover-color: #0D6EFD;
-        --bs-btn-hover-bg: #0B5ED7;
-        --bs-btn-hover-border-color: #0A58CA;
-        --bs-btn-focus-shadow-rgb: 49,132,253;
-        --bs-btn-active-color: #0D6EFD;
-        --bs-btn-active-bg: #0A58CA;
-        --bs-btn-active-border-color: #0A53BE;
-        --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-        --bs-btn-disabled-color: #0D6EFD;
-        --bs-btn-disabled-bg: #0D6EFD;
-        --bs-btn-disabled-border-color: #0D6EFD;
         border-radius:5px;
         border-color: rgba(0, 0, 0, 0);
         color: white;
+        font-size: 20px;
+        padding: 0.375rem 0.75rem;
     }
 
     .btn-primary-confirm {
         background-color: #198754;
-        --bs-btn-color: #198754;
-        --bs-btn-bg: #198754;
-        --bs-btn-hover-color: #198754;
-        --bs-btn-hover-bg: #157347;
-        --bs-btn-hover-border-color: #146C43;
-        --bs-btn-focus-shadow-rgb: 49,132,253;
-        --bs-btn-active-color: #198754;
-        --bs-btn-active-bg: #146c43;
-        --bs-btn-active-border-color: #13653F;
-        --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-        --bs-btn-disabled-color: #198754;
-        --bs-btn-disabled-bg: #198754;
-        --bs-btn-disabled-border-color: #198754;
         border-radius: 5px;
         border-color: rgba(0, 0, 0, 0);
         color: white;
+        font-size: 20px;
+    }
+
+    .btn-padding1 {
+        padding: 0.375rem 0.75rem;
+    }
+
+    .btn-padding2 {
+        padding: 0.5rem 0.75rem;
     }
 
 </style>
@@ -467,20 +452,20 @@
         <div style="display: flex; justify-content: center; gap: 20px;">
             @if (ViewBag.SecuringLoadConfirmation == true)
             {
-                <button type="button" class="btn-primary-confirm" onclick="ShowSecuringLoadModal()">
+                <button type="button" class="btn-primary-confirm btn-padding1" onclick="ShowSecuringLoadModal()">
                     Change Securing Load
                 </button>
             }
             else
             {
-                <button type="button" class="btn-primary-new" onclick="ShowSecuringLoadModal()">
+                <button type="button" class="btn-primary-new btn-padding1" onclick="ShowSecuringLoadModal()">
                     Change Securing Load
                 </button>
             }
             <div>
                 @if (ViewBag.LoadingTypeConfirmation == true)
                 {
-                    <select name="loadingType" id="loadingType" class="btn-primary-confirm" style="font-size:33px;">
+                    <select name="loadingType" id="loadingType" class="btn-primary-confirm btn-padding2">
                         @foreach (var type in ViewBag.LoadingTypes)
                         {
                             <option value="@type">@type</option>
@@ -489,7 +474,7 @@
                 }
                 else
                 {
-                    <select name="loadingType" id="loadingType" class="btn-primary-new" style="font-size:33px;">
+                    <select name="loadingType" id="loadingType" class="btn-primary-new btn-padding2">
                         @foreach (var type in ViewBag.LoadingTypes)
                         {
                             <option value="@type">@type</option>
@@ -499,13 +484,13 @@
             </div>
             @if (ViewBag.FormDefinitionConfirmation == true)
             {
-                <button type="button" class="btn-primary-confirm" onclick="ShowFormDefinitionModal()">
+                <button type="button" class="btn-primary-confirm btn-padding1" onclick="ShowFormDefinitionModal()">
                     Change Form Definition
                 </button>
             }
             else
             {
-                <button type="button" class="btn-primary-new" onclick="ShowFormDefinitionModal()">
+                <button type="button" class="btn-primary-new btn-padding1" onclick="ShowFormDefinitionModal()">
                     Change Form Definition
                 </button>
             }

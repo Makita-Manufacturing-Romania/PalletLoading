@@ -15,7 +15,7 @@
 
 <div class="modal-fade" id="ModalCreate">
     <div class="modal-dialog" >
-        <div class="modal-content" style="width:70vh">
+        <div class="modal-content" style="width:70vh; margin-left:-9.5vh; border-radius:10px;">
       
             <div class="modal-body">
                 <form asp-action="EditSecuringLoadData">
@@ -24,6 +24,11 @@
                     <input asp-for="Id" style="font-size:3vh" class="form-control" hidden />
                     <input asp-for="ContainerId" style="font-size:3vh" class="form-control" hidden />
 
+
+                    <div class="form-group containerEdges">
+                        <h3>Securing Load</h3>
+                    </div>
+                    <hr>
 
                     <div class="form-group">
                         <div class="row">
@@ -87,8 +92,8 @@
 
                     <hr>
                     <div class="form-group containerEdges" style="margin-top:5vh">
-                        <button id="closeModal" type="button" style="font-size:4vh" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type="submit" style="font-size:4vh" value="Confirm" class="btn btn-success" />
+                        <button id="closeModal" type="button" style="font-size:4vh; margin-left:10px;" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" style="font-size:4vh; margin-right:10px;" value="Confirm" class="btn btn-success" />
                     </div>
                 </form>
             </div>
