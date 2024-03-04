@@ -40,6 +40,8 @@ namespace PalletLoading.Data
         public DbSet<LoadingType> LoadingTypes { get; set; }
         public DbSet<SecuringLoad> SecuringLoads { get; set; }
         public DbSet<FormDefinition> FormDefinitions { get; set; }
+        public DbSet<FormData> FormDatas { get; set; }
+        public DbSet<UploadModel> UploadModelTabel {  get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

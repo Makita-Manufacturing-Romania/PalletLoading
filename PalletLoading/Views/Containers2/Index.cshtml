@@ -79,7 +79,23 @@
         margin-bottom:5px;
     }
 
+    .big-checkbox {
+        width: 25px;
+        height: 25px;
+    }
+
 </style>
+
+<!-- Hidden field to store the buton ID's and other C# variables' -->
+<input type="hidden" id="indexParam1" name="indexParam1" value="@ViewBag.indexParam1" />
+<input type="hidden" id="indexParam2" name="indexParam2" value="@ViewBag.indexParam2" />
+<input type="hidden" id="indexParam3" name="indexParam3" value="@ViewBag.indexParam3" />
+<input type="hidden" id="indexParam4" name="indexParam4" value="@ViewBag.indexParam4" />
+<input type="hidden" id="indexParam5" name="indexParam5" value="@ViewBag.indexParam5" />
+<input type="hidden" id="indexParam6" name="indexParam6" value="@ViewBag.indexParam6" />
+
+
+
 
 <div style="display:flex; justify-content:space-between">
     @if (ViewBag.UserRightLevel > 0)
@@ -122,7 +138,12 @@
             <th>
                 Volume (mc3)
             </th>
-            <th style="width:150px;">Actions</th>
+            <th style="width:150px;">
+                Actions
+            </th>
+            <th style="width:50px;">
+                Manager Approval
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -202,22 +223,20 @@
                 </td>
                 @if (ViewBag.UserRightLevel > 0)
                 {
-                    <td style="width:200px;">
+                    <td style="width:200px">
                         <a class="btn btn-info" asp-action="Details" asp-route-id="@container.Id">Details</a>
                         <a class="btn btn-danger" asp-action="Delete" asp-route-id="@container.Id">Delete</a>
-
-
-                        @if (container.CmrId != null)
-                        {
-                            <span> | </span>
-                            @*<a asp-action="GeneratePDF" asp-controller="CMR" asp-route-id="@container.Container.CmrId">CMR</a>*@
-                            <a asp-action="CmrReport" asp-controller="CMR" asp-route-id="@container.CmrId">CMR</a>
-                        }
                     </td>
+                    @if (string.IsNullOrEmpty(container.approval_Name))
+                    {
+                        <td style="width:100px">
+                            <input type="checkbox" class="row-checkbox big-checkbox" style="margin-top:6px" data-id="@container.Id" />
+                        </td>
+                    }
                 }
                 else
                 {
-                    <td style="width:150px;">
+                    <td style="width:150px">
                         <a asp-action="Details" asp-route-id="@container.Id">Details</a>
                     </td>
                 }
@@ -225,6 +244,8 @@
         }
     </tbody>
 </table>
+
+
 
 @{
     var prevDisabled = Model.PageIndex - 1 == 0 ? "disabled" : "";
@@ -251,6 +272,9 @@
    onclick="redirectToContainers()">
     Next
 </a>
+
+<button id="submit-changes" class="btn btn-primary"  style="margin-left:650px">Manager Approval</button>
+
 @section Scripts {
 <link rel="stylesheet" href="~/jquery-ui-1.12.1/jquery-ui.css" />
 <script src="~/jquery-ui-1.12.1/jquery-ui.js"></script>
@@ -333,6 +357,48 @@
         function redirectToContainers() {
             document.querySelector('.loadingScreen').style.display = 'block';
         }
+
+
+        //manually sign checked items as manager
+        $(document).ready(function () {
+            var checkedIds = [];
+
+            $('.row-checkbox').change(function () {
+                var id = $(this).data('id');
+                if ($(this).is(':checked')) {
+                    checkedIds.push(id);
+                } else {
+                    checkedIds = checkedIds.filter(function (item) {
+                        return item !== id;
+                    });
+                }
+            });
+
+            var indexParam1 = $("#indexParam1").val();
+            var indexParam2 = $("#indexParam2").val();
+            var indexParam3 = $("#indexParam3").val();
+            var indexParam4 = $("#indexParam4").val();
+            var indexParam5 = $("#indexParam5").val();
+            var indexParam6 = $("#indexParam6").val();
+
+
+            $('#submit-changes').click(function () {
+                document.querySelector('.loadingScreen').style.display = 'block';
+                $.ajax({
+                    url: '/Containers2/ManagerBulkSign',
+                    type: 'POST',
+                    data: { ids: checkedIds, searchString: indexParam1, pageNumber: indexParam2, currentdatetimepickerStartDate: indexParam3, currentdatetimepickerEndDate: indexParam4,
+                         datetimepickerStartDate: indexParam5, datetimepickerEndDate: indexParam6 },
+                    success: function () {
+                         window.location.href = '/Containers2/Index?searchString=' + indexParam1 + '&pageNumber=' + indexParam2 + '&currentdatetimepickerStartDate=' + indexParam3 + '&currentdatetimepickerEndDate=' + indexParam4
+                             + '&datetimepickerStartDate=' + indexParam5 + '&datetimepickerEndDate=' + indexParam6;
+
+                        // alert('Changes submitted successfully!');
+                    }
+                });
+            });
+        });
+
 
 </script>
 }

@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Authorization;
 using PalletLoading.Helpers;
 using Part_Center_Systems.Middleware;
 using Microsoft.AspNetCore.Authentication.Negotiate;
+using PalletLoading.Interfaces;
+using PalletLoading.Services;
 
 namespace PalletLoading
 {
@@ -58,6 +60,7 @@ namespace PalletLoading
 
             services.AddScoped<IAuthorizationHandler, CustomAuthorization>();
 
+            services.AddScoped<IBufferedFileUploadService, BufferedFileUploadLocalService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
