@@ -23,6 +23,10 @@ using PalletLoading.Migrations;
 using System.Text.RegularExpressions;
 using System.Security;
 using Microsoft.AspNetCore.StaticFiles;
+using Newtonsoft.Json;
+using Microsoft.CodeAnalysis;
+using System.Web;
+using Microsoft.Build.Evaluation;
 
 namespace PalletLoading.Controllers
 {
@@ -220,6 +224,47 @@ namespace PalletLoading.Controllers
                 .OrderByDescending(x => x.Id)
                 //.Take(500)
                 .ToList();
+
+            foreach (var item in containers)
+            {
+                //check all input data for completion
+                item.dataCheck = true;
+                item.signatureCheck = true;
+                item.fileCheck = true;
+
+                //Check for input data
+                if (item.SecuringLoadId == null || item.SecuringLoadId == null || item.FormTypeId == null || item.FormDataId == null)
+                {
+                    item.dataCheck = false;
+                }
+                else
+                {
+                    var formData = _context.FormDatas
+                        .Where(l => l.id == item.FormDataId && (l.rampaNr != null && l.oraIntrare != null && l.start != null && l.stop != null && l.oraIesire != null &&
+                        l.nrCamion != null && l.nrContainer != null && l.nrPaletiPickPeTemp != null && l.nrPalScanner != null && l.nrAviz != null &&
+                        l.nrSigiliu != null && l.numeStivuitorist != null))
+                        .FirstOrDefault();
+
+                    if (formData == null)
+                    {
+                        item.dataCheck = false;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(item.issuer_Name) || string.IsNullOrEmpty(item.checkerTL_Name) || string.IsNullOrEmpty(item.checkerSV_Name))
+                {
+                    item.signatureCheck = false;
+                }
+
+                var uploadData = _context.UploadModelTabel
+                    .Where(l => l.ContainerId == item.Id)
+                    .ToList();
+                if (uploadData == null || uploadData.Count == 0)
+                {
+                    item.fileCheck = false;
+                }
+
+            }
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -448,7 +493,18 @@ namespace PalletLoading.Controllers
                         {
                             if (securingLoadConfirm == 2 && loadingTypeConfirm == 2 && formDefinitionConfirm == 2 && formDataConfirm == 2)
                             {
-                                ViewBag.ManagerSignatureValidation = 1;
+
+                                var uploadData = _context.UploadModelTabel
+                                    .Where(l => l.ContainerId == id)
+                                    .ToList();
+                                if (uploadData == null || uploadData.Count == 0)
+                                {
+                                    ViewBag.ManagerSignatureValidation = 0;
+                                }
+                                else
+                                {
+                                    ViewBag.ManagerSignatureValidation = 1;
+                                }
                             }
                             else
                             {
@@ -503,10 +559,31 @@ namespace PalletLoading.Controllers
                 .Where(l => l.ContainerId == id)
                 .ToList();
 
+
+            if (uploadedFilesData != null)
+            {
+                List<UploadModel> files_list = new List<UploadModel>(uploadedFilesData);
+                foreach (var req in files_list)
+                {
+                    if (System.IO.File.Exists(req.filePath + @"\" + req.fileName))
+                    {
+                    }
+                    else
+                    {
+                        uploadedFilesData.Remove(req);
+                    }
+                }
+
+            }
+
+
             viewModel.UploadModel = uploadedFilesData;
             
                 ViewBag.typeOfOperation = "edit";
-            
+
+
+
+
             return View(viewModel);
         }
 
@@ -697,6 +774,9 @@ namespace PalletLoading.Controllers
             containerData.issuer_Name = "";
             containerData.checkerTL_Name = "";
             containerData.checkerSV_Name = "";
+            containerData.issuer_Signature_Timestamp = null;
+            containerData.checkerTL_Signature_Timestamp = null;
+            containerData.checkerSV_Signature_Timestamp = null;
 
             _context.Update(securingLoad);
             _context.Update(containerData);
@@ -726,6 +806,9 @@ namespace PalletLoading.Controllers
             containerData.issuer_Name = "";
             containerData.checkerTL_Name = "";
             containerData.checkerSV_Name = "";
+            containerData.issuer_Signature_Timestamp = null;
+            containerData.checkerTL_Signature_Timestamp = null;
+            containerData.checkerSV_Signature_Timestamp = null;
 
             _context.Update(containerData);
             _context.SaveChanges();
@@ -737,7 +820,7 @@ namespace PalletLoading.Controllers
         }
 
 
-        public IActionResult ShowFormDefinitionModal(int id1)
+        public IActionResult ShowFormDefinitionModal(int id1, string containersList)
         {
             var formTypeId = _context.Containers
                 .Where(l => l.Id == id1)
@@ -750,19 +833,26 @@ namespace PalletLoading.Controllers
                     .Select(l => l.Id)
                     .FirstOrDefault();
             }
+            else
+            {
+                containersList = "";
+            }
 
             var formTypeData = _context.FormDefinitions
                 .Where(l => l.Id == formTypeId)
                 .FirstOrDefault();
             formTypeData.ContainerId = id1;
+            formTypeData.containersList = containersList;
 
             return View("SelectFormDefinitionModal", formTypeData);
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> EditFormDefinitionData([Bind("Id,PDF_Name,DocRefNumber,Department,ContainerId")] FormDefinition formTypeCurrentData)
+        public async Task<IActionResult> EditFormDefinitionData([Bind("Id,PDF_Name,DocRefNumber,Department,ContainerId,containersList")] FormDefinition formTypeCurrentData)
         {
+            string name = formTypeCurrentData.containersList;
+
             var formTypePreviousData = _context.FormDefinitions
                 .Where(l => l.Id == formTypeCurrentData.Id)
                 .FirstOrDefault();
@@ -771,30 +861,34 @@ namespace PalletLoading.Controllers
                 .Where(l => l.Id == formTypeCurrentData.ContainerId)
                 .FirstOrDefault();
 
-            if (formTypeCurrentData.PDF_Name != formTypePreviousData.PDF_Name || formTypeCurrentData.DocRefNumber != formTypePreviousData.DocRefNumber ||
-                formTypeCurrentData.Department != formTypePreviousData.Department)
+
+            FormDefinition newFormDefinition = new FormDefinition();
+
+            if (formTypeCurrentData.PDF_Name != "_")
             {
-                //data was changed so we create a new entity
-                FormDefinition newFormDefinition = new FormDefinition();
-
                 newFormDefinition.PDF_Name = formTypeCurrentData.PDF_Name;
-                newFormDefinition.DocRefNumber = formTypeCurrentData.DocRefNumber;
-                newFormDefinition.Department = formTypeCurrentData.Department;
-                _context.Add(newFormDefinition);
-                _context.SaveChanges();
-
-                containerData.FormTypeId = newFormDefinition.Id;
             }
             else
             {
-                //data stays the same but we set FormDefinition Id to Default
-                containerData.FormTypeId = formTypeCurrentData.Id;
+                //Replace _ with name From Details Page top
+                newFormDefinition.PDF_Name = name;
             }
+            newFormDefinition.DocRefNumber = formTypeCurrentData.DocRefNumber;
+            newFormDefinition.Department = formTypeCurrentData.Department;
+            _context.Add(newFormDefinition);
+            _context.SaveChanges();
+
+            //data stays the same but we set FormDefinition Id to Default 
+            containerData.FormTypeId = newFormDefinition.Id;
+
 
             //clear signatures
             containerData.issuer_Name = "";
             containerData.checkerTL_Name = "";
             containerData.checkerSV_Name = "";
+            containerData.issuer_Signature_Timestamp = null;
+            containerData.checkerTL_Signature_Timestamp = null;
+            containerData.checkerSV_Signature_Timestamp = null;
 
             _context.Update(containerData);
             _context.SaveChanges();
@@ -848,6 +942,9 @@ namespace PalletLoading.Controllers
             containerData.issuer_Name = "";
             containerData.checkerTL_Name = "";
             containerData.checkerSV_Name = "";
+            containerData.issuer_Signature_Timestamp = null;
+            containerData.checkerTL_Signature_Timestamp = null;
+            containerData.checkerSV_Signature_Timestamp = null;
 
             _context.Update(containerData);
             _context.Update(formDataCurrentData);
@@ -874,6 +971,7 @@ namespace PalletLoading.Controllers
                     .FirstOrDefault();
 
                 containerData.issuer_Name = name;
+                containerData.issuer_Signature_Timestamp = DateTime.Now;
                 _context.Update(containerData);
                 _context.SaveChanges();
             }
@@ -899,6 +997,7 @@ namespace PalletLoading.Controllers
                     .FirstOrDefault();
 
                 containerData.checkerTL_Name = name;
+                containerData.checkerTL_Signature_Timestamp = DateTime.Now;
                 _context.Update(containerData);
                 _context.SaveChanges();
             }
@@ -923,6 +1022,7 @@ namespace PalletLoading.Controllers
                     .FirstOrDefault();
 
                 containerData.checkerSV_Name = name;
+                containerData.checkerSV_Signature_Timestamp = DateTime.Now;
                 _context.Update(containerData);
                 _context.SaveChanges();
             }
@@ -947,6 +1047,7 @@ namespace PalletLoading.Controllers
                     .FirstOrDefault();
 
                 containerData.approval_Name = name;
+                containerData.approval_Signature_Timestamp = DateTime.Now;
                 _context.Update(containerData);
                 _context.SaveChanges();
             }
@@ -1258,7 +1359,15 @@ namespace PalletLoading.Controllers
             LoadingType loadingTypeData = _context.LoadingTypes
                 .Where(l => l.Id == container.LoadingTypeId)
                 .FirstOrDefault();
-            string loadingType = loadingTypeData.Abbreviation + "-" + loadingTypeData.Name;
+            string loadingType = "";
+            if (loadingTypeData == null)
+            {
+                loadingType = "";
+            }
+            else
+            {
+                loadingType = loadingTypeData.Abbreviation + "-" + loadingTypeData.Name;
+            }
 
             //get form data
             FormDefinition formDefinition = _context.FormDefinitions
@@ -1347,11 +1456,40 @@ namespace PalletLoading.Controllers
         }
 
 
-        //[HttpPost]
-        public async Task<IActionResult> SubmitFiles( IFormFile[] file,string containerId)
+        [HttpPost]
+        public async Task<IActionResult> SubmitFiles( IFormFile[] file,string containerId, string? ListofFiles)
         {
+
             string numberString = Regex.Replace(containerId, @"\D", "");
             int id = Int32.Parse(numberString);
+
+
+            //delete files
+            List<UploadModel> originalListOffiles = _context.UploadModelTabel
+                .Where(l => l.ContainerId == id)
+                .ToList();
+            List<string>? FileList = JsonConvert.DeserializeObject<List<string>>(ListofFiles);
+
+            List<string> files = new List<string>();
+            foreach (var fileindividual in FileList)
+            {
+                if (fileindividual != "removed")
+                {
+                    Uri myUri = new Uri(fileindividual.ToString());
+                    string param1 = HttpUtility.ParseQueryString(myUri.Query).Get("fileName");
+                    files.Add(param1);
+                }
+            }
+
+            for (int a = 0; a < originalListOffiles.Count; a++)
+            {
+                bool b = files.Any(originalListOffiles[a].fileName.Contains);
+                if (b == false)
+                {
+                    await deleteFileOnSvAsync(originalListOffiles[a], id);
+                }
+            }
+
 
             foreach (var item in file)
             {
@@ -1362,7 +1500,7 @@ namespace PalletLoading.Controllers
                 if (saveData)
                 {
                     var pathBase = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("CustomSettings")["FileStoragePath"];
-                    string path = pathBase + "\\UploadedFiles";
+                    string path = pathBase + "\\" + id + "\\";
 
                     var uploadModelTable = _context.UploadModelTabel
                         .Where(l => l.ContainerId == id)
@@ -1400,10 +1538,7 @@ namespace PalletLoading.Controllers
 
 
             }
-            //return View();
-            //return RedirectToAction("Details", "Containers2", new { id = id });
-            string returnLink = "Invalid Data";
-            return View(returnLink);
+            return RedirectToAction("Details", "Containers2", new { id = id });
         }
 
 
@@ -1419,7 +1554,7 @@ namespace PalletLoading.Controllers
                 //int? requestId = typeId;
                 //path is prjectid/request/requestid/files
                 var pathBase = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("CustomSettings")["FileStoragePath"];
-                path = pathBase + "\\UploadedFiles\\" + containerId + "\\";
+                path = pathBase + "\\" + containerId + "\\";
                 //path = path + "\\Project-" + ProjectId.ToString();
                 //path = path + "\\" + typeOffile;
                 //path = path + "\\" + typeOffile + "-" + requestId.ToString();
@@ -1447,9 +1582,9 @@ namespace PalletLoading.Controllers
 
 
 
-        public IActionResult Download([FromQuery] string fileName, [FromQuery] string requestid, [FromQuery] string projectId)
+        public IActionResult Download([FromQuery] string fileName, [FromQuery] string requestid, [FromQuery] string containerId)
         {
-            int Projectid = int.Parse(projectId);
+            int Projectid = int.Parse(containerId);
             string typeOffile = "Acceptances";
             int requestId = int.Parse(requestid);
             return DownloadThisFileAsync(fileName, typeOffile, Projectid, requestId);
@@ -1466,10 +1601,10 @@ namespace PalletLoading.Controllers
             //typeofdocument+-+iddocument
             //file
             var pathBase = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("CustomSettings")["FileStoragePath"];
-            string path = pathBase + @"\UploadedFiles";
-            path = path + @"\Project-" + projectId;
-            path = path + @"\" + typeOffile;
-            path = path + @"\" + typeOffile + "-" + documentId;
+            string path = pathBase + "\\" + projectId + "\\";
+            //path = path + @"\Project-" + projectId;
+            //path = path + @"\" + typeOffile;
+            //path = path + @"\" + typeOffile + "-" + documentId;
             //path = Path.GetFullPath(Path.Combine(path, fileName));
             new FileExtensionContentTypeProvider().TryGetContentType(fileName, out string? contentType);
             var filePath = path;
@@ -1483,6 +1618,86 @@ namespace PalletLoading.Controllers
             //return File(await File.ReadAllBytesAsync(file), "application/pdf", fileName);
         }
 
+
+        public async Task<bool> deleteFileOnSvAsync(UploadModel idnew, int containerId)
+        {
+            try
+            {
+                string? fileName = idnew.fileName;
+                string typeOfFile = "Acceptances";
+                int requestid = idnew.id;
+
+
+                ////delete Files
+                bool fileDeleted = DeleteFile(fileName, typeOfFile, containerId, requestid, out string result);
+                if (fileDeleted == true)
+                {
+                    //delete file entry
+                    //CHECK THIS CODE DUDE!
+                    var RequestEntry = _context.UploadModelTabel
+                        .Where(m => m.ContainerId == containerId && m.fileName == fileName).ToList();
+                    foreach (var item in RequestEntry)
+                    {
+                        if (item.fileName == fileName)
+                        {
+                            //RequestEntry.Remove(item);
+                            var fileEntry = await _context.UploadModelTabel.Where(m => m.fileName == item.fileName).FirstOrDefaultAsync();
+                            _context.UploadModelTabel.Remove(fileEntry);
+                            await _context.SaveChangesAsync();
+                            break;
+                        }
+                    }
+                }
+
+
+                //retrun message with delete succesful
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(idnew);
+                return true;
+            }
+            catch (Exception es)
+            {
+                return false;
+            }
+        }
+
+
+        public bool DeleteFile(string fileName, string typeOffile, int projectId, int documentId, out string result)
+        {
+            try
+            {
+                var pathBase = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("CustomSettings")["FileStoragePath"];
+                //string path = pathBase + @"\UploadedFiles";
+                string path = pathBase + "\\" + projectId + "\\";
+                //path = path + @"\Project-" + projectId;
+                //path = path + @"\" + typeOffile;
+                //path = path + @"\" + typeOffile + "-" + documentId;
+                var fileToDelete = path + "\\" + fileName;
+                System.IO.File.Delete(fileToDelete);
+                result = path;
+                return true;
+            }
+            catch (Exception e)
+            {
+                result = e.Message;
+                return false;
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult ManagerUnlock(int id)
+        {
+            var containerData = _context.Containers
+                .Where(l => l.Id == id)
+                .FirstOrDefault();
+
+            containerData.approval_Name = null;
+            containerData.approval_Signature_Timestamp = null;
+            _context.Update(containerData);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", "Containers2", new { id = id });
+        }
 
     }
 }

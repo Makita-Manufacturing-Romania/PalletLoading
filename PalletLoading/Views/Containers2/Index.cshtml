@@ -144,13 +144,16 @@
             <th style="width:50px;">
                 Manager Approval
             </th>
+            <th style="width:200px;">
+                Information Check
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var container in Model)
         {
             <tr>
-                <td>
+                <td style="text-align:center; vertical-align:middle;">
                     @if (container.ContainerAT != null)
                     {
                         var listNames = new List<String>();
@@ -164,11 +167,11 @@
 
 
                 </td>
-                <td>
+                <td style="text-align:center; vertical-align:middle;">
 
                     @Html.DisplayFor(modelItem => container.Type.Name)
                 </td>
-                <td>
+                <td style="text-align:center; vertical-align:middle;">
                     @if (container.ContainerAT != null)
                     {
                         var listNames = new List<String>();
@@ -180,7 +183,7 @@
                         @:@templistContainer
                     }
                 </td>
-                <td>
+                <td style="text-align:center; vertical-align:middle;">
                     @{
                         decimal volumTotal = 0;
                         var tempPID = container.Pallets.Where(c => c.PalletImportData != null && c.PalletImportData.serial_from != 0).Sum(c => c.PalletImportData.volume * c.PalletImportData.picking_qty);
@@ -223,20 +226,52 @@
                 </td>
                 @if (ViewBag.UserRightLevel > 0)
                 {
-                    <td style="width:200px">
+                    <td style="width:200px;text-align:center; vertical-align:middle;">
                         <a class="btn btn-info" asp-action="Details" asp-route-id="@container.Id">Details</a>
                         <a class="btn btn-danger" asp-action="Delete" asp-route-id="@container.Id">Delete</a>
                     </td>
                     @if (string.IsNullOrEmpty(container.approval_Name))
                     {
-                        <td style="width:100px">
-                            <input type="checkbox" class="row-checkbox big-checkbox" style="margin-top:6px" data-id="@container.Id" />
+                        <td style="text-align:center; vertical-align:middle;">
+                            @if (container.dataCheck == true && container.signatureCheck == true && container.fileCheck == true)
+                            {
+                                if (ViewBag.UserRightLevel > 1)
+                                {
+                                    <input type="checkbox" class="row-checkbox big-checkbox" style="margin-top:6px;font-size:3vh;" data-id="@container.Id" />
+                                }
+                                else
+                                {
+                                    <i class="fas fa-exclamation" style="font-size:3vh;"></i>
+                                }
+                            }
+                        </td>
+                        <td style="text-align:center; vertical-align:middle;">
+                            @if (container.dataCheck == false)
+                            {
+                                <i class="fas fa-database" style="margin-right:20px;font-size:3vh;"></i>
+                            }
+                            @if (container.signatureCheck == false)
+                            {
+                                <i class="fas fa-clipboard-list" style="margin-right:20px;font-size:3vh;"></i>
+                            }
+                            @if (container.fileCheck == false)
+                            {
+                                <i class="fas fa-file-archive" style="font-size:3vh;"></i>
+                            }
+                        </td>
+                    }
+                    else
+                    {
+                        <td style="width:100px;text-align:center; vertical-align:middle;">
+                            <i class="fas fa-check" style="font-size:3vh;"></i>
+                        </td>
+                        <td style="text-align:center; vertical-align:middle;">
                         </td>
                     }
                 }
                 else
                 {
-                    <td style="width:150px">
+                    <td style="width:150px; style=" text-align:center; vertical-align:middle;"">
                         <a asp-action="Details" asp-route-id="@container.Id">Details</a>
                     </td>
                 }
@@ -247,33 +282,39 @@
 
 
 
-@{
-    var prevDisabled = Model.PageIndex - 1 == 0 ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-}
+    @{
+        var prevDisabled = Model.PageIndex - 1 == 0 ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
 
-<a asp-action="Index"
-   asp-route-pageNumber="@(Model.PageIndex - 1)"
-   asp-route-datetimepickerEndDate="@(Model.PageIndex - 1)"
-   class=" @prevDisabled btn btn-secondary"
-   id = "prevBtn"
-   onclick="redirectToContainers()">
-    Previous
-</a>
+    <a asp-action="Index"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-datetimepickerEndDate="@(Model.PageIndex - 1)"
+       class=" @prevDisabled btn btn-secondary"
+       id="prevBtn"
+       onclick="redirectToContainers()">
+        Previous
+    </a>
 
-<input style="width:50px;" type="text" id="pageText" value="@Model.PageIndex" />  / @Model.TotalPages
-<input type="button" value="Go to" onclick="redirectToContainers()" id="btnGoTo" />
+    <input style="width:50px;" type="text" id="pageText" value="@Model.PageIndex" />  / @Model.TotalPages
+    <input type="button" value="Go to" onclick="redirectToContainers()" id="btnGoTo" />
 
 
-<a asp-action="Index"
-   asp-route-pageNumber="@(Model.PageIndex + 1)"
-   class=" @nextDisabled btn btn-secondary"
-   id = "nextBtn"
-   onclick="redirectToContainers()">
-    Next
-</a>
+    <a asp-action="Index"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       class=" @nextDisabled btn btn-secondary"
+       id="nextBtn"
+       onclick="redirectToContainers()">
+        Next
+    </a>
 
-<button id="submit-changes" class="btn btn-primary"  style="margin-left:650px">Manager Approval</button>
+    @*  <div style="margin-left:344px"> *@
+@*     <input type="checkbox" class="row-checkbox big-checkbox" style="margin-left:560px; font-size:3vh; vertical-align:central" id="master"> *@
+<input type="checkbox" id="select-all" class="big-checkbox" style="margin-left:560px;font-size:3vh;" />
+    <button id="submit-changes" style="margin-left:52px;" class="btn btn-primary">Manager Approval</button>
+    @*  </div> *@
+
+
 
 @section Scripts {
 <link rel="stylesheet" href="~/jquery-ui-1.12.1/jquery-ui.css" />
@@ -397,6 +438,12 @@
                     }
                 });
             });
+        });
+
+        //check all
+        $('#select-all').change(function () {
+            var isChecked = $(this).is(':checked');
+            $('.row-checkbox').prop('checked', isChecked).change();
         });
 
 

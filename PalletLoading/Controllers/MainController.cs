@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace PalletLoading.Models
 {
@@ -21,14 +22,22 @@ namespace PalletLoading.Models
         public MainController(ILogger logger, PalletLoadingContext context, IWebHostEnvironment iwhe)
         {
             this.logger = logger;
-            this._context = context;
+            _context = context;
             this.webHost = iwhe;
         }
 
         public override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             var text = Request.Headers["User-Agent"].ToString();
-            if (!this._context.User.Any(c => c.Username.Equals(User.Identity.Name.Replace("MMRMAKITA\\", ""))))
+            var picker = "";
+            try
+            {
+                picker = HttpContext.User.FindFirst(c => c.Type == ClaimTypes.Name).Value.Replace("MMRMAKITA\\", "");
+
+            }
+            catch { }
+
+            if (!_context.User.Any(c => c.Username.Contains(picker)))
             {
                 var actionName = filterContext.ActionDescriptor.RouteValues["action"];
                 if (!actionName.Equals("AccesDenied"))

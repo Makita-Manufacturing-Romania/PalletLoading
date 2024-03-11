@@ -81,6 +81,7 @@ else
 @* <input type="hidden" id="formTypeId" name="formTypeId" value="@ViewBag.formTypeId" /> *@
 
 <style>
+
     .detailsBtn:focus {
         outline: 0 !important;
         box-shadow: none !important;
@@ -133,7 +134,7 @@ else
     }
 
     .btn-primary-new {
-        background-color: #0D6EFD;
+        background-color: darkcyan;
         border-radius:5px;
         border-color: rgba(0, 0, 0, 0);
         color: white;
@@ -157,6 +158,18 @@ else
         color: black;
     }
 
+    .btn-primary-manager {
+        background-color: #800080;
+        border-radius: 5px;
+        border-color: rgba(0, 0, 0, 0);
+        color: white;
+        font-size: 20px;
+    }
+
+        .btn-primary-manager:hover {
+            color: black;
+        }
+
     .btn-padding1 {
         padding: 0.375rem 0.75rem;
     }
@@ -169,7 +182,7 @@ else
 
     .AddButtonFiles {
         color: #ffff;
-        background-color: #424242;
+        background-color: #AAAAAA;
         width: 100%;
         height: 100%;
         font-size: 91px;
@@ -194,7 +207,7 @@ else
     }
 
     .LabelFiles {
-        color: #fff;
+        color: #88FFFF;
         width: 70%;
         text-align: center;
         flex-direction: column;
@@ -215,6 +228,29 @@ else
         }
 
 
+
+    .LabelFiles2 {
+        color: #FFFFFF;
+        width: 70%;
+        text-align: center;
+        flex-direction: column;
+        border-radius: 5px 5px 5px 5px;
+        padding: 0.375rem 0.75rem;
+        margin: 5px;
+        border: 1px solid transparent;
+    }
+
+        .LabelFiles2:focus {
+            outline: none !important;
+            box-shadow: 0 0 0px 0px #044d55 !important;
+            border-width: 0px;
+        }
+
+        .LabelFiles2:hover {
+            color: deepskyblue;
+        }
+
+
     .btn-Reject {
         color: #ffff;
         background-color: #c40e0e !important;
@@ -223,7 +259,7 @@ else
         text-align: center;
         border-radius: 5px 5px 5px 5px;
         margin: 5px;
-        max-height: 30px;
+        max-height: 60px;
         text-decoration: none;
         line-height: 1.2;
         padding: 0.375rem 0.75rem;
@@ -294,8 +330,9 @@ else
         max-width: 200px;
         text-align: center;
         */
-        background-color: #424242;
+        background-color: #AAAAAA;
         border-radius: 12px 12px 12px 12px;
+        border-color: #123456
         width: 100%;
         height: 100%;
         max-height: 200px;
@@ -304,6 +341,99 @@ else
         min-height: 150px;
         margin: 5px;
     }
+
+    .btnUploadFiles {
+        background-color: #007d21;
+        color:wheat;
+        border-radius: 3px 3px 3px 3px;
+        margin-left: 84.8%;
+        font-size: 3vh;
+    }
+
+
+
+    .loadingScreen {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        opacity: 0.9;
+        z-index: 9999;
+    }
+
+    .lds-ring {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .lds-ring div {
+            box-sizing: border-box;
+            display: block;
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            margin: 30px;
+            border: 30px solid #fff;
+            border-radius: 50%;
+            animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            border-color: #fff transparent transparent transparent;
+        }
+
+            .lds-ring div:nth-child(1) {
+                animation-delay: -0.45s;
+            }
+
+            .lds-ring div:nth-child(2) {
+                animation-delay: -0.3s;
+            }
+
+            .lds-ring div:nth-child(3) {
+                animation-delay: -0.15s;
+            }
+
+    @@keyframes lds-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+
+    .modal2 {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content2 {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    .sizeTooBig {
+        border: 2px solid #000040;
+        padding-left:33%;
+        padding-right:33%;
+        font-size: 3vh;
+    }
+
 
 
 </style>
@@ -331,15 +461,18 @@ else
     }
    @*  <a type="button" asp-action="GeneratePDF" asp-controller="Containers2" asp-route-id="@Model.Container.Id" target="_blank" class="btn btn-danger">Export PDF</a>
  *@
-    @if (ViewBag.ExportPDFConfirmation == true)
+
+    <a class="previewClass btn-padding1" type="button" asp-action="GeneratePDFNew" asp-controller="Containers2" asp-route-id="@Model.Container.Id" asp-route-actionType="Preview" target="_blank">Preview PDF</a>
+
+     @if (ViewBag.ExportPDFConfirmation == true)
     {
-        <a class="previewClass btn-padding1" type="button" asp-action="GeneratePDFNew" asp-controller="Containers2" asp-route-id="@Model.Container.Id" asp-route-actionType="Preview" target="_blank">Preview PDF</a>
         <a class="exportClass btn-padding1" type="button" asp-action="GeneratePDFNew" asp-controller="Containers2" asp-route-id="@Model.Container.Id" asp-route-actionType="Download" target="_blank">Download PDF</a>
-    }
+    } 
 
 
     @*<h1 style="text-align:center">Details - <a class="nav-link text-dark" asp-area="" asp-controller="CMR" asp-action="Index">@Model.Container.Name</a></h1>*@
     <input type="hidden" value="@Model.Container.Id" id="container" />
+    <input type="hidden" value="@templistContainer" id="templistContainer" />
     @*<div>
         <div align="center" style="padding:50px 300px 50px 300px">
         <div align="left">
@@ -632,122 +765,166 @@ else
     </div>
 
     @* New Modal Elements *@
-    @if (ViewBag.UserRightLevel > 1)
+    @if (ViewBag.UserRightLevel > 0)
     {
         <div style="display: flex; justify-content: center; gap: 20px;">
-            @if (ViewBag.SecuringLoadConfirmation == 2)
+            @if (!string.IsNullOrEmpty(Model.Container.approval_Name))
             {
-                <button type="button" class="btn-primary-confirm btn-padding1" onclick="ShowSecuringLoadModal()">
-                    Change Secure Load
-                </button>
+                <a class="btn-primary-manager btn-padding1" type="button" asp-action="ManagerUnlock" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Unlock For Editing
+                </a>
             }
-            else if (ViewBag.SecuringLoadConfirmation == 1)
+            else
             {
-                <button type="button" class="btn-primary-new btn-padding1" onclick="ShowSecuringLoadModal()">
-                    Change Secure Load
-                </button>
-            }
-            <div>
-                @if (ViewBag.LoadingTypeConfirmation == 2)
+                @if (ViewBag.SecuringLoadConfirmation == 2)
                 {
-                    <select name="loadingType" id="loadingType" class="btn-primary-confirm btn-padding2">
-                        @foreach (var type in ViewBag.LoadingTypes)
-                        {
-                            <option value="@type">@type</option>
-                        }
-                    </select>
+                    <button type="button" class="btn-primary-confirm btn-padding1" onclick="ShowSecuringLoadModal()">
+                        Change Secure Load
+                    </button>
                 }
-                else if (ViewBag.LoadingTypeConfirmation == 1)
+                else if (ViewBag.SecuringLoadConfirmation == 1)
                 {
-                    <select name="loadingType" id="loadingType" class="btn-primary-new btn-padding2">
-                        @foreach (var type in ViewBag.LoadingTypes)
-                        {
-                            <option value="@type">@type</option>
-                        }
-                    </select>
+                    <button type="button" class="btn-primary-new btn-padding1" onclick="ShowSecuringLoadModal()">
+                        Change Secure Load
+                    </button>
                 }
-            </div>
-            @if (ViewBag.FormDefinitionConfirmation == 2)
-            {
-                <button type="button" class="btn-primary-confirm btn-padding1" onclick="ShowFormDefinitionModal()">
-                    Change Form Definition
-                </button>
+                <div>
+                    @if (ViewBag.LoadingTypeConfirmation == 2)
+                    {
+                        <select name="loadingType" id="loadingType" class="btn-primary-confirm btn-padding2">
+                            @foreach (var type in ViewBag.LoadingTypes)
+                            {
+                                <option value="@type">@type</option>
+                            }
+                        </select>
+                    }
+                    else if (ViewBag.LoadingTypeConfirmation == 1)
+                    {
+                        <select name="loadingType" id="loadingType" class="btn-primary-new btn-padding2">
+                            @foreach (var type in ViewBag.LoadingTypes)
+                            {
+                                <option value="@type">@type</option>
+                            }
+                        </select>
+                    }
+                </div>
+                @if (ViewBag.FormDefinitionConfirmation == 2)
+                {
+                    <button type="button" class="btn-primary-confirm btn-padding1" onclick="ShowFormDefinitionModal()">
+                        Change Form Definition
+                    </button>
+                }
+                else if (ViewBag.FormDefinitionConfirmation == 1)
+                {
+                    <button type="button" class="btn-primary-new btn-padding1" onclick="ShowFormDefinitionModal()">
+                        Change Form Definition
+                    </button>
+                }
+                @if (ViewBag.FormDataConfirmation == 2)
+                {
+                    <button type="button" class="btn-primary-confirm btn-padding1" onclick="ShowFormDataModal()">
+                        Edit Form Data
+                    </button>
+                }
+                else if (ViewBag.FormDataConfirmation == 1)
+                {
+                    <button type="button" class="btn-primary-new btn-padding1" onclick="ShowFormDataModal()">
+                        Edit Form Data
+                    </button>
+                }
             }
-            else if (ViewBag.FormDefinitionConfirmation == 1)
+        </div>
+
+
+        <br />
+        <div style="display: flex; justify-content: center; gap: 20px;">
+            @if (ViewBag.IssuerSignatureValidation == 2)
             {
-                <button type="button" class="btn-primary-new btn-padding1" onclick="ShowFormDefinitionModal()">
-                    Change Form Definition
-                </button>
+                <a class="btn-primary-confirm btn-padding1" type="button" asp-action="IssuerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Issuer Signature
+                    <br/>
+                    @Model.Container.issuer_Name
+                    <br/>
+                    @Model.Container.issuer_Signature_Timestamp
+                </a>
             }
-            @if (ViewBag.FormDataConfirmation == 2)
+            else if (ViewBag.IssuerSignatureValidation == 1)
             {
-                <button type="button" class="btn-primary-confirm btn-padding1" onclick="ShowFormDataModal()">
-                    Edit Form Data
-                </button>
+                <a class="btn-primary-new btn-padding1" type="button" asp-action="IssuerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Issuer Signature
+                    <br />
+                    @Model.Container.issuer_Name
+                    <br />
+                    @Model.Container.issuer_Signature_Timestamp
+                </a>
             }
-            else if (ViewBag.FormDataConfirmation == 1)
+
+            @if (ViewBag.TeamLeaderSignatureValidation == 2)
             {
-                <button type="button" class="btn-primary-new btn-padding1" onclick="ShowFormDataModal()">
-                    Edit Form Data
-                </button>
+                <a class="btn-primary-confirm btn-padding1" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Team Leader Signature
+                    <br />
+                    @Model.Container.checkerTL_Name
+                    <br />
+                    @Model.Container.checkerTL_Signature_Timestamp
+                </a>
             }
+            else if (ViewBag.TeamLeaderSignatureValidation == 1)
+            {
+                <a class="btn-primary-new btn-padding1" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Team Leader Signature
+                    <br />
+                    @Model.Container.checkerTL_Name
+                    <br />
+                    @Model.Container.checkerTL_Signature_Timestamp
+                </a>
+            }
+
+            @if (ViewBag.SupervisorSignatureValidation == 2)
+            {
+                <a class="btn-primary-confirm btn-padding1" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Supervisor Signature
+                    <br />
+                    @Model.Container.checkerSV_Name
+                    <br/>
+                    @Model.Container.checkerSV_Signature_Timestamp
+                </a>
+            }
+            else if (ViewBag.SupervisorSignatureValidation == 1)
+            {
+                <a class="btn-primary-new btn-padding1" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Supervisor Signature
+                    <br />
+                    @Model.Container.checkerSV_Name
+                    <br />
+                    @Model.Container.checkerSV_Signature_Timestamp
+                </a>
+            }
+
+            @if (ViewBag.ManagerSignatureValidation == 2)
+            {
+                <a class="btn-primary-confirm btn-padding1" type="button" asp-action="ManagerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Manager Signature
+                    <br />
+                    @Model.Container.approval_Name
+                    <br/>
+                    @Model.Container.approval_Signature_Timestamp
+                </a>
+            }
+            else if (ViewBag.ManagerSignatureValidation == 1 && ViewBag.UserRightLevel > 1)
+            {
+                <a class="btn-primary-new btn-padding1" type="button" asp-action="ManagerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Manager Signature
+                    <br />
+                    @Model.Container.approval_Name
+                    <br/>
+                    @Model.Container.approval_Signature_Timestamp
+                </a>
+            }
+
         </div>
     }
    
-    <br />
-    <div style="display: flex; justify-content: center; gap: 20px;">
-        @if (ViewBag.IssuerSignatureValidation == 2)
-        {
-            <a class="btn-primary-confirm btn-padding1" type="button" asp-action="IssuerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                Issuer Signature
-            </a>
-        }
-        else if (ViewBag.IssuerSignatureValidation == 1)
-        {
-            <a class="btn-primary-new btn-padding1" type="button" asp-action="IssuerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                Issuer Signature
-            </a>
-        }
-        
-        @if (ViewBag.TeamLeaderSignatureValidation == 2)
-        {
-            <a class="btn-primary-confirm btn-padding1" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                Team Leader Signature
-            </a>
-        }
-        else if (ViewBag.TeamLeaderSignatureValidation == 1)
-        {
-            <a class="btn-primary-new btn-padding1" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                Team Leader Signature
-            </a>
-        }
-        
-        @if (ViewBag.SupervisorSignatureValidation == 2)
-        {
-            <a class="btn-primary-confirm btn-padding1" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                Supervisor Signature
-            </a>
-        }
-        else if (ViewBag.SupervisorSignatureValidation == 1)
-        {
-            <a class="btn-primary-new btn-padding1" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                Supervisor Signature
-            </a>
-        }
-
-        @if (ViewBag.ManagerSignatureValidation == 2)
-        {
-            <a class="btn-primary-confirm btn-padding1" type="button" asp-action="ManagerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                Manager Signature
-            </a>
-        }
-        else if (ViewBag.ManagerSignatureValidation == 1)
-        {
-            <a class="btn-primary-new btn-padding1" type="button" asp-action="ManagerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                Manager Signature
-            </a>
-        }
-    </div>
 
 
     <br />
@@ -893,79 +1070,89 @@ else
 
     }
 
-    <!--HTML ELEMENT FOR FILE UPLOAD-->
-<div class="row">
-    <div class="col-sm-10">
-        <div id="uploadLister" class="addListFiles">
-                @if (@ViewBag.typeOfOperation == "edit")
-                {
-                    int a = 0;
-                    @foreach (var item in Model.UploadModel)
-                    {
-                        string idInput = "myfile" + a.ToString();
-                        string idLabel = "myfilelabel" + a.ToString();
-                        string idRemove = "myfileremove" + a.ToString();
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <a class=" btn-Link-files btn" href="@Url.Action("Download", "Containers2", new { fileName = item.fileName, requestid = item.id, projectId=item.ContainerId})">@item.fileName <i class="bi bi-download"></i></a>
-                            <input type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFileOnSv(this)" />
-                            <input type="file" name="uploadfile" id="@idInput" style="display:none;" onchange="clickbtnadd(this)" />
+
+    @* Hide upload element after manager signature *@
+    @if (string.IsNullOrEmpty(Model.Container.approval_Name))
+    {
+    <form asp-action="SubmitFiles" id="emptyForm" enctype="multipart/form-data">
+
+        <span asp-validation-for="Container.Id"></span>
+
+        <!--HTML ELEMENT FOR FILE UPLOAD-->
+        <div class="row">
+            <div class="col-sm-10">
+                <div id="uploadLister" class="addListFiles">
+                        @if (@ViewBag.typeOfOperation == "edit")
+                        {
+                            int a = 0;
+                            @foreach (var item in Model.UploadModel)
+                            {
+                                string idInput = "myfile" + a.ToString();
+                                string idLabel = "myfilelabel" + a.ToString();
+                                string idRemove = "myfileremove" + a.ToString();
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a class=" btn-Link-files btn LabelFiles2" href="@Url.Action("Download", "Containers2", new { fileName = item.fileName, requestid = item.id, containerId=item.ContainerId})">@item.fileName <i class="bi bi-download"></i></a>
+                                    <input type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFileOnSv(this)" />
+                                    <input type="file" name="uploadfile" id="@idInput" style="display:none;justify-content: space-around;" onchange="clickbtnadd(this)" />
+                                </div>
+                                <hr class="HrFiles">
+                            </div>
+                                a++;
+                            }
+                            string idInputLast = "myfile" + Model.UploadModel.Count.ToString();
+                            string idLabelLast = "myfilelabel" + Model.UploadModel.Count.ToString();
+                            string idRemoveLast = "myfileremove" + Model.UploadModel.Count.ToString();
+                            string idhrLast = "myfilehr" + Model.UploadModel.Count.ToString();
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <input type="file" name="uploadfile" id="@idInputLast" style="display:none;" onchange="clickbtnadd(this)" />
+                                <label class="LabelFiles" style="display:none;" id="@idLabelLast">FileUploaded</label>
+                                <input style="display:none;justify-content: space-around;" id="@idRemoveLast" type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFiles(this)">
+                            </div>
+                            <hr id="@idhrLast" style="display:none;" class="HrFiles">
                         </div>
-                        <hr class="HrFiles">
-                    </div>
-                        a++;
+                        }
+                        else
+                        {
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <input type="file" name="uploadfile" id="myfile0" style="display:none;" onchange="clickbtnadd(this)" />
+                                <label class="LabelFiles" style="display:none;" id="myfilelabel0">FileUploaded</label>
+                                <input style="display:none;justify-content: space-around;" id="myfileremove0" type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFiles(this)">
+                            </div>
+                            <hr id="myfilehr0" style="display:none;" class="HrFiles">
+                        </div>
+                        }
+
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                    @if (@ViewBag.typeOfOperation == "edit")
+                    {
+                        string idInputLast = "myfile" + Model.UploadModel.Count.ToString();
+                    <label id="button+" for="@idInputLast" class="AddButtonFiles">+</label>
                     }
-                    string idInputLast = "myfile" + Model.UploadModel.Count.ToString();
-                    string idLabelLast = "myfilelabel" + Model.UploadModel.Count.ToString();
-                    string idRemoveLast = "myfileremove" + Model.UploadModel.Count.ToString();
-                    string idhrLast = "myfilehr" + Model.UploadModel.Count.ToString();
-                <div class="row">
-                    <div class="col-sm-12">
-                        <input type="file" name="uploadfile" id="@idInputLast" style="display:none;" onchange="clickbtnadd(this)" />
-                        <label class="LabelFiles" style="display:none;" id="@idLabelLast">FileUploaded</label>
-                        <input style="display:none;" id="@idRemoveLast" type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFiles(this)">
-                    </div>
-                    <hr id="@idhrLast" style="display:none;" class="HrFiles">
-                </div>
-                }
-                else
-                {
-                <div class="row">
-                    <div class="col-sm-12">
-                        <input type="file" name="uploadfile" id="myfile0" style="display:none;" onchange="clickbtnadd(this)" />
-                        <label class="LabelFiles" style="display:none;" id="myfilelabel0">FileUploaded</label>
-                        <input style="display:none;" id="myfileremove0" type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFiles(this)">
-                    </div>
-                    <hr id="myfilehr0" style="display:none;" class="HrFiles">
-                </div>
-                }
-
+                    else
+                    {
+                    <label id="button+" for="myfile0" class="AddButtonFiles">+</label>
+                    }
+            </div>
         </div>
-    </div>
 
-    <div class="col-sm-2">
-            @if (@ViewBag.typeOfOperation == "edit")
-            {
-                string idInputLast = "myfile" + Model.UploadModel.Count.ToString();
-            <label id="button+" for="@idInputLast" class="AddButtonFiles">+</label>
-            }
-            else
-            {
-            <label id="button+" for="myfile0" class="AddButtonFiles">+</label>
-            }
-    </div>
-</div>
-<form id="emptyForm">
 
-    <input id="btnSave" type="submit" value="Save" class="btn-Accept" />
+        <input id="btnSave" type="submit" value="Save" class="btnUploadFiles" />
 
-</form>
+    </form>
+    }
+
 
 
 @* MODAL FOR REMOVE UPLOADED FILES *@
-<div class="modal" id="DeleteFileModal">
+<div class="modal" id="DeleteFileModal" style="background-color: rgba(0,0,0,0.4);">
     <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
+        <div class="modal-content modalUpload">
             <div class="modal-header">
                 <h5 class="modal-title"></h5>
                 <div class="col-12">
@@ -978,19 +1165,19 @@ else
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-sm-2 spaceBetwenDivsSmallTop">
+                    <div class="col-sm-2">
                     </div>
-                    <div class="col-sm-4 spaceBetwenDivsSmallTop">
-                        <button id="yesDelete" type="button" class="close btn-Reject" data-bs-dismiss="modal" aria-label="Close">
+                    <div class="col-sm-4">
+                        <button id="yesDelete" type="button" class="btn-Reject" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="false">Yes</span>
                         </button>
                     </div>
-                    <div class="col-sm-4 spaceBetwenDivsSmallTop">
-                        <button id="cancelDelete" type="button" class="close btnBlackOwn" data-bs-dismiss="modal" aria-label="Close">
+                    <div class="col-sm-4">
+                        <button id="cancelDelete" type="button" class="btnBlackOwn" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="false">No</span>
                         </button>
                     </div>
-                    <div class="col-sm-2 spaceBetwenDivsSmallTop">
+                    <div class="col-sm-2">
                     </div>
                 </div>
             </div>
@@ -999,88 +1186,49 @@ else
 </div>
 
 
+@* Alert modal for big upload requests *@
+@* <div class="modal2 sizeTooBig" id="modalFileSize">
+    <div class="modal-content2">
+        <p>The requested files are too big!</p>
+        <div class="col-sm-4">
+            <button id="closeModal" type="button" class="btn-Reject" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="false">Close</span>
+            </button>
+        </div>
+    </div>
+</div> *@
+
+@* <div aria-live="polite" aria-atomic="true" style="position: absolute; margin-left:200px;margin-bottom:150px min-height: 200px;"> *@
+    <!-- Position it -->
+    <div style="position: absolute; bottom: 21px; left: 19px; z-index: 9999;">
+
+        <!-- Then put toasts within -->
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="mr-auto">Notification</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body" style="font-size: 20px">
+                The requested files are too big!
+            </div>
+        </div>
+
+    </div>
+@* </div> *@
+
+
 
     @section Scripts {
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script>
+@*     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> *@
+        
+    @* <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script> *@
+ 
+@*       <script src="~/lib/jquery/dist/jquery.js"></script> 
+     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>    *@
 
-        //Submit Button
-
-        $('emptyForm').on('submit', function (event) {
-
-            event.preventDefault();//nu merge
-            //event.stopImmediatePropagation();
-            var OriginalList = new Array();
-            const originalDiv = document.getElementById("uploadLister");
-            for (const child of originalDiv.children) {
-                var dev = {};
-                //dev.DeveloperName = child.innerText;
-                const childid = child.children[0];
-                var removed = "removed";
-                if (childid == null) {
-                    //alert("frist if");
-                    dev = removed;
-                    OriginalList.push(dev);
-                }
-                else {
-                    const childSecound = childid.children[0];
-                    if (childSecound == null) {
-                        // alert("secound if");
-                        dev = removed;
-                        OriginalList.push(dev);
-                    }
-                    else {
-                        if (childSecound.href == null) {
-
-                            //alert("last  if");
-                            dev = removed;
-                            OriginalList.push(dev);
-                        }
-                        else {
-
-                            dev = childSecound.href;
-                            OriginalList.push(dev);
-                            // alert("merge");
-                            // alert(JSON.stringify(dev));
-                        }
-                    }
-                }
-            }
-
-
-
-
-            var formData = new FormData(document.getElementById('emptyForm'));
-
-            formData.append('ListofFiles', JSON.stringify(OriginalList));
-            $.ajax
-                ({
-                    url: '@Url.Action("SubmitFiles", "Containers2")',
-                    type: 'POST',
-                    data: formData,
-                    dataType: 'json',
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        //document.location.href = "/" + data;
-                        //$('.loading').hide();
-                        // Handle the response
-                    },
-                    error: function (error) {
-                        $('.loading').hide();
-                        // Handle errors
-                    }
-                });
-        });
-
-        </script>
-
-
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
-    <script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script>
-
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
 <script>
 
     // Wait for the document to be fully loaded
@@ -1188,7 +1336,9 @@ else
         function ShowFormDefinitionModal(id) {
             // Construct the URL with the id parameter
             var containerId = $("#containerId").val();
-            var url = "@Url.Action("ShowFormDefinitionModal", "Containers2")" + "?id1=" + containerId;
+            var containersList = $("#templistContainer").val();
+
+            var url = "@Url.Action("ShowFormDefinitionModal", "Containers2")" + "?id1=" + containerId + "&containersList=" + containersList;
 
             $.get(url, function (data) {
                 $("#selectFormDefinitionModalDialog").html(data);
@@ -1260,7 +1410,7 @@ else
                 btn.className = "btn-Reject-files btn-Reject";
                 btn.value = "Remove";
                 btn.id = 'myfileremove' + value;
-                btn.setAttribute("style", "display:none;");
+                btn.setAttribute("style", "display:none;justify-content: space-around;");
                 btn.setAttribute('onclick', 'deleteFiles(this)');
                 var hr = document.createElement('hr');
                 hr.className = "HrFiles";
@@ -1283,7 +1433,10 @@ else
             //delete row
             tbl = el.parentNode.parentNode;
 
-            $('#DeleteFileModal').modal('show');
+            var modal = document.getElementById("DeleteFileModal");
+
+            // Open the modal
+            modal.style.display = 'block';
         }
 
         function deleteFiles(el) {
@@ -1294,8 +1447,11 @@ else
             tbl = el.parentNode.parentNode;
             //delete row
 
+            
+            var modal = document.getElementById("DeleteFileModal");
 
-            $('#DeleteFileModal').modal('show');
+            // Open the modal
+            modal.style.display = 'block';
         }
 
 
@@ -1311,14 +1467,35 @@ else
             }
             tbl.remove();
 
-            $('#DeleteFileModal').modal('hide');
+            var modal = document.getElementById("DeleteFileModal");
+
+            // Open the modal
+            modal.style.display = 'none';
         });
 
-</script>
+        $("body").on("click", "#cancelDelete", function () {
 
-    <script type="text/javascript">
+            var modal = document.getElementById("DeleteFileModal");
+
+            // Open the modal
+            modal.style.display = 'none';
+        });
+
+        // $("body").on("click", "#closeModal", function () {
+
+        //     var modal = document.getElementById("modalFileSize");
+
+        //     // Open the modal
+        //     modal.style.display = 'none';
+        // });
+
+        
+
         $(document).ready(function () {
-            $("form").submit(function () {
+            $("form").submit(function (e) {
+                e.preventDefault();
+
+                document.querySelector('.loadingScreen').style.display = 'block';
 
                 var formData = new FormData(document.getElementById('emptyForm'));
                 for (var ii = 0; ii < value; ii++) {
@@ -1330,6 +1507,7 @@ else
 
                 var OriginalList = new Array();
                 const originalDiv = document.getElementById("uploadLister");
+
                 for (const child of originalDiv.children) {
                     var dev = {};
                     //dev.DeveloperName = child.innerText;
@@ -1367,31 +1545,82 @@ else
                 // alert(containerId);
 
                 formData.append('ListofFiles', JSON.stringify(OriginalList));
-                $.ajax({
-                    url: '@Url.Action("SubmitFiles", "Containers2")',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        return false;
-                        //document.location.href = "/" + data;
-                        //$('.loading').hide();
-                        // Handle the response
-                    },
-                    error: function (error) {
-                        $('.loading').hide();
-                        // Handle errors
-                    }
-                });
+
+
+                const fd = formData
+                let size = 0
+
+                for (let pair of fd.entries()) {
+                    if (pair[1] instanceof Blob)
+                        size += pair[1].size
+                    else
+                        size += pair[1].length
+                }
+
+                if (size < 28000000)
+                {
+
+
+                    $.ajax({
+                        url: '@Url.Action("SubmitFiles", "Containers2")',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+
+                            console.log('ready for redirect');
+                            window.location.href = '/Containers2/Details?id=' + containerId;
+
+                            return false;
+                            //document.location.href = "/" + data;
+                            //$('.loading').hide();
+                            // Handle the response
+
+                        },
+                        error: function (error) {
+                            $('.loading').hide();
+                            // Handle errors
+                        }
+                    });
+                }
+                else
+                {
+                    // alert("aaaa");
+                    document.querySelector('.loadingScreen').style.display = 'none';
+
+
+                    // var modal = document.getElementById("modalFileSize");
+
+                    // // Open the modal
+                    // modal.style.display = 'block';
+
+                    $(document).ready(function () {
+                        showToast();
+                    });
+
+                    // // After 3 seconds, close the modal
+                    // setTimeout(function () {
+                    //     modal.style.display = 'none';
+                    // }, 3000);
+
+                    //alert("x");
+                }
+
+
+
+
 
             });
         });
 
+        function showToast() {
+            $('.toast').toast({ delay: 3000 });
+            $('.toast').toast('show');
+        }
 
-    </script>
 
-
+</script>
 
 
     }

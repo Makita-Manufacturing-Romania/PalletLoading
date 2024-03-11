@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PalletLoading.Data;
 
@@ -11,9 +12,11 @@ using PalletLoading.Data;
 namespace PalletLoading.Migrations
 {
     [DbContext(typeof(PalletLoadingContext))]
-    partial class PalletLoadingContextModelSnapshot : ModelSnapshot
+    [Migration("20240311073606_clientTypesTableAdd")]
+    partial class clientTypesTableAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,12 +223,7 @@ namespace PalletLoading.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TypeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("TypeId");
 
                     b.ToTable("Countries");
                 });
@@ -947,15 +945,6 @@ namespace PalletLoading.Migrations
                     b.Navigation("Country");
                 });
 
-            modelBuilder.Entity("PalletLoading.Models.Countries", b =>
-                {
-                    b.HasOne("PalletLoading.Models.ClientType", "Type")
-                        .WithMany("Countries")
-                        .HasForeignKey("TypeId");
-
-                    b.Navigation("Type");
-                });
-
             modelBuilder.Entity("PalletLoading.Models.Pallet", b =>
                 {
                     b.HasOne("PalletLoading.Models.Container", "Container2")
@@ -1015,11 +1004,6 @@ namespace PalletLoading.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("UserRight");
-                });
-
-            modelBuilder.Entity("PalletLoading.Models.ClientType", b =>
-                {
-                    b.Navigation("Countries");
                 });
 
             modelBuilder.Entity("PalletLoading.Models.Container", b =>

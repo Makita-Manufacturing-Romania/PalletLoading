@@ -31,8 +31,11 @@ Layout=null;
     <h2 style="margin-left:10%;"></h2>
     <table class='table' style="width:80%; margin-top: -60px;" align="center">
         <tr>
-            <th style ="font-size: 20px;">Doc.Ref. @Model.FormDefinition.DocRefNumber</thstyle>
+            @if (Model.FormDefinition != null)
+            {
+            <th style ="font-size: 20px;">Doc.Ref. @Model.FormDefinition.DocRefNumber</th>
             <th style ="font-size: 20px;">Dep. @Model.FormDefinition.Department</th>
+            }
         </tr>
     </table>
 </div>
@@ -44,7 +47,9 @@ Layout=null;
 @* date *@
 <div>
     <table border="1">
-        <tr>
+
+        @if (Model.FormData != null)
+        {<tr>
             <td colspan="3" style="font-size: 25px;">
                 DATA: @Model.loadingData
             </td>
@@ -155,6 +160,8 @@ Layout=null;
                 NUME STIVUITORIST: @Model.FormData.numeStivuitorist
             </td>
         </tr>
+        }
+        
 
 
     </table>

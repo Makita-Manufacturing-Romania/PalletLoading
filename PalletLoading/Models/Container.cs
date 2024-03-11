@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -45,5 +46,16 @@ namespace PalletLoading.Models
         public string checkerTL_Name { get; set; }
         public string checkerSV_Name { get; set; }
         public string approval_Name { get; set; }
+        [NotMapped]
+        public bool dataCheck { get; set; }
+        [NotMapped]
+        public bool signatureCheck { get; set; }
+        [NotMapped]
+        public bool fileCheck { get; set; }
+
+        public DateTime? issuer_Signature_Timestamp { get; set; }
+        public DateTime? checkerTL_Signature_Timestamp { get; set; }
+        public DateTime? checkerSV_Signature_Timestamp { get; set; }
+        public DateTime? approval_Signature_Timestamp { get; set; }
     }
 }

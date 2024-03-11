@@ -1,36 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PalletLoading.Data;
 using PalletLoading.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PalletLoading.Controllers
 {
-    public class CountriesController : MainController
+    public class ClientTypeController : MainController
     {
 
-        public CountriesController(PalletLoadingContext context):base(null,context,null)
+        public ClientTypeController(PalletLoadingContext context) : base(null, context, null)
         {
         }
 
-        // GET: Countries
-        public ActionResult Index(string sortOrder)
+        // GET: PalletTypes
+        public async Task<IActionResult> Index()
         {
-            ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_cresc" : "";
-            List<Countries> countries = new();
-            if (sortOrder == "name_cresc")
-                countries = _context.Countries.Include(x => x.Type).OrderByDescending(x => x.Name).ToList();
-            else
-                countries = _context.Countries.Include(x => x.Type).OrderBy(x => x.Name).ToList();
-            return View(countries);
+            return View(await _context.ClientTypes.ToListAsync());
         }
 
-        // GET: Countries/Details/5
+        // GET: PalletTypes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -38,68 +28,62 @@ namespace PalletLoading.Controllers
                 return NotFound();
             }
 
-            var countries = await _context.Countries.Include(x => x.Type)
+            var formDefinition = await _context.ClientTypes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (countries == null)
+            if (formDefinition == null)
             {
                 return NotFound();
             }
 
-            return View(countries);
+            return View(formDefinition);
         }
 
-        // GET: Countries/Create
+        // GET: PalletTypes/Create
         public IActionResult Create()
         {
-            ViewBag.CountryTypes = _context.ClientTypes.ToList();
-
             return View();
         }
 
-        // POST: Countries/Create
+        // POST: PalletTypes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Abbreviation,Type,TypeId")] Countries countries)
+        public async Task<IActionResult> Create([Bind("Id,Name")] ClientType clientType)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(countries);
+                _context.Add(clientType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(countries);
+            return View(clientType);
         }
 
-        // GET: Countries/Edit/5
-        public async Task<IActionResult> Edit(int? id)//////////NOT WORKING
+        // GET: PalletTypes/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var countries = await _context.Countries.Include(x => x.Type)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (countries == null)
+            var clientType = await _context.ClientTypes.FindAsync(id);
+            if (clientType == null)
             {
                 return NotFound();
             }
-
-            ViewBag.CountryTypes = _context.ClientTypes.ToList();
-
-            return View(countries);
+            return View(clientType);
         }
 
-        // POST: Countries/Edit/5
+        // POST: PalletTypes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Abbreviation,Type,TypeId")] Countries countries)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] ClientType clientType)
         {
-            if (id != countries.Id)
+            if (id != clientType.Id)
             {
                 return NotFound();
             }
@@ -108,12 +92,12 @@ namespace PalletLoading.Controllers
             {
                 try
                 {
-                    _context.Update(countries);
+                    _context.Update(clientType);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CountriesExists(countries.Id))
+                    if (!ClientTypeExists(clientType.Id))
                     {
                         return NotFound();
                     }
@@ -124,10 +108,10 @@ namespace PalletLoading.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(countries);
+            return View(clientType);
         }
 
-        // GET: Countries/Delete/5
+        // GET: PalletTypes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,30 +119,30 @@ namespace PalletLoading.Controllers
                 return NotFound();
             }
 
-            var countries = await _context.Countries.Include(x => x.Type)
+            var clientType = await _context.ClientTypes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (countries == null)
+            if (clientType == null)
             {
                 return NotFound();
             }
 
-            return View(countries);
+            return View(clientType);
         }
 
-        // POST: Countries/Delete/5
+        // POST: PalletTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var countries = await _context.Countries.FindAsync(id);
-            _context.Countries.Remove(countries);
+            var formDefinition = await _context.ClientTypes.FindAsync(id);
+            _context.ClientTypes.Remove(formDefinition);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CountriesExists(int id)
+        private bool ClientTypeExists(int id)
         {
-            return _context.Countries.Any(e => e.Id == id);
+            return _context.ClientTypes.Any(e => e.Id == id);
         }
     }
 }
