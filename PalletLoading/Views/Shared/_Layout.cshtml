@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="shortcut icon" type="image/x-icon" href="~/mlogo2.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 
@@ -205,6 +206,11 @@
 
                                     </li>
 
+                                    <li>
+                                        <a style="font-size: 20px;" class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="ClientType" asp-action="Index"><b>Client Type</b></a>
+
+                                    </li>
+
                                   @*   <li>
                                         <a class="nav-link text-dark" style="color:black;" asp-area="" asp-controller="SecuringLoad" asp-action="Index"><b>Securing Load</b></a>
 
@@ -255,7 +261,12 @@
 
 <div class="loadingScreen">
     <p style="font-size:5vh;margin-top:14%;color:#fff;text-align:center">Loading...</p>
-    <div class="lds-ring align-text-center"><div></div><div></div><div></div><div></div></div>
+    <div class="lds-ring align-text-center">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
 </div>
 
     <script>

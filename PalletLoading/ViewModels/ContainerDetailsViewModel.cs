@@ -26,5 +26,7 @@ namespace PalletLoading.ViewModels
         public string loadingType { get; set; }
         public FormDefinition FormDefinition { get; set;}
         public SecuringLoad SecuringLoad { get; set; }
+        public FormData FormData { get; set; }
+        public List<UploadModel> UploadModel { get; set; }
     }
 }

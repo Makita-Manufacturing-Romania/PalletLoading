@@ -24,9 +24,9 @@ namespace PalletLoading.Controllers
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_cresc" : "";
             List<Countries> countries = new();
             if (sortOrder == "name_cresc")
-                countries = _context.Countries.OrderByDescending(x => x.Name).ToList();
+                countries = _context.Countries.Include(x => x.Type).OrderByDescending(x => x.Name).ToList();
             else
-                countries = _context.Countries.OrderBy(x => x.Name).ToList();
+                countries = _context.Countries.Include(x => x.Type).OrderBy(x => x.Name).ToList();
             return View(countries);
         }
 
@@ -38,7 +38,7 @@ namespace PalletLoading.Controllers
                 return NotFound();
             }
 
-            var countries = await _context.Countries
+            var countries = await _context.Countries.Include(x => x.Type)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (countries == null)
             {
@@ -51,6 +51,8 @@ namespace PalletLoading.Controllers
         // GET: Countries/Create
         public IActionResult Create()
         {
+            ViewBag.CountryTypes = _context.ClientTypes.ToList();
+
             return View();
         }
 
@@ -59,7 +61,7 @@ namespace PalletLoading.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Abbreviation")] Countries countries)
+        public async Task<IActionResult> Create([Bind("Id,Name,Abbreviation,Type,TypeId")] Countries countries)
         {
             if (ModelState.IsValid)
             {
@@ -71,18 +73,22 @@ namespace PalletLoading.Controllers
         }
 
         // GET: Countries/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)//////////NOT WORKING
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var countries = await _context.Countries.FindAsync(id);
+            var countries = await _context.Countries.Include(x => x.Type)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (countries == null)
             {
                 return NotFound();
             }
+
+            ViewBag.CountryTypes = _context.ClientTypes.ToList();
+
             return View(countries);
         }
 
@@ -91,7 +97,7 @@ namespace PalletLoading.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Abbreviation")] Countries countries)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Abbreviation,Type,TypeId")] Countries countries)
         {
             if (id != countries.Id)
             {
@@ -129,7 +135,7 @@ namespace PalletLoading.Controllers
                 return NotFound();
             }
 
-            var countries = await _context.Countries
+            var countries = await _context.Countries.Include(x => x.Type)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (countries == null)
             {

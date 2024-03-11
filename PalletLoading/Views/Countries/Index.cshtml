@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="~/css/background.css" />
 
 <p>
-    <a class="btn btn-warning" asp-action="Create">New Country</a>
+    <a class="btn btn-success" asp-action="Create">New Country</a>
 </p>
 <table class="table">
     <thead>
@@ -20,6 +20,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Abbreviation)
+            </th>
+            <th>
+                Client Type
             </th>
             <th></th>
         </tr>
@@ -34,8 +37,11 @@
                 @Html.DisplayFor(modelItem => item.Abbreviation)
             </td>
             <td>
+                    @Html.DisplayFor(modelItem => item.Type.Name)
+            </td>
+            <td>
                 <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
-                <a class="btn btn-success" asp-action="Details" asp-route-id="@item.Id">Details</a> 
+          @*       <a class="btn btn-success" asp-action="Details" asp-route-id="@item.Id">Details</a>  *@
                 <a class="btn btn-danger"  asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>

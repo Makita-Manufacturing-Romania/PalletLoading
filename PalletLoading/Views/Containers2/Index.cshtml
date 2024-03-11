@@ -79,7 +79,23 @@
         margin-bottom:5px;
     }
 
+    .big-checkbox {
+        width: 25px;
+        height: 25px;
+    }
+
 </style>
+
+<!-- Hidden field to store the buton ID's and other C# variables' -->
+<input type="hidden" id="indexParam1" name="indexParam1" value="@ViewBag.indexParam1" />
+<input type="hidden" id="indexParam2" name="indexParam2" value="@ViewBag.indexParam2" />
+<input type="hidden" id="indexParam3" name="indexParam3" value="@ViewBag.indexParam3" />
+<input type="hidden" id="indexParam4" name="indexParam4" value="@ViewBag.indexParam4" />
+<input type="hidden" id="indexParam5" name="indexParam5" value="@ViewBag.indexParam5" />
+<input type="hidden" id="indexParam6" name="indexParam6" value="@ViewBag.indexParam6" />
+
+
+
 
 <div style="display:flex; justify-content:space-between">
     @if (ViewBag.UserRightLevel > 0)
@@ -122,14 +138,22 @@
             <th>
                 Volume (mc3)
             </th>
-            <th style="width:150px;">Actions</th>
+            <th style="width:150px;">
+                Actions
+            </th>
+            <th style="width:50px;">
+                Manager Approval
+            </th>
+            <th style="width:200px;">
+                Information Check
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var container in Model)
         {
             <tr>
-                <td>
+                <td style="text-align:center; vertical-align:middle;">
                     @if (container.ContainerAT != null)
                     {
                         var listNames = new List<String>();
@@ -143,11 +167,11 @@
 
 
                 </td>
-                <td>
+                <td style="text-align:center; vertical-align:middle;">
 
                     @Html.DisplayFor(modelItem => container.Type.Name)
                 </td>
-                <td>
+                <td style="text-align:center; vertical-align:middle;">
                     @if (container.ContainerAT != null)
                     {
                         var listNames = new List<String>();
@@ -159,7 +183,7 @@
                         @:@templistContainer
                     }
                 </td>
-                <td>
+                <td style="text-align:center; vertical-align:middle;">
                     @{
                         decimal volumTotal = 0;
                         var tempPID = container.Pallets.Where(c => c.PalletImportData != null && c.PalletImportData.serial_from != 0).Sum(c => c.PalletImportData.volume * c.PalletImportData.picking_qty);
@@ -202,22 +226,52 @@
                 </td>
                 @if (ViewBag.UserRightLevel > 0)
                 {
-                    <td style="width:200px;">
+                    <td style="width:200px;text-align:center; vertical-align:middle;">
                         <a class="btn btn-info" asp-action="Details" asp-route-id="@container.Id">Details</a>
                         <a class="btn btn-danger" asp-action="Delete" asp-route-id="@container.Id">Delete</a>
-
-
-                        @if (container.CmrId != null)
-                        {
-                            <span> | </span>
-                            @*<a asp-action="GeneratePDF" asp-controller="CMR" asp-route-id="@container.Container.CmrId">CMR</a>*@
-                            <a asp-action="CmrReport" asp-controller="CMR" asp-route-id="@container.CmrId">CMR</a>
-                        }
                     </td>
+                    @if (string.IsNullOrEmpty(container.approval_Name))
+                    {
+                        <td style="text-align:center; vertical-align:middle;">
+                            @if (container.dataCheck == true && container.signatureCheck == true && container.fileCheck == true)
+                            {
+                                if (ViewBag.UserRightLevel > 1)
+                                {
+                                    <input type="checkbox" class="row-checkbox big-checkbox" style="margin-top:6px;font-size:3vh;" data-id="@container.Id" />
+                                }
+                                else
+                                {
+                                    <i class="fas fa-exclamation" style="font-size:3vh;"></i>
+                                }
+                            }
+                        </td>
+                        <td style="text-align:center; vertical-align:middle;">
+                            @if (container.dataCheck == false)
+                            {
+                                <i class="fas fa-database" style="margin-right:20px;font-size:3vh;"></i>
+                            }
+                            @if (container.signatureCheck == false)
+                            {
+                                <i class="fas fa-clipboard-list" style="margin-right:20px;font-size:3vh;"></i>
+                            }
+                            @if (container.fileCheck == false)
+                            {
+                                <i class="fas fa-file-archive" style="font-size:3vh;"></i>
+                            }
+                        </td>
+                    }
+                    else
+                    {
+                        <td style="width:100px;text-align:center; vertical-align:middle;">
+                            <i class="fas fa-check" style="font-size:3vh;"></i>
+                        </td>
+                        <td style="text-align:center; vertical-align:middle;">
+                        </td>
+                    }
                 }
                 else
                 {
-                    <td style="width:150px;">
+                    <td style="width:150px; style=" text-align:center; vertical-align:middle;"">
                         <a asp-action="Details" asp-route-id="@container.Id">Details</a>
                     </td>
                 }
@@ -226,31 +280,42 @@
     </tbody>
 </table>
 
-@{
-    var prevDisabled = Model.PageIndex - 1 == 0 ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-}
-
-<a asp-action="Index"
-   asp-route-pageNumber="@(Model.PageIndex - 1)"
-   asp-route-datetimepickerEndDate="@(Model.PageIndex - 1)"
-   class=" @prevDisabled btn btn-secondary"
-   id = "prevBtn"
-   onclick="redirectToContainers()">
-    Previous
-</a>
-
-<input style="width:50px;" type="text" id="pageText" value="@Model.PageIndex" />  / @Model.TotalPages
-<input type="button" value="Go to" onclick="redirectToContainers()" id="btnGoTo" />
 
 
-<a asp-action="Index"
-   asp-route-pageNumber="@(Model.PageIndex + 1)"
-   class=" @nextDisabled btn btn-secondary"
-   id = "nextBtn"
-   onclick="redirectToContainers()">
-    Next
-</a>
+    @{
+        var prevDisabled = Model.PageIndex - 1 == 0 ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+
+    <a asp-action="Index"
+       asp-route-pageNumber="@(Model.PageIndex - 1)"
+       asp-route-datetimepickerEndDate="@(Model.PageIndex - 1)"
+       class=" @prevDisabled btn btn-secondary"
+       id="prevBtn"
+       onclick="redirectToContainers()">
+        Previous
+    </a>
+
+    <input style="width:50px;" type="text" id="pageText" value="@Model.PageIndex" />  / @Model.TotalPages
+    <input type="button" value="Go to" onclick="redirectToContainers()" id="btnGoTo" />
+
+
+    <a asp-action="Index"
+       asp-route-pageNumber="@(Model.PageIndex + 1)"
+       class=" @nextDisabled btn btn-secondary"
+       id="nextBtn"
+       onclick="redirectToContainers()">
+        Next
+    </a>
+
+    @*  <div style="margin-left:344px"> *@
+@*     <input type="checkbox" class="row-checkbox big-checkbox" style="margin-left:560px; font-size:3vh; vertical-align:central" id="master"> *@
+<input type="checkbox" id="select-all" class="big-checkbox" style="margin-left:560px;font-size:3vh;" />
+    <button id="submit-changes" style="margin-left:52px;" class="btn btn-primary">Manager Approval</button>
+    @*  </div> *@
+
+
+
 @section Scripts {
 <link rel="stylesheet" href="~/jquery-ui-1.12.1/jquery-ui.css" />
 <script src="~/jquery-ui-1.12.1/jquery-ui.js"></script>
@@ -333,6 +398,54 @@
         function redirectToContainers() {
             document.querySelector('.loadingScreen').style.display = 'block';
         }
+
+
+        //manually sign checked items as manager
+        $(document).ready(function () {
+            var checkedIds = [];
+
+            $('.row-checkbox').change(function () {
+                var id = $(this).data('id');
+                if ($(this).is(':checked')) {
+                    checkedIds.push(id);
+                } else {
+                    checkedIds = checkedIds.filter(function (item) {
+                        return item !== id;
+                    });
+                }
+            });
+
+            var indexParam1 = $("#indexParam1").val();
+            var indexParam2 = $("#indexParam2").val();
+            var indexParam3 = $("#indexParam3").val();
+            var indexParam4 = $("#indexParam4").val();
+            var indexParam5 = $("#indexParam5").val();
+            var indexParam6 = $("#indexParam6").val();
+
+
+            $('#submit-changes').click(function () {
+                document.querySelector('.loadingScreen').style.display = 'block';
+                $.ajax({
+                    url: '/Containers2/ManagerBulkSign',
+                    type: 'POST',
+                    data: { ids: checkedIds, searchString: indexParam1, pageNumber: indexParam2, currentdatetimepickerStartDate: indexParam3, currentdatetimepickerEndDate: indexParam4,
+                         datetimepickerStartDate: indexParam5, datetimepickerEndDate: indexParam6 },
+                    success: function () {
+                         window.location.href = '/Containers2/Index?searchString=' + indexParam1 + '&pageNumber=' + indexParam2 + '&currentdatetimepickerStartDate=' + indexParam3 + '&currentdatetimepickerEndDate=' + indexParam4
+                             + '&datetimepickerStartDate=' + indexParam5 + '&datetimepickerEndDate=' + indexParam6;
+
+                        // alert('Changes submitted successfully!');
+                    }
+                });
+            });
+        });
+
+        //check all
+        $('#select-all').change(function () {
+            var isChecked = $(this).is(':checked');
+            $('.row-checkbox').prop('checked', isChecked).change();
+        });
+
 
 </script>
 }

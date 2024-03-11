@@ -12,5 +12,7 @@ namespace PalletLoading.Models
         public string Department { get; set; }
         [NotMapped]
         public int ContainerId { get; set; }
+        [NotMapped]
+        public string containersList { get; set; }
     }
 }

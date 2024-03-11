@@ -41,41 +41,48 @@ namespace PalletLoading.Controllers
             int noOfTools = 0, noOfSpr = 0, noPalletSpr = 0,noPalletTools = 0;
             Pallet pallet = new();
 
+
             if (pallets.Any(x => x.PalletImportDataId != null))
             {
+                //Check parent for null value
+                List<Pallet> palletsCheck = pallets.Where(x => x.PalletImportData != null).ToList();
+
                 //weight, noOfTools, noOfSpr - today
-                weight = pallets.Where(x => x.PalletImportData.salse_part != "").Sum(x => x.PalletImportData.weight);
-                if (pallets.Any(x => x.PalletImportData.serial_from != 0))
+                weight = palletsCheck.Where(x => x.PalletImportData.salse_part != "").Sum(x => x.PalletImportData.weight);
+                if (palletsCheck.Any(x => x.PalletImportData.serial_from != 0))
                 {
-                    noPalletTools = pallets.Where(x => x.PalletImportData.serial_from != 0).Count();
-                    noOfTools = (int)pallets.Where(x => x.PalletImportData.serial_from != 0).Sum(x => x.PalletImportData.picking_qty);
+                    noPalletTools = palletsCheck.Where(x => x.PalletImportData.serial_from != 0).Count();
+                    noOfTools = (int)palletsCheck.Where(x => x.PalletImportData.serial_from != 0).Sum(x => x.PalletImportData.picking_qty);
                 }
-                if (pallets.Any(x => x.PalletImportData.serial_from == 0))
+                if (palletsCheck.Any(x => x.PalletImportData.serial_from == 0))
                 {
-                    noPalletSpr = pallets.Where(x => x.PalletImportData.serial_from == 0).Count();
-                    noOfSpr = (int)pallets.Where(x => x.PalletImportData.serial_from == 0).Sum(x => x.PalletImportData.picking_qty);
+                    noPalletSpr = palletsCheck.Where(x => x.PalletImportData.serial_from == 0).Count();
+                    noOfSpr = (int)palletsCheck.Where(x => x.PalletImportData.serial_from == 0).Sum(x => x.PalletImportData.picking_qty);
                 }
-                if (pallets.Any(x => x.PalletImportData.IPPLNO != "          "))
-                    pallet = pallets.First(x => x.PalletImportData.IPPLNO != "          ");
+                if (palletsCheck.Any(x => x.PalletImportData.IPPLNO != "          "))
+                    pallet = palletsCheck.First(x => x.PalletImportData.IPPLNO != "          ");
                 newCmr.PackingList = pallet.PalletImportData.IPPLNO;
             }
 
             else
             {
+                //Check parent for null value
+                List<Pallet> palletsCheck = pallets.Where(x => x.PalletImportDataHistory != null).ToList();
+
                 //weight, noOfTools, noOfSpr - history
-                weight = pallets.Where(x => x.PalletImportDataHistory.salse_part != "").Sum(x => x.PalletImportDataHistory.weight);
-                if (pallets.Any(x => x.PalletImportDataHistory.serial_from != 0))
+                weight = palletsCheck.Where(x => x.PalletImportDataHistory.salse_part != "").Sum(x => x.PalletImportDataHistory.weight);
+                if (palletsCheck.Any(x => x.PalletImportDataHistory.serial_from != 0))
                 {
-                    noPalletTools = pallets.Where(x => x.PalletImportDataHistory.serial_from != 0).Count();
-                    noOfTools = (int)pallets.Where(x => x.PalletImportDataHistory.serial_from != 0).Sum(x => x.PalletImportDataHistory.picking_qty);
+                    noPalletTools = palletsCheck.Where(x => x.PalletImportDataHistory.serial_from != 0).Count();
+                    noOfTools = (int)palletsCheck.Where(x => x.PalletImportDataHistory.serial_from != 0).Sum(x => x.PalletImportDataHistory.picking_qty);
                 }
-                if (pallets.Any(x => x.PalletImportDataHistory.serial_from == 0))
+                if (palletsCheck.Any(x => x.PalletImportDataHistory.serial_from == 0))
                 {
-                    noPalletSpr = pallets.Where(x => x.PalletImportDataHistory.serial_from == 0).Count();
-                    noOfSpr = (int)pallets.Where(x => x.PalletImportDataHistory.serial_from == 0).Sum(x => x.PalletImportDataHistory.picking_qty);
+                    noPalletSpr = palletsCheck.Where(x => x.PalletImportDataHistory.serial_from == 0).Count();
+                    noOfSpr = (int)palletsCheck.Where(x => x.PalletImportDataHistory.serial_from == 0).Sum(x => x.PalletImportDataHistory.picking_qty);
                 }
-                if (pallets.Any(x => x.PalletImportDataHistory.IPPLNO != "          "))
-                    pallet = pallets.First(x => x.PalletImportDataHistory.IPPLNO != "          ");
+                if (palletsCheck.Any(x => x.PalletImportDataHistory.IPPLNO != "          "))
+                    pallet = palletsCheck.First(x => x.PalletImportDataHistory.IPPLNO != "          ");
                 newCmr.PackingList = pallet.PalletImportDataHistory.IPPLNO;
             }
             //client address

@@ -1,0 +1,257 @@
+﻿@model PalletLoading.Models.FormData
+
+@{
+    Layout = "_Modal";
+}
+
+<link rel="stylesheet" href="~/css/background.css" />
+
+<style>
+    .containerEdges {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .removeArrows::-webkit-outer-spin-button {
+        /*    color: #ffff;
+        background-color: #424242;*/
+        /*width: 50%;
+        max-width: 200px;
+        text-align: center;
+        */
+        -webkit-appearance: none;
+        appearance: none;
+        -moz-appearance: textfield;
+    }
+
+    .removeArrows::-webkit-inner-spin-button {
+        /*    color: #ffff;
+        background-color: #424242;*/
+        /*width: 50%;
+        max-width: 200px;
+        text-align: center;
+        */
+        -webkit-appearance: none;
+        appearance: none;
+        -moz-appearance: textfield;
+    }
+
+    .removeArrows {
+        /*    color: #ffff;
+        background-color: #424242;*/
+        /*width: 50%;
+        max-width: 200px;
+        text-align: center;
+        */
+        -webkit-appearance: none;
+        appearance: none;
+        -moz-appearance: textfield;
+    }
+
+</style>
+
+<div class="modal-fade" id="ModalCreate">
+    <div class="modal-dialog" >
+        <div class="modal-content" style="width:120vh; margin-left:-34.5vh; border-radius:10px;">
+      
+            <div class="modal-body">
+                <form asp-action="EditFormData">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input asp-for="id" style="font-size:3vh" class="form-control" hidden />
+                    <input asp-for="ContainerId" style="font-size:3vh" class="form-control" hidden />
+
+                    <div class="form-group containerEdges">
+                        <h3>Form Data</h3>
+                    </div>
+                    <hr>
+
+                    <div class="row">
+
+                    <div class="col-sm-6">
+                        <div class="form-group" style="margin-right:10px;">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label asp-for="rampaNr" style="font-size:2.5vh; margin-top: 10px;" class="control-label">Rampa Nr</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input asp-for="rampaNr" style="font-size:2.5vh;" class="form-control" />
+                                    <span asp-validation-for="rampaNr" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-right:10px;">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label asp-for="oraIntrare" style="font-size:2.5vh; margin-top: 10px;" class="control-label">Ora Intrare</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input asp-for="oraIntrare" style="font-size:2.5vh;" class="form-control" />
+                                    <span asp-validation-for="oraIntrare" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-right:10px;">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label asp-for="start" style="font-size:2.5vh; margin-top: 10px;" class="control-label">Start</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input asp-for="start" style="font-size:2.5vh;" class="form-control" />
+                                    <span asp-validation-for="start" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-right:10px;">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label asp-for="stop" style="font-size:2.5vh; margin-top: 10px;" class="control-label">Stop</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input asp-for="stop" style="font-size:2.5vh;" class="form-control" />
+                                    <span asp-validation-for="stop" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-right:10px;">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label asp-for="oraIesire" style="font-size:2.5vh; margin-top: 10px;" class="control-label">Ora Iesire</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input asp-for="oraIesire" style="font-size:2.5vh;" class="form-control" />
+                                    <span asp-validation-for="oraIesire" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-right:10px;">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label asp-for="nrCamion" style="font-size:2.5vh; margin-top: 10px;" class="control-label">Nr Camion</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input asp-for="nrCamion" style="font-size:2.5vh;" class="form-control" />
+                                    <span asp-validation-for="nrCamion" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    
+                    <div class="col-sm-6">
+
+                        <div class="form-group" style="margin-right:10px;">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label asp-for="nrContainer" style="font-size:2.5vh; margin-top: 10px;" class="control-label">Nr Container</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input asp-for="nrContainer" style="font-size:2.5vh;" class="form-control" />
+                                    <span asp-validation-for="nrContainer" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group" style="margin-right:10px;">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label asp-for="nrPaletiPickPeTemp" style="font-size:2.5vh; margin-top: 10px;" class="control-label removeArrows">Nr Paleti Pick Temp</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input asp-for="nrPaletiPickPeTemp" min="0" style="font-size:2.5vh;" class="form-control" />
+                                    <span asp-validation-for="nrPaletiPickPeTemp" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-right:10px;">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label asp-for="nrPalScanner" style="font-size:2.5vh; margin-top: 10px;" class="control-label">Nr Pal Scanner</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input asp-for="nrPalScanner" style="font-size:2.5vh;" class="form-control" />
+                                    <span asp-validation-for="nrPalScanner" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-right:10px;">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label asp-for="nrAviz" style="font-size:2.5vh; margin-top: 10px;" class="control-label">Nr Aviz</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input asp-for="nrAviz" style="font-size:2.5vh;" class="form-control" />
+                                    <span asp-validation-for="nrAviz" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-right:10px;">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label asp-for="nrSigiliu" style="font-size:2.5vh; margin-top: 10px;" class="control-label">Nr Sigiliu</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input asp-for="nrSigiliu" style="font-size:2.5vh;" class="form-control" />
+                                    <span asp-validation-for="nrSigiliu" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-right:10px;">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label asp-for="numeStivuitorist" style="font-size:2.5vh; margin-top: 10px;" class="control-label">Nume Stivuitorist</label>
+                                </div>
+                                <div class="col-sm-7">
+                                    <input asp-for="numeStivuitorist" style="font-size:2.5vh;" class="form-control" />
+                                    <span asp-validation-for="numeStivuitorist" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    </div>
+
+
+                    <hr>
+                    <div class="form-group containerEdges" style="margin-top:3vh">
+                        <button id="closeModal3"  type="button" style="font-size:2.5vh; margin-left:10px;" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" style="font-size:2.5vh; margin-right:10px;" value="Confirm" class="btn btn-success" />
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('closeModal3').addEventListener('click', function () {
+        $("#selectFormDataModal").hide();
+
+        // Find the element with the specified classes
+        const backdropElement = document.querySelector('.modal-backdrop.fade.show');
+
+        if (backdropElement) {
+            // Remove the element
+            backdropElement.remove();
+        }
+
+        const body = document.body;
+        // Remove the "modal-open" class from the body
+        body.classList.remove("modal-open");
+        body.style.paddingRight = "";
+    });
+
+</script>

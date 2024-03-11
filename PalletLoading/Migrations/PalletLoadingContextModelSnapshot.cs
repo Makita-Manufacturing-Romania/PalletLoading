@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PalletLoading.Data;
 
+#nullable disable
+
 namespace PalletLoading.Migrations
 {
     [DbContext(typeof(PalletLoadingContext))]
@@ -15,16 +17,34 @@ namespace PalletLoading.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.16")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("PalletLoading.Models.ClientType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ClientTypes");
+                });
 
             modelBuilder.Entity("PalletLoading.Models.CmrData", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Adress")
                         .HasColumnType("nvarchar(max)");
@@ -62,8 +82,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("CmrId")
                         .HasColumnType("int");
@@ -73,6 +94,9 @@ namespace PalletLoading.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("FormDataId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("FormTypeId")
                         .HasColumnType("int");
@@ -89,32 +113,35 @@ namespace PalletLoading.Migrations
                     b.Property<int>("NoOfRows")
                         .HasColumnType("int");
 
+                    b.Property<int?>("SecuringLoadId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TypeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("forklifterName")
+                    b.Property<string>("approval_Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("formDefinitionConfirm")
-                        .HasColumnType("bit");
+                    b.Property<DateTime?>("approval_Signature_Timestamp")
+                        .HasColumnType("datetime2");
 
-                    b.Property<bool?>("loadingTypeConfirm")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("operatorName")
+                    b.Property<string>("checkerSV_Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("securingLoadConfirm")
-                        .HasColumnType("bit");
+                    b.Property<DateTime?>("checkerSV_Signature_Timestamp")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int?>("securingLoadId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("svName")
+                    b.Property<string>("checkerTL_Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("tlName")
+                    b.Property<DateTime?>("checkerTL_Signature_Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("issuer_Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("issuer_Signature_Timestamp")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -129,8 +156,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ContainerId")
                         .HasColumnType("int");
@@ -154,8 +182,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Height")
                         .HasColumnType("int");
@@ -170,7 +199,7 @@ namespace PalletLoading.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("volume")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(18, 6)");
 
                     b.HasKey("Id");
 
@@ -181,8 +210,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Abbreviation")
                         .HasColumnType("nvarchar(max)");
@@ -190,7 +220,12 @@ namespace PalletLoading.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TypeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TypeId");
 
                     b.ToTable("Countries");
                 });
@@ -335,12 +370,62 @@ namespace PalletLoading.Migrations
                     b.ToTable("CountryDescriptionImportData");
                 });
 
+            modelBuilder.Entity("PalletLoading.Models.FormData", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("nrAviz")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("nrCamion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("nrContainer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("nrPalScanner")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("nrPaletiPickPeTemp")
+                        .HasColumnType("int");
+
+                    b.Property<string>("nrSigiliu")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("numeStivuitorist")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("oraIesire")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("oraIntrare")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("rampaNr")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("start")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("stop")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("id");
+
+                    b.ToTable("FormDatas");
+                });
+
             modelBuilder.Entity("PalletLoading.Models.FormDefinition", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Department")
                         .HasColumnType("nvarchar(max)");
@@ -360,8 +445,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<string>("IPPLNO")
                         .HasMaxLength(255)
@@ -413,7 +499,7 @@ namespace PalletLoading.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("volume")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(18, 6)");
 
                     b.Property<decimal>("weight")
                         .HasColumnType("decimal(18,2)");
@@ -427,8 +513,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<string>("IPPLNO")
                         .HasMaxLength(255)
@@ -480,7 +567,7 @@ namespace PalletLoading.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("volume")
-                        .HasColumnType("decimal(18,6)");
+                        .HasColumnType("decimal(18, 6)");
 
                     b.Property<decimal>("weight")
                         .HasColumnType("decimal(18,2)");
@@ -494,8 +581,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CustomerCode180P")
                         .HasMaxLength(25)
@@ -526,8 +614,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Abbreviation")
                         .HasColumnType("nvarchar(max)");
@@ -544,8 +633,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int?>("Column")
                         .HasColumnType("int");
@@ -597,8 +687,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Height")
                         .HasColumnType("int");
@@ -621,8 +712,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Destination")
                         .IsRequired()
@@ -675,8 +767,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -693,8 +786,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Absorgel")
                         .HasColumnType("bit");
@@ -720,8 +814,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("FirstPallet")
                         .HasColumnType("nvarchar(max)");
@@ -743,17 +838,40 @@ namespace PalletLoading.Migrations
                     b.ToTable("SwitchedPallets");
                 });
 
+            modelBuilder.Entity("PalletLoading.Models.UploadModel", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("ContainerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("fileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("filePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("UploadModelTabel");
+                });
+
             modelBuilder.Entity("PalletLoading.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RoleId")
+                    b.Property<int?>("RoleId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserRightId")
@@ -778,8 +896,9 @@ namespace PalletLoading.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Right")
                         .HasColumnType("nvarchar(max)");
@@ -826,6 +945,15 @@ namespace PalletLoading.Migrations
                     b.Navigation("Container");
 
                     b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("PalletLoading.Models.Countries", b =>
+                {
+                    b.HasOne("PalletLoading.Models.ClientType", "Type")
+                        .WithMany("Countries")
+                        .HasForeignKey("TypeId");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("PalletLoading.Models.Pallet", b =>
@@ -876,9 +1004,7 @@ namespace PalletLoading.Migrations
                 {
                     b.HasOne("PalletLoading.Models.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoleId");
 
                     b.HasOne("PalletLoading.Models.UserRight", "UserRight")
                         .WithMany("Userslist")
@@ -889,6 +1015,11 @@ namespace PalletLoading.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("UserRight");
+                });
+
+            modelBuilder.Entity("PalletLoading.Models.ClientType", b =>
+                {
+                    b.Navigation("Countries");
                 });
 
             modelBuilder.Entity("PalletLoading.Models.Container", b =>

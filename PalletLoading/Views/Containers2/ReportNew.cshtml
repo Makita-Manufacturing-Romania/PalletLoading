@@ -31,8 +31,11 @@ Layout=null;
     <h2 style="margin-left:10%;"></h2>
     <table class='table' style="width:80%; margin-top: -60px;" align="center">
         <tr>
-            <th style ="font-size: 20px;">Doc.Ref. @Model.FormDefinition.DocRefNumber</thstyle>
+            @if (Model.FormDefinition != null)
+            {
+            <th style ="font-size: 20px;">Doc.Ref. @Model.FormDefinition.DocRefNumber</th>
             <th style ="font-size: 20px;">Dep. @Model.FormDefinition.Department</th>
+            }
         </tr>
     </table>
 </div>
@@ -44,7 +47,9 @@ Layout=null;
 @* date *@
 <div>
     <table border="1">
-        <tr>
+
+        @if (Model.FormData != null)
+        {<tr>
             <td colspan="3" style="font-size: 25px;">
                 DATA: @Model.loadingData
             </td>
@@ -52,22 +57,24 @@ Layout=null;
                 CLIENT: @Model.totalClients
             </td>
             <td colspan="1" style="color: black; font-size: 25px;">
-                RAMPA NR: <span style="color: white;">X</span>
+                RAMPA NR: @Model.FormData.rampaNr <span style="color: white;">X</span>
             </td>
         </tr>
 
         <tr>
-            <td colspan="4" style="color: black; width:370px; font-size: 25px;">
-                ORA INTRARE:
+            <td colspan="8" style="color: black; width:370px; font-size: 25px;">
+                ORA INTRARE: @Model.FormData.oraIntrare
             </td>
-            <td colspan="4" style="color: black; width:270px; font-size: 25px;">
-                START:
+            <td colspan="8" style="color: black; width:370px; font-size: 25px;">
+                ORA IESIRE: @Model.FormData.oraIesire
             </td>
-            <td colspan="4" style="color: black; width:270px; font-size: 25px;">
-                STOP:
+        </tr>
+        <tr>
+            <td colspan="8" style="color: black; width:270px; font-size: 25px;">
+                START: @Model.FormData.start
             </td>
-            <td colspan="4" style="color: black; width:370px; font-size: 25px;">
-                ORA IESIRE:
+            <td colspan="8" style="color: black; width:270px; font-size: 25px;">
+                STOP: @Model.FormData.stop
             </td>
         </tr>
 
@@ -85,16 +92,16 @@ Layout=null;
 
         <tr>
             <td colspan="8" style="font-size:25px;">
-                NR. CAMION:
+                NR. CAMION: @Model.FormData.nrCamion
             </td>
             <td colspan="8" style="font-size:25px;">
-                NR. CONTAINER:
+                NR. CONTAINER: @Model.FormData.nrContainer
             </td>
         </tr>
 
         <tr>
             <td colspan="16" style="font-size:25px;">
-                NR PALETI PICK PE TEMP:
+                NR PALETI PICK PE TEMP: @Model.FormData.nrPaletiPickPeTemp
             </td>
         </tr>
 
@@ -136,18 +143,25 @@ Layout=null;
 
         <tr>
             <td colspan="2" style="font-size:25px;">
-                NR PAL SCANNER 
+                NR PAL SCANNER: @Model.FormData.nrPalScanner
             </td>
             <td colspan="14" style="font-size:25px;">
-                NR AVIZ
+                NR AVIZ: @Model.FormData.nrAviz
             </td>
         </tr>
 
         <tr>
             <td colspan="16" style="font-size:25px;">
-                NR SIGILIU
+                NR SIGILIU: @Model.FormData.nrSigiliu
             </td>
         </tr>
+        <tr>
+            <td colspan="16" style="font-size:25px;">
+                NUME STIVUITORIST: @Model.FormData.numeStivuitorist
+            </td>
+        </tr>
+        }
+        
 
 
     </table>
@@ -706,7 +720,7 @@ Layout=null;
     {
 
         <div style="margin-top:-80px; width=100%; margin-top:50px;">
-            <h1 style="margin-left:40%;">Pallets details</h1>
+            <h1 style="margin-left:40%;">Loading Pallet List</h1>
             <table class='table' style="width:80%;"  align="center" >
                 <tr>
                     <th>Order no</th>
@@ -841,37 +855,37 @@ Layout=null;
 
 
     @* Signatures (username) *@
-    <div style="width: max-content; margin-left:100px; margin-top:50px">
+    <div style="width: max-content; margin-left:1px; margin-top:50px">
         <table border="1" style="page-break-inside: avoid">
             <tr>
-                <th style="font-size:44px">&nbsp;Emis de operator&nbsp;</th>
-                <th style="font-size:44px">&nbsp;Stivuitorist&nbsp;</th>
-                <th style="font-size:44px">&nbsp;Verificat&nbsp;</th>
-                <th style="font-size:44px">&nbsp;Verificat de SV&nbsp;</th>
+                <th style="font-size:30px">Issuer</th>
+                <th style="font-size:30px">Team Leader</th>
+                <th style="font-size:30px">Supervisor</th>
+                <th style="font-size:30px">Manager</th>
             </tr>
 
             <tr>
-                <th style="font-size:44px"> <span style="color: white;">WWWW</span> </th>
+               @*  <th style="font-size:44px"> <span style="color: white;">WWWW</span> </th>
                 <th style ="font-size:44px"> <span style="color: white;">WWWW</span> </th>
                 <th style="font-size:44px"> <span style="color: white;">WWWW</span> </th>
-                <th style="font-size:44px"> <span style="color: white;">WWWW</span> </th>
+                <th style="font-size:44px"> <span style="color: white;">WWWW</span> </th> *@
                 
-    @*          @if (Model.Container.operatorName != null)
+                @if (Model.Container.issuer_Name != null)
                 {
-                    <th style="font-size:44px"> @Model.Container.operatorName  <span style="color: white;">WWWW</span> </th>
+                    <th style="font-size:30px"> @Model.Container.issuer_Name</th>
                 }
-                @if (Model.Container.forklifterName != null)
+                @if (Model.Container.checkerTL_Name != null)
                 {
-                    <th style ="font-size:44px"> @Model.Container.forklifterName  <span style="color: white;">WWWW</span> </th>
+                    <th style ="font-size:30px"> @Model.Container.checkerTL_Name</th>
                 }
-                @if (Model.Container.tlName != null)
+                @if (Model.Container.checkerSV_Name != null)
                 {
-                    <th style="font-size:44px"> @Model.Container.tlName  <span style="color: white;">WWWW</span> </th>
+                    <th style="font-size:30px"> @Model.Container.checkerSV_Name</th>
                 }
-                @if (Model.Container.svName != null)
+                @if (Model.Container.approval_Name != null)
                 {
-                    <th style="font-size:44px"> @Model.Container.svName  <span style="color: white;">WWWW</span> </th>
-                }   *@
+                    <th style="font-size:30px"> @Model.Container.approval_Name</th>
+                }  
             </tr>
         </table>
     </div>
