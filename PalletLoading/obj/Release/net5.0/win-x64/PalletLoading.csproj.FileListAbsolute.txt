@@ -834,3 +834,6 @@ C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\wi
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\Razor\Views\PartCenterPallets\PrintView.cshtml.g.cs
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\Razor\Views\PartCenterPallets\PrintViewCreate.cshtml.g.cs
 C:\Users\r.tanase\Source\Repos\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\refint\PalletLoading.dll
+C:\Users\o.stoica\Source\Repos\Makita-Manufacturing-Romania\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\PalletLoading.dll
+C:\Users\o.stoica\Source\Repos\Makita-Manufacturing-Romania\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\refint\PalletLoading.dll
+C:\Users\o.stoica\Source\Repos\Makita-Manufacturing-Romania\PalletLoading\PalletLoading\obj\Release\net5.0\win-x64\PalletLoading.pdb
