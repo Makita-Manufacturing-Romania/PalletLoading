@@ -46,12 +46,42 @@
 
 <link rel="stylesheet" href="~/css/background.css" />
 
+@if (@ViewBag.typeOfOperation == "edit")
+{
+    @if (@Model.UploadModel.Count == 0)
+    {
+        <script>
+            var value = 0;
+            var tbl;
+            var tbf;
+        </script>
+    }
+    else
+    {
+        <script>
+            var value = @Model.UploadModel.Count;
+            var tbl;
+            var tbf;
+        </script>
+    }
+}
+else
+{
+    <script>
+        var value = 0;
+        var tbl;
+        var tbf;
+    </script>
+}
+
+
 <!-- Hidden field to store the buton ID's and other C# variables' -->
 <input type="hidden" id="containerId" name="containerId" value="@ViewBag.containerId" />
 <input type="hidden" id="selectedLoadType" name="selectedLoadType" value="@ViewBag.selectedLoadType" />
 @* <input type="hidden" id="formTypeId" name="formTypeId" value="@ViewBag.formTypeId" /> *@
 
 <style>
+
     .detailsBtn:focus {
         outline: 0 !important;
         box-shadow: none !important;
@@ -82,6 +112,7 @@
 
     .exportClass {
         background-color: darkorange;
+        border-radius: 5px;
         color: white;
     }
 
@@ -90,19 +121,29 @@
         color: white;
     }
 
+    .modifyClass {
+        background-color: green;
+        border-radius: 5px;
+        color: white;
+    }
 
     .previewClass {
         background-color: darkcyan;
+        border-radius: 5px;
         color: white;
     }
 
     .btn-primary-new {
-        background-color: #0D6EFD;
+        background-color: darkcyan;
         border-radius:5px;
         border-color: rgba(0, 0, 0, 0);
         color: white;
         font-size: 20px;
         padding: 0.375rem 0.75rem;
+    }
+
+    .btn-primary-new:hover {
+        color: black;
     }
 
     .btn-primary-confirm {
@@ -113,6 +154,22 @@
         font-size: 20px;
     }
 
+    .btn-primary-confirm:hover {
+        color: black;
+    }
+
+    .btn-primary-manager {
+        background-color: #800080;
+        border-radius: 5px;
+        border-color: rgba(0, 0, 0, 0);
+        color: white;
+        font-size: 20px;
+    }
+
+        .btn-primary-manager:hover {
+            color: black;
+        }
+
     .btn-padding1 {
         padding: 0.375rem 0.75rem;
     }
@@ -120,6 +177,264 @@
     .btn-padding2 {
         padding: 0.5rem 0.75rem;
     }
+
+
+
+    .AddButtonFiles {
+        color: #ffff;
+        background-color: #AAAAAA;
+        width: 100%;
+        height: 100%;
+        font-size: 91px;
+        max-width: 160px;
+        max-height: 140px;
+        text-align: center;
+        border-radius: 5px 5px 5px 5px;
+        margin: 5px;
+    }
+
+    .HrFiles {
+        /*color: #ffff;
+        background-color: #424242;
+        width: 50%;
+        max-width: 200px;
+        text-align: center;
+        */
+        background-color: white;
+        border-radius: 12px 12px 12px 12px;
+        margin: 5px;
+        border-width: 1px;
+    }
+
+    .LabelFiles {
+        color: #88FFFF;
+        width: 70%;
+        text-align: center;
+        flex-direction: column;
+        border-radius: 5px 5px 5px 5px;
+        padding: 0.375rem 0.75rem;
+        margin: 5px;
+        border: 1px solid transparent;
+    }
+
+        .LabelFiles:focus {
+            outline: none !important;
+            box-shadow: 0 0 0px 0px #044d55 !important;
+            border-width: 0px;
+        }
+
+        .LabelFiles:hover {
+            color: deepskyblue;
+        }
+
+
+
+    .LabelFiles2 {
+        color: #FFFFFF;
+        width: 70%;
+        text-align: center;
+        flex-direction: column;
+        border-radius: 5px 5px 5px 5px;
+        padding: 0.375rem 0.75rem;
+        margin: 5px;
+        border: 1px solid transparent;
+    }
+
+        .LabelFiles2:focus {
+            outline: none !important;
+            box-shadow: 0 0 0px 0px #044d55 !important;
+            border-width: 0px;
+        }
+
+        .LabelFiles2:hover {
+            color: deepskyblue;
+        }
+
+
+    .btn-Reject {
+        color: #ffff;
+        background-color: #c40e0e !important;
+        width: 100%;
+        max-width: 200px;
+        text-align: center;
+        border-radius: 5px 5px 5px 5px;
+        margin: 5px;
+        max-height: 60px;
+        text-decoration: none;
+        line-height: 1.2;
+        padding: 0.375rem 0.75rem;
+        border-width: 0px;
+        border: 0px solid;
+    }
+
+        .btn-Reject:active:focus {
+            color: #ffff;
+            background-color: #991414;
+            outline: none !important;
+            box-shadow: 0 0 1px 1px #991414 !important;
+            border-width: 1px;
+        }
+
+        .btn-Reject:hover {
+            color: #ffff;
+            background-color: #991414;
+        }
+
+        .btn-Reject:focus {
+            color: #ffff;
+            background-color: #991414;
+        }
+
+
+    .btnBlackOwn {
+        color: #ffff;
+        background-color: #0ec40e !important;
+        width: 100%;
+        max-width: 200px;
+        text-align: center;
+        border-radius: 5px 5px 5px 5px;
+        margin: 5px;
+        max-height: 30px;
+        text-decoration: none;
+        line-height: 1.2;
+        padding: 0.375rem 0.75rem;
+        border-width: 0px;
+        border: 0px solid;
+    }
+
+        .btnBlackOwn:active:focus {
+            color: #ffff;
+            background-color: #149914;
+            outline: none !important;
+            box-shadow: 0 0 1px 1px #149914 !important;
+            border-width: 1px;
+        }
+
+        .btnBlackOwn:hover {
+            color: #ffff;
+            background-color: #149914;
+        }
+
+        .btnBlackOwn:focus {
+            color: #ffff;
+            background-color: #149914;
+        }
+
+
+    
+
+    .addListFiles {
+        /*color: #ffff;
+        background-color: #424242;
+        width: 50%;
+        max-width: 200px;
+        text-align: center;
+        */
+        background-color: #AAAAAA;
+        border-radius: 12px 12px 12px 12px;
+        border-color: #123456
+        width: 100%;
+        height: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        min-height: 150px;
+        margin: 5px;
+    }
+
+    .btnUploadFiles {
+        background-color: #007d21;
+        color:wheat;
+        border-radius: 3px 3px 3px 3px;
+        margin-left: 84.8%;
+        font-size: 3vh;
+    }
+
+
+
+    .loadingScreen {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        opacity: 0.9;
+        z-index: 9999;
+    }
+
+    .lds-ring {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .lds-ring div {
+            box-sizing: border-box;
+            display: block;
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            margin: 30px;
+            border: 30px solid #fff;
+            border-radius: 50%;
+            animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            border-color: #fff transparent transparent transparent;
+        }
+
+            .lds-ring div:nth-child(1) {
+                animation-delay: -0.45s;
+            }
+
+            .lds-ring div:nth-child(2) {
+                animation-delay: -0.3s;
+            }
+
+            .lds-ring div:nth-child(3) {
+                animation-delay: -0.15s;
+            }
+
+    @@keyframes lds-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+
+    .modal2 {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        padding-top: 100px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content2 {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+    .sizeTooBig {
+        border: 2px solid #000040;
+        padding-left:33%;
+        padding-right:33%;
+        font-size: 3vh;
+    }
+
+
 
 </style>
 
@@ -142,19 +457,22 @@
 <div width="100%" align="center" style="margin-bottom:10px;">
     @if (ViewBag.UserRightLevel > 0)
     {
-        <a class="btn btn-success" asp-action="Create" asp-controller="Pallets" asp-route-id="@Model.Container.Id">Modify</a>
+        <a class="modifyClass btn-padding1" type="button" asp-action="Create" asp-controller="Pallets" asp-route-id="@Model.Container.Id">Modify</a>
     }
    @*  <a type="button" asp-action="GeneratePDF" asp-controller="Containers2" asp-route-id="@Model.Container.Id" target="_blank" class="btn btn-danger">Export PDF</a>
  *@
-    @if (ViewBag.ExportPDFConfirmation == true)
+
+    <a class="previewClass btn-padding1" type="button" asp-action="GeneratePDFNew" asp-controller="Containers2" asp-route-id="@Model.Container.Id" asp-route-actionType="Preview" target="_blank">Preview PDF</a>
+
+     @if (ViewBag.ExportPDFConfirmation == true)
     {
-        <a class="btn previewClass" type="button" asp-action="GeneratePDFNew" asp-controller="Containers2" asp-route-id="@Model.Container.Id" asp-route-actionType="Preview" target="_blank" class="btn btn-danger">Preview PDF</a>
-        <a class="btn exportClass" type="button" asp-action="GeneratePDFNew" asp-controller="Containers2" asp-route-id="@Model.Container.Id" asp-route-actionType="Download" target="_blank" class="btn btn-danger">Download PDF</a>
-    }
+        <a class="exportClass btn-padding1" type="button" asp-action="GeneratePDFNew" asp-controller="Containers2" asp-route-id="@Model.Container.Id" asp-route-actionType="Download" target="_blank">Download PDF</a>
+    } 
 
 
     @*<h1 style="text-align:center">Details - <a class="nav-link text-dark" asp-area="" asp-controller="CMR" asp-action="Index">@Model.Container.Name</a></h1>*@
     <input type="hidden" value="@Model.Container.Id" id="container" />
+    <input type="hidden" value="@templistContainer" id="templistContainer" />
     @*<div>
         <div align="center" style="padding:50px 300px 50px 300px">
         <div align="left">
@@ -242,25 +560,25 @@
                 @{
                     var colNo = 1;
                     var currentRow = 1;
-                    @for (int row = 0; row < widthContainer; row++)
+                                @for (int row = 0; row < widthContainer; row++)
                     {
-                        <tr style="vertical-align: top;">
-                            @for (int col = 0; col < lengthContainer; col++)
+                                    <tr style="vertical-align: top;">
+                                        @for (int col = 0; col < lengthContainer; col++)
                             {
                                 string idPallet = row.ToString() + "," + col.ToString();
                                 var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
 
                                 if (currentPallets != null)
                                 {
-                                    @if (currentPallets.Count() == 1 && currentRow == 1)
+                                                @if (currentPallets.Count() == 1 && currentRow == 1)
                                     {
-                                        <td style="width: 4vw; max-width: 4vw;min-width: 40px; text-align: center; position: relative; height:110px;">
-                                            @if (currentRow == 1)
+                                                    <td style="width: 4vw; max-width: 4vw;min-width: 40px; text-align: center; position: relative; height:110px;">
+                                                        @if (currentRow == 1)
                                             {
-                                                <p style="font-size:25px">@colNo</p>
+                                                            <p style="font-size:25px">@colNo</p>
                                                 colNo++;
                                             }
-                                            @{
+                                                        @{
                                                 var palet = currentPallets.First();
 
                                                 if (palet.PalletImportData != null)
@@ -270,23 +588,23 @@
                                                     {
                                                         if (_context.PartCenterPallets.Any(c => /*c.Container_no == palet.PalletImportData.container_no &&*/ c.Destination == palet.PalletImportData.consignee_code && c.Pallet_number == palet.PalletImportData.pallet_no))
                                                         {
-                                                            <div style="position: absolute; bottom: 0; width: 95%;">
-                                                                <input type="button" data-volume="@_context.PartCenterPallets.Where(c=>/*c.Container_no == palet.PalletImportData.container_no &&*/ c.Destination == palet.PalletImportData.consignee_code && c.Pallet_number == palet.PalletImportData.pallet_no).Select(c=>c.Volume).FirstOrDefault()" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px;min-width: 30px; min-height:40px; margin-bottom:5px; border-radius:5px; height:6vh; text-align:center" class="detailsBtn btn-info">
-                                                            </div>
+                                                                                    <div style="position: absolute; bottom: 0; width: 95%;">
+                                                                                        <input type="button" data-volume="@_context.PartCenterPallets.Where(c=>/*c.Container_no == palet.PalletImportData.container_no &&*/ c.Destination == palet.PalletImportData.consignee_code && c.Pallet_number == palet.PalletImportData.pallet_no).Select(c=>c.Volume).FirstOrDefault()" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px;min-width: 30px; min-height:40px; margin-bottom:5px; border-radius:5px; height:6vh; text-align:center" class="detailsBtn btn-info">
+                                                                                    </div>
 
                                                         }
                                                         else
                                                         {
-                                                            <div style="position: absolute; bottom: 0; width: 95%;">
-                                                                <input type="button" data-volume="0" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px;min-width: 30px; min-height:40px; margin-bottom:5px; border-radius:5px; height:6vh; text-align:center" class="detailsBtn btn-info">
-                                                            </div>
+                                                                                    <div style="position: absolute; bottom: 0; width: 95%;">
+                                                                                        <input type="button" data-volume="0" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px;min-width: 30px; min-height:40px; margin-bottom:5px; border-radius:5px; height:6vh; text-align:center" class="detailsBtn btn-info">
+                                                                                    </div>
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        <div style="position: absolute; bottom: 0; width: 95%;">
-                                                            <input type="button" data-volume="@palet.PalletImportData.volume" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px;min-width: 30px; min-height:40px; margin-bottom:5px; border-radius:5px; height:6vh; text-align:center" class="detailsBtn btn-info">
-                                                        </div>
+                                                                                <div style="position: absolute; bottom: 0; width: 95%;">
+                                                                                    <input type="button" data-volume="@palet.PalletImportData.volume" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width:80%; margin-top:5px;min-width: 30px; min-height:40px; margin-bottom:5px; border-radius:5px; height:6vh; text-align:center" class="detailsBtn btn-info">
+                                                                                </div>
                                                     }
 
 
@@ -297,41 +615,41 @@
                                                     {
                                                         if (_context.PartCenterPallets.Any(c =>/* c.Container_no == palet.PalletImportDataHistory.container_no &&*/ c.Destination == palet.PalletImportDataHistory.consignee_code && c.Pallet_number == palet.PalletImportDataHistory.pallet_no))
                                                         {
-                                                            <div style="position: absolute; bottom: 0; width: 95%;">
+                                                                                    <div style="position: absolute; bottom: 0; width: 95%;">
 
-                                                                <input type="button" data-volume="@_context.PartCenterPallets.Where(c=>/*c.Container_no == palet.PalletImportDataHistory.container_no &&*/ c.Destination == palet.PalletImportDataHistory.consignee_code && c.Pallet_number == palet.PalletImportDataHistory.pallet_no).Select(c=>c.Volume).FirstOrDefault()" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" min-height:40px; style="width:3vw; margin-top:5px; margin-bottom:5px; border-radius:5px; min-width: 40px; height:6vh; text-align:center" class="detailsBtn btn-info">
-                                                            </div>
+                                                                                        <input type="button" data-volume="@_context.PartCenterPallets.Where(c=>/*c.Container_no == palet.PalletImportDataHistory.container_no &&*/ c.Destination == palet.PalletImportDataHistory.consignee_code && c.Pallet_number == palet.PalletImportDataHistory.pallet_no).Select(c=>c.Volume).FirstOrDefault()" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" min-height:40px; style="width:3vw; margin-top:5px; margin-bottom:5px; border-radius:5px; min-width: 40px; height:6vh; text-align:center" class="detailsBtn btn-info">
+                                                                                    </div>
 
                                                         }
                                                         else
                                                         {
-                                                            <div style="position: absolute; bottom: 0; width: 95%;">
+                                                                                    <div style="position: absolute; bottom: 0; width: 95%;">
 
-                                                                <input type="button" data-volume="0" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" min-height:40px; style="width:3vw; margin-top:5px; margin-bottom:5px; border-radius:5px; min-width: 40px; height:6vh; text-align:center" class="detailsBtn btn-info">
-                                                            </div>
+                                                                                        <input type="button" data-volume="0" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" min-height:40px; style="width:3vw; margin-top:5px; margin-bottom:5px; border-radius:5px; min-width: 40px; height:6vh; text-align:center" class="detailsBtn btn-info">
+                                                                                    </div>
 
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        <div style="position: absolute; bottom: 0; width: 95%;">
+                                                                                <div style="position: absolute; bottom: 0; width: 95%;">
 
-                                                            <input type="button" data-volume="0" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" min-height:40px; style="width:3vw; margin-top:5px; margin-bottom:5px; border-radius:5px; min-width: 40px; height:6vh; text-align:center" class="detailsBtn btn-info">
-                                                        </div>
+                                                                                    <input type="button" data-volume="0" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" min-height:40px; style="width:3vw; margin-top:5px; margin-bottom:5px; border-radius:5px; min-width: 40px; height:6vh; text-align:center" class="detailsBtn btn-info">
+                                                                                </div>
                                                     }
 
                                                 }
                                                 else
                                                 {
-                                                    <div style="position: absolute; bottom: 0; width: 95%;">
-                                                        <input type="button" data-volume="0" data-consignee="" data-container="" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top: 5px;min-height:40px; margin-bottom: 5px; border-radius: 5px; height:6vh;text-align: center" class="detailsBtn btn-info">
-                                                    </div>
+                                                                            <div style="position: absolute; bottom: 0; width: 95%;">
+                                                                                <input type="button" data-volume="0" data-consignee="" data-container="" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top: 5px;min-height:40px; margin-bottom: 5px; border-radius: 5px; height:6vh;text-align: center" class="detailsBtn btn-info">
+                                                                            </div>
                                                 }
-                                                <br />
-                                            }
-                                        </td>
+                                                                        <br />
+                                                        }
+                                                    </td>
                                     }
-                                    @*else if (currentPallets.Count() == 1)
+                                                @*else if (currentPallets.Count() == 1)
                                         {
                                         <td style="width: 4vw; max-width: 4vw; text-align: center; position: relative; min-width: 40px; min-height: 4vw;">
                                         @if (currentRow == 1)
@@ -365,20 +683,20 @@
                                         }*@
                                     else
                                     {
-                                        <td style=" width:4vw; text-align:center; position:relative;height:75px; min-width: 40px;" align="center">
-                                            @if (currentRow == 1)
+                                                    <td style=" width:4vw; text-align:center; position:relative;height:75px; min-width: 40px;" align="center">
+                                                        @if (currentRow == 1)
                                             {
-                                                <p style="font-size:25px;margin-bottom:0;">@colNo</p>
+                                                            <p style="font-size:25px;margin-bottom:0;">@colNo</p>
                                                 colNo++;
                                             }
 
-                                            @foreach (var palet in currentPallets)
+                                                        @foreach (var palet in currentPallets)
                                             {
-                                                <div style="height:7vh; min-height:55px; width:100%; "> </div>
+                                                            <div style="height:7vh; min-height:55px; width:100%; "> </div>
                                             }
-                                            <div style="position:absolute; bottom:0; width:100%!important;" align="center">
+                                                        <div style="position:absolute; bottom:0; width:100%!important;" align="center">
 
-                                                @foreach (var palet in currentPallets)
+                                                            @foreach (var palet in currentPallets)
                                                 {
                                                     if (palet.PalletImportData != null)
                                                     {
@@ -386,18 +704,18 @@
                                                         {
                                                             if (_context.PartCenterPallets.Any(c => /*c.Container_no == palet.PalletImportData.container_no &&*/ c.Destination == palet.PalletImportData.consignee_code && c.Pallet_number == palet.PalletImportData.pallet_no))
                                                             {
-                                                                <input type="button" data-volume="@_context.PartCenterPallets.Where(c=>/*c.Container_no == palet.PalletImportData.container_no &&*/ c.Destination == palet.PalletImportData.consignee_code && c.Pallet_number == palet.PalletImportData.pallet_no).Select(c=>c.Volume).FirstOrDefault()" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px;height:6vh;text-align:center" class="detailsBtn btn-info">
+                                                                            <input type="button" data-volume="@_context.PartCenterPallets.Where(c=>/*c.Container_no == palet.PalletImportData.container_no &&*/ c.Destination == palet.PalletImportData.consignee_code && c.Pallet_number == palet.PalletImportData.pallet_no).Select(c=>c.Volume).FirstOrDefault()" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px;height:6vh;text-align:center" class="detailsBtn btn-info">
 
                                                             }
                                                             else
                                                             {
-                                                                <input type="button" data-volume="0" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px;height:6vh;text-align:center" class="detailsBtn btn-info">
+                                                                            <input type="button" data-volume="0" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px;height:6vh;text-align:center" class="detailsBtn btn-info">
 
                                                             }
                                                         }
                                                         else
                                                         {
-                                                            <input type="button" data-volume="@palet.PalletImportData.volume" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px;height:6vh;text-align:center" class="detailsBtn btn-info">
+                                                                        <input type="button" data-volume="@palet.PalletImportData.volume" data-consignee="@palet.PalletImportData.consignee_code" data-container="@palet.PalletImportData.container_no" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px;height:6vh;text-align:center" class="detailsBtn btn-info">
 
                                                         }
                                                     }
@@ -407,39 +725,39 @@
                                                         {
                                                             if (_context.PartCenterPallets.Any(c => /*c.Container_no == palet.PalletImportDataHistory.container_no &&*/ c.Destination == palet.PalletImportDataHistory.consignee_code && c.Pallet_number == palet.PalletImportDataHistory.pallet_no))
                                                             {
-                                                                <input type="button" data-volume="@_context.PartCenterPallets.Where(c=>/*c.Container_no == palet.PalletImportDataHistory.container_no &&*/ c.Destination == palet.PalletImportDataHistory.consignee_code && c.Pallet_number == palet.PalletImportDataHistory.pallet_no).Select(c=>c.Volume).FirstOrDefault()" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px;height:6vh;text-align:center" class="detailsBtn btn-info">
+                                                                            <input type="button" data-volume="@_context.PartCenterPallets.Where(c=>/*c.Container_no == palet.PalletImportDataHistory.container_no &&*/ c.Destination == palet.PalletImportDataHistory.consignee_code && c.Pallet_number == palet.PalletImportDataHistory.pallet_no).Select(c=>c.Volume).FirstOrDefault()" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px;height:6vh;text-align:center" class="detailsBtn btn-info">
 
                                                             }
                                                             else
                                                             {
-                                                                <input type="button" data-volume="0" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px;height:6vh;text-align:center" class="detailsBtn btn-info">
+                                                                            <input type="button" data-volume="0" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px;height:6vh;text-align:center" class="detailsBtn btn-info">
 
 
                                                             }
                                                         }
                                                         else
                                                         {
-                                                            <input type="button" data-volume="@palet.PalletImportDataHistory.volume" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px; height:6vh; text-align:center" class="detailsBtn btn-info">
+                                                                        <input type="button" data-volume="@palet.PalletImportDataHistory.volume" data-consignee="@palet.PalletImportDataHistory.consignee_code" data-container="@palet.PalletImportDataHistory.container_no" data-sales="@palet.PalletImportDataHistory.salse_part" data-palletno="@palet.PalletImportDataHistory.pallet_no" data-serialto="@palet.PalletImportDataHistory.serial_to" data-serialfrom="@palet.PalletImportDataHistory.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportDataHistory.picking_qty" data-weight="@palet.PalletImportDataHistory.weight" value="@palet.OrderNo" style="width: 3vw; min-width: 30px; margin-top:5px; margin-bottom:5px;min-height:40px; border-radius:5px; height:6vh; text-align:center" class="detailsBtn btn-info">
 
                                                         }
                                                     }
                                                     else
                                                     {
 
-                                                        <input type="button" data-volume="" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width: 3vw; margin-top:5px; margin-bottom:5px; min-height:40px; border-radius:5px; height:6vh; min-width: 30px; text-align:center" class="detailsBtn btn-info">
+                                                                    <input type="button" data-volume="" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width: 3vw; margin-top:5px; margin-bottom:5px; min-height:40px; border-radius:5px; height:6vh; min-width: 30px; text-align:center" class="detailsBtn btn-info">
 
                                                     }
                                                 }
-                                            </div>
+                                                        </div>
 
-                                        </td>
+                                                    </td>
                                     }
                                 }
                             }
-                            @{
+                                        @{
                                 currentRow++;
-                            }
-                        </tr>
+                                        }
+                                    </tr>
                     }
                 }
             </tbody>
@@ -447,94 +765,166 @@
     </div>
 
     @* New Modal Elements *@
-    @if (ViewBag.UserRightLevel > 1)
+    @if (ViewBag.UserRightLevel > 0)
     {
         <div style="display: flex; justify-content: center; gap: 20px;">
-            @if (ViewBag.SecuringLoadConfirmation == true)
+            @if (!string.IsNullOrEmpty(Model.Container.approval_Name))
             {
-                <button type="button" class="btn-primary-confirm btn-padding1" onclick="ShowSecuringLoadModal()">
-                    Change Securing Load
-                </button>
+                <a class="btn-primary-manager btn-padding1" type="button" asp-action="ManagerUnlock" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Unlock For Editing
+                </a>
             }
             else
             {
-                <button type="button" class="btn-primary-new btn-padding1" onclick="ShowSecuringLoadModal()">
-                    Change Securing Load
-                </button>
-            }
-            <div>
-                @if (ViewBag.LoadingTypeConfirmation == true)
+                @if (ViewBag.SecuringLoadConfirmation == 2)
                 {
-                    <select name="loadingType" id="loadingType" class="btn-primary-confirm btn-padding2">
-                        @foreach (var type in ViewBag.LoadingTypes)
-                        {
-                            <option value="@type">@type</option>
-                        }
-                    </select>
+                    <button type="button" class="btn-primary-confirm btn-padding1" onclick="ShowSecuringLoadModal()">
+                        Change Secure Load
+                    </button>
                 }
-                else
+                else if (ViewBag.SecuringLoadConfirmation == 1)
                 {
-                    <select name="loadingType" id="loadingType" class="btn-primary-new btn-padding2">
-                        @foreach (var type in ViewBag.LoadingTypes)
-                        {
-                            <option value="@type">@type</option>
-                        }
-                    </select>
+                    <button type="button" class="btn-primary-new btn-padding1" onclick="ShowSecuringLoadModal()">
+                        Change Secure Load
+                    </button>
                 }
-            </div>
-            @if (ViewBag.FormDefinitionConfirmation == true)
-            {
-                <button type="button" class="btn-primary-confirm btn-padding1" onclick="ShowFormDefinitionModal()">
-                    Change Form Definition
-                </button>
+                <div>
+                    @if (ViewBag.LoadingTypeConfirmation == 2)
+                    {
+                        <select name="loadingType" id="loadingType" class="btn-primary-confirm btn-padding2">
+                            @foreach (var type in ViewBag.LoadingTypes)
+                            {
+                                <option value="@type">@type</option>
+                            }
+                        </select>
+                    }
+                    else if (ViewBag.LoadingTypeConfirmation == 1)
+                    {
+                        <select name="loadingType" id="loadingType" class="btn-primary-new btn-padding2">
+                            @foreach (var type in ViewBag.LoadingTypes)
+                            {
+                                <option value="@type">@type</option>
+                            }
+                        </select>
+                    }
+                </div>
+                @if (ViewBag.FormDefinitionConfirmation == 2)
+                {
+                    <button type="button" class="btn-primary-confirm btn-padding1" onclick="ShowFormDefinitionModal()">
+                        Change Form Definition
+                    </button>
+                }
+                else if (ViewBag.FormDefinitionConfirmation == 1)
+                {
+                    <button type="button" class="btn-primary-new btn-padding1" onclick="ShowFormDefinitionModal()">
+                        Change Form Definition
+                    </button>
+                }
+                @if (ViewBag.FormDataConfirmation == 2)
+                {
+                    <button type="button" class="btn-primary-confirm btn-padding1" onclick="ShowFormDataModal()">
+                        Edit Form Data
+                    </button>
+                }
+                else if (ViewBag.FormDataConfirmation == 1)
+                {
+                    <button type="button" class="btn-primary-new btn-padding1" onclick="ShowFormDataModal()">
+                        Edit Form Data
+                    </button>
+                }
             }
-            else
+        </div>
+
+
+        <br />
+        <div style="display: flex; justify-content: center; gap: 20px;">
+            @if (ViewBag.IssuerSignatureValidation == 2)
             {
-                <button type="button" class="btn-primary-new btn-padding1" onclick="ShowFormDefinitionModal()">
-                    Change Form Definition
-                </button>
+                <a class="btn-primary-confirm btn-padding1" type="button" asp-action="IssuerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Issuer Signature
+                    <br/>
+                    @Model.Container.issuer_Name
+                    <br/>
+                    @Model.Container.issuer_Signature_Timestamp
+                </a>
             }
+            else if (ViewBag.IssuerSignatureValidation == 1)
+            {
+                <a class="btn-primary-new btn-padding1" type="button" asp-action="IssuerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Issuer Signature
+                    <br />
+                    @Model.Container.issuer_Name
+                    <br />
+                    @Model.Container.issuer_Signature_Timestamp
+                </a>
+            }
+
+            @if (ViewBag.TeamLeaderSignatureValidation == 2)
+            {
+                <a class="btn-primary-confirm btn-padding1" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Team Leader Signature
+                    <br />
+                    @Model.Container.checkerTL_Name
+                    <br />
+                    @Model.Container.checkerTL_Signature_Timestamp
+                </a>
+            }
+            else if (ViewBag.TeamLeaderSignatureValidation == 1)
+            {
+                <a class="btn-primary-new btn-padding1" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Team Leader Signature
+                    <br />
+                    @Model.Container.checkerTL_Name
+                    <br />
+                    @Model.Container.checkerTL_Signature_Timestamp
+                </a>
+            }
+
+            @if (ViewBag.SupervisorSignatureValidation == 2)
+            {
+                <a class="btn-primary-confirm btn-padding1" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Supervisor Signature
+                    <br />
+                    @Model.Container.checkerSV_Name
+                    <br/>
+                    @Model.Container.checkerSV_Signature_Timestamp
+                </a>
+            }
+            else if (ViewBag.SupervisorSignatureValidation == 1)
+            {
+                <a class="btn-primary-new btn-padding1" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Supervisor Signature
+                    <br />
+                    @Model.Container.checkerSV_Name
+                    <br />
+                    @Model.Container.checkerSV_Signature_Timestamp
+                </a>
+            }
+
+            @if (ViewBag.ManagerSignatureValidation == 2)
+            {
+                <a class="btn-primary-confirm btn-padding1" type="button" asp-action="ManagerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Manager Signature
+                    <br />
+                    @Model.Container.approval_Name
+                    <br/>
+                    @Model.Container.approval_Signature_Timestamp
+                </a>
+            }
+            else if (ViewBag.ManagerSignatureValidation == 1 && ViewBag.UserRightLevel > 1)
+            {
+                <a class="btn-primary-new btn-padding1" type="button" asp-action="ManagerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                    Manager Signature
+                    <br />
+                    @Model.Container.approval_Name
+                    <br/>
+                    @Model.Container.approval_Signature_Timestamp
+                </a>
+            }
+
         </div>
     }
    
-   @*  <br />
-    <div style="display: flex; justify-content: center; gap: 20px;">
-        @if (ViewBag.OperatorSignatureValidation == true)
-        {
-            <a class="btn exportClass" type="button" asp-action="OperatorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Operator Signature</a>
-        }
-        else
-        {
-            <a class="btn errorData" type="button" asp-action="OperatorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Operator Signature</a>
-        }
-        
-        @if (ViewBag.ForklifterSignatureValidation == true)
-        {
-            <a class="btn exportClass" type="button" asp-action="ForklifterSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Forklifter Signature</a>
-        }
-        else
-        {
-            <a class="btn errorData" type="button" asp-action="ForklifterSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Forklifter Signature</a>
-        }
-        
-        @if (ViewBag.TeamLeaderSignatureValidation == true)
-        {
-            <a class="btn exportClass" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Team Leader Signature</a>
-        }
-        else
-        {
-            <a class="btn errorData" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Team Leader Signature</a>
-        }
-
-        @if (ViewBag.SupervisorSignatureValidation == true)
-        {
-            <a class="btn exportClass" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Supervisor Signature</a>
-        }
-        else
-        {
-            <a class="btn errorData" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id" class="btn btn-danger">Supervisor Signature</a>
-        }
-    </div> *@
 
 
     <br />
@@ -556,17 +946,17 @@
                     @{
                         if (Model.Pallet != null)
                         {
-                        <div align="left">
-                                @Html.DisplayNameFor(model => model.Pallet.Name)
-                            <span style="float:right">@Html.DisplayFor(model => model.Pallet.Name)</span>
-                        </div>
+                                    <div align="left">
+                                            @Html.DisplayNameFor(model => model.Pallet.Name)
+                                        <span style="float:right">@Html.DisplayFor(model => model.Pallet.Name)</span>
+                                    </div>
 
-                        <br />
+                                    <br />
 
-                        <div align="left">
-                                @Html.DisplayNameFor(model => model.Pallet.OrderNo)
-                            <span style="float:right">@Html.DisplayFor(model => model.Pallet.OrderNo)</span>
-                        </div>
+                                    <div align="left">
+                                            @Html.DisplayNameFor(model => model.Pallet.OrderNo)
+                                        <span style="float:right">@Html.DisplayFor(model => model.Pallet.OrderNo)</span>
+                                    </div>
                         }
                     }
             </td>
@@ -662,21 +1052,183 @@
 
     <div class="modal fade modalClassSecuringLoad" id="selectSecuringLoadModal" role="dialog">
         <div class="modal-dialog" id="selectSecuringLoadModalDialog">
-            <!-- Modal content in partial view-->
+            <!-- Modal content from SelectSecuringLoadModal view-->
         </div>
     </div>
 
     <div class="modal fade modalClassFormDefinition" id="selectFormDefinitionModal" role="dialog">
         <div class="modal-dialog" id="selectFormDefinitionModalDialog">
-            <!-- Modal content in partial view-->
+            <!-- Modal content from SelectFormDefinitionModal view-->
+        </div>
+    </div>
+
+    <div class="modal fade modalClassFormData" id="selectFormDataModal" role="dialog">
+        <div class="modal-dialog" id="selectFormDataModalDialog">
+            <!-- Modal content from SelectFormDataModal view-->
         </div>
     </div>
 
     }
 
 
+    @* Hide upload element after manager signature *@
+    @if (string.IsNullOrEmpty(Model.Container.approval_Name))
+    {
+    <form asp-action="SubmitFiles" id="emptyForm" enctype="multipart/form-data">
+
+        <span asp-validation-for="Container.Id"></span>
+
+        <!--HTML ELEMENT FOR FILE UPLOAD-->
+        <div class="row">
+            <div class="col-sm-10">
+                <div id="uploadLister" class="addListFiles">
+                        @if (@ViewBag.typeOfOperation == "edit")
+                        {
+                            int a = 0;
+                            @foreach (var item in Model.UploadModel)
+                            {
+                                string idInput = "myfile" + a.ToString();
+                                string idLabel = "myfilelabel" + a.ToString();
+                                string idRemove = "myfileremove" + a.ToString();
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a class=" btn-Link-files btn LabelFiles2" href="@Url.Action("Download", "Containers2", new { fileName = item.fileName, requestid = item.id, containerId=item.ContainerId})">@item.fileName <i class="bi bi-download"></i></a>
+                                    <input type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFileOnSv(this)" />
+                                    <input type="file" name="uploadfile" id="@idInput" style="display:none;justify-content: space-around;" onchange="clickbtnadd(this)" />
+                                </div>
+                                <hr class="HrFiles">
+                            </div>
+                                a++;
+                            }
+                            string idInputLast = "myfile" + Model.UploadModel.Count.ToString();
+                            string idLabelLast = "myfilelabel" + Model.UploadModel.Count.ToString();
+                            string idRemoveLast = "myfileremove" + Model.UploadModel.Count.ToString();
+                            string idhrLast = "myfilehr" + Model.UploadModel.Count.ToString();
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <input type="file" name="uploadfile" id="@idInputLast" style="display:none;" onchange="clickbtnadd(this)" />
+                                <label class="LabelFiles" style="display:none;" id="@idLabelLast">FileUploaded</label>
+                                <input style="display:none;justify-content: space-around;" id="@idRemoveLast" type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFiles(this)">
+                            </div>
+                            <hr id="@idhrLast" style="display:none;" class="HrFiles">
+                        </div>
+                        }
+                        else
+                        {
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <input type="file" name="uploadfile" id="myfile0" style="display:none;" onchange="clickbtnadd(this)" />
+                                <label class="LabelFiles" style="display:none;" id="myfilelabel0">FileUploaded</label>
+                                <input style="display:none;justify-content: space-around;" id="myfileremove0" type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFiles(this)">
+                            </div>
+                            <hr id="myfilehr0" style="display:none;" class="HrFiles">
+                        </div>
+                        }
+
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                    @if (@ViewBag.typeOfOperation == "edit")
+                    {
+                        string idInputLast = "myfile" + Model.UploadModel.Count.ToString();
+                    <label id="button+" for="@idInputLast" class="AddButtonFiles">+</label>
+                    }
+                    else
+                    {
+                    <label id="button+" for="myfile0" class="AddButtonFiles">+</label>
+                    }
+            </div>
+        </div>
+
+
+        <input id="btnSave" type="submit" value="Save" class="btnUploadFiles" />
+
+    </form>
+    }
+
+
+
+@* MODAL FOR REMOVE UPLOADED FILES *@
+<div class="modal" id="DeleteFileModal" style="background-color: rgba(0,0,0,0.4);">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content modalUpload">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label>Do you want to Delete this File ?</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-2">
+                    </div>
+                    <div class="col-sm-4">
+                        <button id="yesDelete" type="button" class="btn-Reject" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="false">Yes</span>
+                        </button>
+                    </div>
+                    <div class="col-sm-4">
+                        <button id="cancelDelete" type="button" class="btnBlackOwn" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="false">No</span>
+                        </button>
+                    </div>
+                    <div class="col-sm-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* Alert modal for big upload requests *@
+@* <div class="modal2 sizeTooBig" id="modalFileSize">
+    <div class="modal-content2">
+        <p>The requested files are too big!</p>
+        <div class="col-sm-4">
+            <button id="closeModal" type="button" class="btn-Reject" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="false">Close</span>
+            </button>
+        </div>
+    </div>
+</div> *@
+
+@* <div aria-live="polite" aria-atomic="true" style="position: absolute; margin-left:200px;margin-bottom:150px min-height: 200px;"> *@
+    <!-- Position it -->
+    <div style="position: absolute; bottom: 21px; left: 19px; z-index: 9999;">
+
+        <!-- Then put toasts within -->
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="mr-auto">Notification</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body" style="font-size: 20px">
+                The requested files are too big!
+            </div>
+        </div>
+
+    </div>
+@* </div> *@
+
+
 
     @section Scripts {
+@*     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> *@
+        
+    @* <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.0.min.js" type="text/javascript"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js" type="text/javascript"></script> *@
+ 
+@*       <script src="~/lib/jquery/dist/jquery.js"></script> 
+     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>    *@
+
 <script>
 
     // Wait for the document to be fully loaded
@@ -685,8 +1237,18 @@
         var selectElement = document.getElementById('loadingType');
 
         // Set the second option as selected (index 1)
-        var selectedLoadType = $("#selectedLoadType").val();
-        selectElement.selectedIndex = selectedLoadType;
+        var selectedLoadType = $("#selectedLoadType");
+        if (selectedLoadType == null)
+        {
+            //e null
+        }
+        else 
+        {
+                //nu e null
+            if (selectElement != null) {
+                selectElement.selectedIndex = selectedLoadType.val();
+            }
+        }
     });
 
 
@@ -704,74 +1266,79 @@
             window.location.href = path;
         });
 
-    $(".detailsBtn").click(function () {
-        var palletId = this.id;
-        var tmpVolume = ($(this).attr("data-volume") * $(this).attr("data-qty")).toFixed(2);
-        console.log($(this).attr("data-serialfrom") + " " +$(this).attr("data-volume"))
-        if($(this).attr("data-serialfrom") == "0.00"){
-         tmpVolume = $(this).attr("data-volume") ;
+        $(".detailsBtn").click(function () {
+            var palletId = this.id;
+            var tmpVolume = ($(this).attr("data-volume") * $(this).attr("data-qty")).toFixed(2);
+            console.log($(this).attr("data-serialfrom") + " " + $(this).attr("data-volume"))
+            if ($(this).attr("data-serialfrom") == "0.00") {
+                tmpVolume = $(this).attr("data-volume");
 
-        }
+            }
 
-        var palletTxt = "<div align='left'> <span style='float:left;font-weight:bold;'>Loading no:</span> <span style='float: right'> " + $(this).attr("data-orderNo") + "</span></div ></br> "
-            + "<div align='left'><span style='float:left;font-weight:bold;'> Container:</span> <span style='float: right'> " + $(this).attr("data-consignee") + ' - ' + $(this).attr("data-container") + "</span></div></br>"
-            + "<div align='left'><span style='float:left;font-weight:bold;'> Sales part:</span> <span style='float: right'> " + $(this).attr("data-sales") + "</span></div></br>"
-            + "<div align='left'> <span style='float:left;font-weight:bold;'>Pallet no:</span> <span style='float: right'> " + $(this).attr("data-palletno") + "</span></div ></br> "
-            + "<div align='left'><span style='float:left;font-weight:bold;'> Serial from:</span> <span style='float: right'> " + $(this).attr("data-serialfrom") + "</span></div > </br>"
-            + "<div align='left'> <span style='float:left;font-weight:bold;'>Serial to:</span> <span style='float: right'> " + $(this).attr("data-serialto") + "</span></div > </br>"
-            + "<div align='left'><span style='float:left;font-weight:bold;'> Quantity: </span><span style='float: right'> " + $(this).attr("data-qty") + "</span></div ></br> "
-            + "<div align='left'><span style='float:left;font-weight:bold;'> Weight: </span><span style='float: right'> " + $(this).attr("data-weight") + "</span></div > </br>"
-            + "<div align='left'><span style='float:left;font-weight:bold;'> Volume: </span><span style='float: right'> " + tmpVolume + "</span></div > </br>"
-        $("#palletContent").empty();
-        $("#palletContent").append(palletTxt)
-        //console.log($(this).attr("data-serialto"))
-    });
+            var palletTxt = "<div align='left'> <span style='float:left;font-weight:bold;'>Loading no:</span> <span style='float: right'> " + $(this).attr("data-orderNo") + "</span></div ></br> "
+                + "<div align='left'><span style='float:left;font-weight:bold;'> Container:</span> <span style='float: right'> " + $(this).attr("data-consignee") + ' - ' + $(this).attr("data-container") + "</span></div></br>"
+                + "<div align='left'><span style='float:left;font-weight:bold;'> Sales part:</span> <span style='float: right'> " + $(this).attr("data-sales") + "</span></div></br>"
+                + "<div align='left'> <span style='float:left;font-weight:bold;'>Pallet no:</span> <span style='float: right'> " + $(this).attr("data-palletno") + "</span></div ></br> "
+                + "<div align='left'><span style='float:left;font-weight:bold;'> Serial from:</span> <span style='float: right'> " + $(this).attr("data-serialfrom") + "</span></div > </br>"
+                + "<div align='left'> <span style='float:left;font-weight:bold;'>Serial to:</span> <span style='float: right'> " + $(this).attr("data-serialto") + "</span></div > </br>"
+                + "<div align='left'><span style='float:left;font-weight:bold;'> Quantity: </span><span style='float: right'> " + $(this).attr("data-qty") + "</span></div ></br> "
+                + "<div align='left'><span style='float:left;font-weight:bold;'> Weight: </span><span style='float: right'> " + $(this).attr("data-weight") + "</span></div > </br>"
+                + "<div align='left'><span style='float:left;font-weight:bold;'> Volume: </span><span style='float: right'> " + tmpVolume + "</span></div > </br>"
+            $("#palletContent").empty();
+            $("#palletContent").append(palletTxt)
+            //console.log($(this).attr("data-serialto"))
+        });
 
 
-    function ShowSecuringLoadModal(id) 
-    {
+        function ShowSecuringLoadModal(id) {
             // Construct the URL with the id parameter
             var containerId = $("#containerId").val();
             var url = "@Url.Action("ShowSelectSecuringLoadModal", "Containers2")" + "?id1=" + containerId;
 
-            $.get(url, function (data)
-            {
+            $.get(url, function (data) {
                 $("#selectSecuringLoadModalDialog").html(data);
             });
 
-        $("#selectSecuringLoadModal").modal("show");
-    }
+            $("#selectSecuringLoadModal").modal("show");
+        }
 
 
 
-    // Handle dropdown change event
-    document.getElementById('loadingType').addEventListener('change', function () {
-        var selectedType = this.value;
-        var containerId = $("#containerId").val();
+        //check if loading element was loaded
+        var selectElementCheck = document.getElementById('loadingType');
+        if (selectElementCheck != null) {
+            // Handle dropdown change event
+            document.getElementById('loadingType').addEventListener('change', function () {
+                var selectedType = this.value;
+                var containerId = $("#containerId").val();
 
-        // Make an AJAX call to the controller function
-        $.ajax({
-            type: 'POST',
-            url: '@Url.Action("ChangeLoadingType", "Containers2")',
-            data: { containerId: containerId, selectedType: selectedType },
-            dataType: "json", // Expect JSON response
-            success: function (data) {
-                // Handle success (e.g., show a message)
-                //alert('Loading type saved successfully!');
-                window.location.href = '/Containers2/Details?id=' + containerId;
-            },
-            error: function () {
-                // Handle error (e.g., show an error message)
-                //alert('Error saving loading type.');
-            }
-        });
-    });
+                // Make an AJAX call to the controller function
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ChangeLoadingType", "Containers2")',
+                    data: { containerId: containerId, selectedType: selectedType },
+                    dataType: "json", // Expect JSON response
+                    success: function (data) {
+                        // Handle success (e.g., show a message)
+                        //alert('Loading type saved successfully!');
+                        window.location.href = '/Containers2/Details?id=' + containerId;
+                    },
+                    error: function () {
+                        // Handle error (e.g., show an error message)
+                        //alert('Error saving loading type.');
+                    }
+                });
+            });
+        }
+
 
 
         function ShowFormDefinitionModal(id) {
             // Construct the URL with the id parameter
             var containerId = $("#containerId").val();
-            var url = "@Url.Action("ShowFormDefinitionModal", "Containers2")" + "?id1=" + containerId;
+            var containersList = $("#templistContainer").val();
+
+            var url = "@Url.Action("ShowFormDefinitionModal", "Containers2")" + "?id1=" + containerId + "&containersList=" + containersList;
 
             $.get(url, function (data) {
                 $("#selectFormDefinitionModalDialog").html(data);
@@ -781,6 +1348,280 @@
         }
 
 
+
+
+        function ShowFormDataModal(id) {
+            // Construct the URL with the id parameter
+            var containerId = $("#containerId").val();
+            var url = "@Url.Action("ShowFormDataModal", "Containers2")" + "?id1=" + containerId;
+
+            $.get(url, function (data) {
+                $("#selectFormDataModalDialog").html(data);
+            });
+
+            $("#selectFormDataModal").modal("show");
+        }
+
+
+
+        //Input File For Upload
+        function clickbtnadd(el) {
+            var string = "myfile" + value;
+            var stringlabel = "myfilelabel" + value;
+            var stringremove = "myfileremove" + value;
+            var stringhr = "myfilehr" + value;
+            let EstimatedInput = document.getElementById(string);
+            if (EstimatedInput.files[0] == null) {
+            } else {
+                var filename = EstimatedInput.files[0].name;
+                var myLabel = document.getElementById(stringlabel);
+                myLabel.style.display = 'inline-flex'
+                myLabel.innerHTML = filename;
+                var myLabel = document.getElementById(stringremove);
+                myLabel.style.display = 'inline-flex'
+                var myhr = document.getElementById(stringhr);
+                myhr.style.display = 'inline-flex'
+                var buttonA = "button+";
+                var buttonAdd = document.getElementById(buttonA);
+                value = value + 1;
+                var newstring = "myfile" + value;
+                buttonAdd.setAttribute("for", newstring)
+                const container = document.createElement('div');
+                container.className = 'row';
+                //col sm 6 div
+                const colFile = document.createElement('div');
+                colFile.className = 'col-sm-12';
+                //input
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.id = 'myfile' + value;
+                fileInput.className = 'required btnBlackOwn';
+                fileInput.setAttribute("style", "display:none;");
+                fileInput.setAttribute('onclick', 'clickbtnadd(this)');
+                fileInput.addEventListener('change', function (e) {
+                    clickbtnadd(this);
+                }, false);
+                var labelCreated = document.createElement('label');
+                labelCreated.id = 'myfilelabel' + value;
+                labelCreated.setAttribute("style", "display:none;");
+                labelCreated.className = "LabelFiles";
+                var btn = document.createElement('input');
+                btn.type = "button";
+                btn.className = "btn-Reject-files btn-Reject";
+                btn.value = "Remove";
+                btn.id = 'myfileremove' + value;
+                btn.setAttribute("style", "display:none;justify-content: space-around;");
+                btn.setAttribute('onclick', 'deleteFiles(this)');
+                var hr = document.createElement('hr');
+                hr.className = "HrFiles";
+                hr.id = 'myfilehr' + value;
+                hr.setAttribute("style", "display:none;");
+                //append
+                colFile.appendChild(fileInput);
+                colFile.appendChild(labelCreated);
+                colFile.appendChild(btn);
+                //append div to row div
+                container.appendChild(colFile);
+                container.appendChild(hr);
+                const element = document.getElementById("uploadLister");
+                element.appendChild(container);
+            }
+        }
+
+        //Remove Element From Upload List
+        function deleteFileOnSv(el) {
+            //delete row
+            tbl = el.parentNode.parentNode;
+
+            var modal = document.getElementById("DeleteFileModal");
+
+            // Open the modal
+            modal.style.display = 'block';
+        }
+
+        function deleteFiles(el) {
+
+
+            // if (!confirm("Are you sure you want to delete?")) return;
+
+            tbl = el.parentNode.parentNode;
+            //delete row
+
+            
+            var modal = document.getElementById("DeleteFileModal");
+
+            // Open the modal
+            modal.style.display = 'block';
+        }
+
+
+
+
+        $("body").on("click", "#yesDelete", function () {
+            //$('#form-modal').modal('hide');
+
+
+            while (tbl.firstChild) {
+                tbl.lastChild.value = "";
+                tbl.removeChild(tbl.lastChild);
+            }
+            tbl.remove();
+
+            var modal = document.getElementById("DeleteFileModal");
+
+            // Open the modal
+            modal.style.display = 'none';
+        });
+
+        $("body").on("click", "#cancelDelete", function () {
+
+            var modal = document.getElementById("DeleteFileModal");
+
+            // Open the modal
+            modal.style.display = 'none';
+        });
+
+        // $("body").on("click", "#closeModal", function () {
+
+        //     var modal = document.getElementById("modalFileSize");
+
+        //     // Open the modal
+        //     modal.style.display = 'none';
+        // });
+
+        
+
+        $(document).ready(function () {
+            $("form").submit(function (e) {
+                e.preventDefault();
+
+                document.querySelector('.loadingScreen').style.display = 'block';
+
+                var formData = new FormData(document.getElementById('emptyForm'));
+                for (var ii = 0; ii < value; ii++) {
+                    if ($('#myfile' + ii).length > 0) {
+                        formData.append('file', document.getElementById('myfile' + ii).files[0]);
+                    }
+                }
+
+
+                var OriginalList = new Array();
+                const originalDiv = document.getElementById("uploadLister");
+
+                for (const child of originalDiv.children) {
+                    var dev = {};
+                    //dev.DeveloperName = child.innerText;
+                    const childid = child.children[0];
+                    var removed = "removed";
+                    if (childid == null) {
+                        dev = removed;
+                        OriginalList.push(dev);
+                    }
+                    else {
+                        const childSecound = childid.children[0];
+                        if (childSecound == null) {
+                            dev = removed;
+                            OriginalList.push(dev);
+                        }
+                        else {
+                            if (childSecound.href == null) {
+
+                                dev = removed;
+                                OriginalList.push(dev);
+                            }
+                            else {
+
+                                dev = childSecound.href;
+                                OriginalList.push(dev);
+                                //alert(JSON.stringify(dev));
+                            }
+                        }
+                    }
+                }
+
+                var containerId = $("#containerId").val();
+                formData.append('containerId', JSON.stringify(containerId));
+
+                // alert(containerId);
+
+                formData.append('ListofFiles', JSON.stringify(OriginalList));
+
+
+                const fd = formData
+                let size = 0
+
+                for (let pair of fd.entries()) {
+                    if (pair[1] instanceof Blob)
+                        size += pair[1].size
+                    else
+                        size += pair[1].length
+                }
+
+                if (size < 28000000)
+                {
+
+
+                    $.ajax({
+                        url: '@Url.Action("SubmitFiles", "Containers2")',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+
+                            console.log('ready for redirect');
+                            window.location.href = '/Containers2/Details?id=' + containerId;
+
+                            return false;
+                            //document.location.href = "/" + data;
+                            //$('.loading').hide();
+                            // Handle the response
+
+                        },
+                        error: function (error) {
+                            $('.loading').hide();
+                            // Handle errors
+                        }
+                    });
+                }
+                else
+                {
+                    // alert("aaaa");
+                    document.querySelector('.loadingScreen').style.display = 'none';
+
+
+                    // var modal = document.getElementById("modalFileSize");
+
+                    // // Open the modal
+                    // modal.style.display = 'block';
+
+                    $(document).ready(function () {
+                        showToast();
+                    });
+
+                    // // After 3 seconds, close the modal
+                    // setTimeout(function () {
+                    //     modal.style.display = 'none';
+                    // }, 3000);
+
+                    //alert("x");
+                }
+
+
+
+
+
+            });
+        });
+
+        function showToast() {
+            $('.toast').toast({ delay: 3000 });
+            $('.toast').toast('show');
+        }
+
+
 </script>
+
+
     }
 

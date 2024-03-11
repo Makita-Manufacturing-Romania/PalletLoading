@@ -11,5 +11,7 @@ namespace PalletLoading.Models
         public string Name { get; set; }
         public string Abbreviation { get; set; }
         public virtual ICollection<Container> Containers { get; set; }
+        public int? TypeId { get; set; }
+        public ClientType Type { get; set; }
     }
 }

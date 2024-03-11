@@ -76,6 +76,7 @@ namespace PalletLoading.Controllers
 
             var user = await _context.User
                 .Include(u => u.UserRight)
+                .Include(u => u.RoleId)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
@@ -100,7 +101,8 @@ namespace PalletLoading.Controllers
         public async Task<IActionResult> Create([Bind("Id,Username,FullName,Usermail,UserRightId")] User user)
         {
             if (ModelState.IsValid)
-            {
+            {    
+                user.RoleId = 1;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -142,6 +144,7 @@ namespace PalletLoading.Controllers
             {
                 try
                 {
+                    user.RoleId = 1;
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }

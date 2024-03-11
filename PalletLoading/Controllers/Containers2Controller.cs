@@ -15,14 +15,29 @@ using System.Drawing;
 using System.Globalization;
 using System.ComponentModel;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using PalletLoading.Interfaces;
+using PalletLoading.Migrations;
+using System.Text.RegularExpressions;
+using System.Security;
+using Microsoft.AspNetCore.StaticFiles;
+using Newtonsoft.Json;
+using Microsoft.CodeAnalysis;
+using System.Web;
+using Microsoft.Build.Evaluation;
 
 namespace PalletLoading.Controllers
 {
     public class Containers2Controller : MainController
     {
+        public readonly IBufferedFileUploadService _bufferedFileUploadService;
+        public bool saveData = false;
 
-        public Containers2Controller(PalletLoadingContext context) : base(null, context, null)
+        public Containers2Controller(PalletLoadingContext context, IBufferedFileUploadService bufferedFileUploadService) : base(null, context, null)
         {
+            _bufferedFileUploadService = bufferedFileUploadService;
         }
 
         public ActionResult GeneratePDF(int id)
@@ -159,6 +174,15 @@ namespace PalletLoading.Controllers
         // GET: Containers2
         public async Task<IActionResult> Index(string searchString, int? pageNumber, string currentdatetimepickerStartDate, string currentdatetimepickerEndDate, string datetimepickerStartDate, string datetimepickerEndDate)
         {
+
+            ViewBag.indexParam1 = searchString;
+            ViewBag.indexParam2 = pageNumber;
+            ViewBag.indexParam3 = currentdatetimepickerStartDate;
+            ViewBag.indexParam4 = currentdatetimepickerEndDate;
+            ViewBag.indexParam5 = datetimepickerStartDate;
+            ViewBag.indexParam6 = datetimepickerEndDate;
+
+
             //var tempTest = _context.vEmployees_AD.ToList();
             DateTime dater = DateTime.Now;
             var cultureGB = new CultureInfo("en-GB");
@@ -200,6 +224,47 @@ namespace PalletLoading.Controllers
                 .OrderByDescending(x => x.Id)
                 //.Take(500)
                 .ToList();
+
+            foreach (var item in containers)
+            {
+                //check all input data for completion
+                item.dataCheck = true;
+                item.signatureCheck = true;
+                item.fileCheck = true;
+
+                //Check for input data
+                if (item.SecuringLoadId == null || item.SecuringLoadId == null || item.FormTypeId == null || item.FormDataId == null)
+                {
+                    item.dataCheck = false;
+                }
+                else
+                {
+                    var formData = _context.FormDatas
+                        .Where(l => l.id == item.FormDataId && (l.rampaNr != null && l.oraIntrare != null && l.start != null && l.stop != null && l.oraIesire != null &&
+                        l.nrCamion != null && l.nrContainer != null && l.nrPaletiPickPeTemp != null && l.nrPalScanner != null && l.nrAviz != null &&
+                        l.nrSigiliu != null && l.numeStivuitorist != null))
+                        .FirstOrDefault();
+
+                    if (formData == null)
+                    {
+                        item.dataCheck = false;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(item.issuer_Name) || string.IsNullOrEmpty(item.checkerTL_Name) || string.IsNullOrEmpty(item.checkerSV_Name))
+                {
+                    item.signatureCheck = false;
+                }
+
+                var uploadData = _context.UploadModelTabel
+                    .Where(l => l.ContainerId == item.Id)
+                    .ToList();
+                if (uploadData == null || uploadData.Count == 0)
+                {
+                    item.fileCheck = false;
+                }
+
+            }
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -281,7 +346,6 @@ namespace PalletLoading.Controllers
                 Pallet = palletDetailed
             };
 
-
             ViewBag.containerId = id;
 
             var loadingTypesList = _context.LoadingTypes.ToList();
@@ -317,78 +381,207 @@ namespace PalletLoading.Controllers
             ViewBag.selectedLoadType = selectedType;
 
             //send confirmations
-            ViewBag.SecuringLoadConfirmation = container.securingLoadConfirm;
-            ViewBag.LoadingTypeConfirmation = container.loadingTypeConfirm;
-            ViewBag.FormDefinitionConfirmation = container.formDefinitionConfirm;
+            int securingLoadConfirm = 1;
+            int loadingTypeConfirm = 1;
+            int formDefinitionConfirm = 1;
+            int formDataConfirm = 2;
+            if (container.SecuringLoadId > 0)
+            {
+                securingLoadConfirm = 2;
+            }
+            if (container.LoadingTypeId > 0)
+            {
+                loadingTypeConfirm = 2;
+            }
+            if (container.FormTypeId > 0)
+            {
+                formDefinitionConfirm = 2;
+            }
+            if (container.FormDataId > 0)
+            {
+                var formData = _context.FormDatas
+                    .Where(l => l.id == container.FormDataId)
+                    .FirstOrDefault();
+
+                if (formDataConfirm == 2)
+                {
+                    if (formData.rampaNr == null)
+                    {
+                        formDataConfirm = 1;
+                    }
+                    if (formData.oraIntrare == null)
+                    {
+                        formDataConfirm = 1;
+                    }
+                    if (formData.start == null)
+                    {
+                        formDataConfirm = 1;
+                    }
+                    if (formData.stop == null)
+                    {
+                        formDataConfirm = 1;
+                    }
+                    if (formData.oraIesire == null)
+                    {
+                        formDataConfirm = 1;
+                    }
+                    if (formData.nrCamion == null)
+                    {
+                        formDataConfirm = 1;
+                    }
+                    if (formData.nrContainer == null)
+                    {
+                        formDataConfirm = 1;
+                    }
+                    if (formData.nrPaletiPickPeTemp == null)
+                    {
+                        formDataConfirm = 1;
+                    }
+                    if (formData.nrPalScanner == null)
+                    {
+                        formDataConfirm = 1;
+                    }
+                    if (formData.nrAviz == null)
+                    {
+                        formDataConfirm = 1;
+                    }
+                    if (formData.nrSigiliu == null)
+                    {
+                        formDataConfirm = 1;
+                    }
+                    if (formData.numeStivuitorist == null)
+                    {
+                        formDataConfirm = 1;
+                    }
+                }
+            }
+            else
+            {
+                formDataConfirm = 1;
+            }
+
+            ViewBag.SecuringLoadConfirmation = securingLoadConfirm;
+            ViewBag.LoadingTypeConfirmation = loadingTypeConfirm;
+            ViewBag.FormDefinitionConfirmation = formDefinitionConfirm;
+            ViewBag.FormDataConfirmation = formDataConfirm;
 
             bool pdfConf = false;
-            if (container.securingLoadConfirm == true && container.loadingTypeConfirm == true && container.formDefinitionConfirm == true)
+            if (securingLoadConfirm == 2 && loadingTypeConfirm == 2 && formDefinitionConfirm == 2 && formDataConfirm == 2)
             {
                 pdfConf = true;
             }
             ViewBag.ExportPDFConfirmation = pdfConf;
 
             //signatures martor
-            if (container.operatorName == null)
+            if (!string.IsNullOrEmpty(container.issuer_Name))
             {
-                ViewBag.OperatorSignatureValidation = false;
-            }
-            else
-            {
-                if (container.operatorName.Trim() == "")
+                ViewBag.IssuerSignatureValidation = 2;
+
+                if (!string.IsNullOrEmpty(container.checkerTL_Name))
                 {
-                    ViewBag.OperatorSignatureValidation = false;
+                    ViewBag.TeamLeaderSignatureValidation = 2;
+
+                    if (!string.IsNullOrEmpty(container.checkerSV_Name))
+                    {
+                        ViewBag.SupervisorSignatureValidation = 2;
+
+                        if (!string.IsNullOrEmpty(container.approval_Name))
+                        {
+                            ViewBag.ManagerSignatureValidation = 2;
+                        }
+                        else
+                        {
+                            if (securingLoadConfirm == 2 && loadingTypeConfirm == 2 && formDefinitionConfirm == 2 && formDataConfirm == 2)
+                            {
+
+                                var uploadData = _context.UploadModelTabel
+                                    .Where(l => l.ContainerId == id)
+                                    .ToList();
+                                if (uploadData == null || uploadData.Count == 0)
+                                {
+                                    ViewBag.ManagerSignatureValidation = 0;
+                                }
+                                else
+                                {
+                                    ViewBag.ManagerSignatureValidation = 1;
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.ManagerSignatureValidation = 0;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.SupervisorSignatureValidation = 1;
+                    }
                 }
                 else
                 {
-                    ViewBag.OperatorSignatureValidation = true;
+                    ViewBag.TeamLeaderSignatureValidation = 1;
                 }
-            }
-            if (container.forklifterName == null)
-            {
-                ViewBag.ForklifterSignatureValidation = false;
             }
             else
             {
-                if (container.forklifterName.Trim() == "")
-                {
-                    ViewBag.ForklifterSignatureValidation = false;
-                }
-                else
-                {
-                    ViewBag.ForklifterSignatureValidation = true;
-                }
+                ViewBag.IssuerSignatureValidation = 1;
+                ViewBag.TeamLeaderSignatureValidation = 0;
+                ViewBag.SupervisorSignatureValidation = 0;
+                ViewBag.ManagerSignatureValidation = 0;
             }
-            if (container.tlName == null)
+
+            if (!string.IsNullOrEmpty(container.approval_Name))
             {
-                ViewBag.TeamLeaderSignatureValidation = false;
+                ViewBag.SecuringLoadConfirmation = 0;
+                ViewBag.LoadingTypeConfirmation = 0;
+                ViewBag.FormDefinitionConfirmation = 0;
+                ViewBag.FormDataConfirmation = 0;
+
+                ViewBag.IssuerSignatureValidation = 0;
+                ViewBag.TeamLeaderSignatureValidation = 0;
+                ViewBag.SupervisorSignatureValidation = 0;
+                ViewBag.ManagerSignatureValidation = 0;
             }
-            else
+
+            //Add Uploaded Files Data
+            List<UploadModel> uploadedFilesData = new List<UploadModel>();
+            //while (true)
+            //{
+            //    uploadedFilesData = _context.UploadModelTabel
+            //        .Where(l => l.ContainerId == id)
+            //        .ToList();
+            //    if (uploadedFilesData.Count > 0)
+            //    {
+            //        break;
+            //    }
+            //}
+            uploadedFilesData = _context.UploadModelTabel
+                .Where(l => l.ContainerId == id)
+                .ToList();
+
+
+            if (uploadedFilesData != null)
             {
-                if (container.tlName.Trim() == "")
+                List<UploadModel> files_list = new List<UploadModel>(uploadedFilesData);
+                foreach (var req in files_list)
                 {
-                    ViewBag.TeamLeaderSignatureValidation = false;
+                    if (System.IO.File.Exists(req.filePath + @"\" + req.fileName))
+                    {
+                    }
+                    else
+                    {
+                        uploadedFilesData.Remove(req);
+                    }
                 }
-                else
-                {
-                    ViewBag.TeamLeaderSignatureValidation = true;
-                }
+
             }
-            if (container.svName == null)
-            {
-                ViewBag.SupervisorSignatureValidation = false;
-            }
-            else
-            {
-                if (container.svName.Trim() == "")
-                {
-                    ViewBag.SupervisorSignatureValidation = false;
-                }
-                else
-                {
-                    ViewBag.SupervisorSignatureValidation = true;
-                }
-            }
+
+
+            viewModel.UploadModel = uploadedFilesData;
+            
+                ViewBag.typeOfOperation = "edit";
+
+
 
 
             return View(viewModel);
@@ -529,9 +722,10 @@ namespace PalletLoading.Controllers
 
         public IActionResult ShowSelectSecuringLoadModal(int id1)
         {
+
             var securingLoadId = _context.Containers
                 .Where(l =>l.Id == id1)
-                .Select(l => l.securingLoadId)
+                .Select(l => l.SecuringLoadId)
                 .FirstOrDefault();
 
             var securingLoadData = new SecuringLoad();
@@ -549,7 +743,7 @@ namespace PalletLoading.Controllers
                 var containerData = _context.Containers
                     .Where(l => l.Id == id1)
                     .FirstOrDefault();
-                containerData.securingLoadId = securingLoadData.Id;
+                containerData.SecuringLoadId = securingLoadData.Id;
                 _context.Update(containerData);
                 _context.SaveChanges();
             }
@@ -574,8 +768,15 @@ namespace PalletLoading.Controllers
             var containerData = _context.Containers
                 .Where(l => l.Id == securingLoad.ContainerId)
                 .FirstOrDefault();
-            containerData.securingLoadId = securingLoad.Id;
-            containerData.securingLoadConfirm = true;
+            containerData.SecuringLoadId = securingLoad.Id;
+
+            //clear signatures
+            containerData.issuer_Name = "";
+            containerData.checkerTL_Name = "";
+            containerData.checkerSV_Name = "";
+            containerData.issuer_Signature_Timestamp = null;
+            containerData.checkerTL_Signature_Timestamp = null;
+            containerData.checkerSV_Signature_Timestamp = null;
 
             _context.Update(securingLoad);
             _context.Update(containerData);
@@ -601,7 +802,13 @@ namespace PalletLoading.Controllers
                 .FirstOrDefault();
             containerData.LoadingTypeId = Convert.ToInt32(loadingTypeId);
 
-            containerData.loadingTypeConfirm = true;
+            //clear signatures
+            containerData.issuer_Name = "";
+            containerData.checkerTL_Name = "";
+            containerData.checkerSV_Name = "";
+            containerData.issuer_Signature_Timestamp = null;
+            containerData.checkerTL_Signature_Timestamp = null;
+            containerData.checkerSV_Signature_Timestamp = null;
 
             _context.Update(containerData);
             _context.SaveChanges();
@@ -613,7 +820,7 @@ namespace PalletLoading.Controllers
         }
 
 
-        public IActionResult ShowFormDefinitionModal(int id1)
+        public IActionResult ShowFormDefinitionModal(int id1, string containersList)
         {
             var formTypeId = _context.Containers
                 .Where(l => l.Id == id1)
@@ -626,19 +833,26 @@ namespace PalletLoading.Controllers
                     .Select(l => l.Id)
                     .FirstOrDefault();
             }
+            else
+            {
+                containersList = "";
+            }
 
             var formTypeData = _context.FormDefinitions
                 .Where(l => l.Id == formTypeId)
                 .FirstOrDefault();
             formTypeData.ContainerId = id1;
+            formTypeData.containersList = containersList;
 
             return View("SelectFormDefinitionModal", formTypeData);
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> EditFormDefinitionData([Bind("Id,PDF_Name,DocRefNumber,Department,ContainerId")] FormDefinition formTypeCurrentData)
+        public async Task<IActionResult> EditFormDefinitionData([Bind("Id,PDF_Name,DocRefNumber,Department,ContainerId,containersList")] FormDefinition formTypeCurrentData)
         {
+            string name = formTypeCurrentData.containersList;
+
             var formTypePreviousData = _context.FormDefinitions
                 .Where(l => l.Id == formTypeCurrentData.Id)
                 .FirstOrDefault();
@@ -647,27 +861,34 @@ namespace PalletLoading.Controllers
                 .Where(l => l.Id == formTypeCurrentData.ContainerId)
                 .FirstOrDefault();
 
-            if (formTypeCurrentData.PDF_Name != formTypePreviousData.PDF_Name || formTypeCurrentData.DocRefNumber != formTypePreviousData.DocRefNumber ||
-                formTypeCurrentData.Department != formTypePreviousData.Department)
+
+            FormDefinition newFormDefinition = new FormDefinition();
+
+            if (formTypeCurrentData.PDF_Name != "_")
             {
-                //data was changed so we create a new entity
-                FormDefinition newFormDefinition = new FormDefinition();
-
                 newFormDefinition.PDF_Name = formTypeCurrentData.PDF_Name;
-                newFormDefinition.DocRefNumber = formTypeCurrentData.DocRefNumber;
-                newFormDefinition.Department = formTypeCurrentData.Department;
-                _context.Add(newFormDefinition);
-                _context.SaveChanges();
-
-                containerData.FormTypeId = newFormDefinition.Id;
             }
             else
             {
-                //data stays the same but we set FormDefinition Id to Default
-                containerData.FormTypeId = formTypeCurrentData.Id;
+                //Replace _ with name From Details Page top
+                newFormDefinition.PDF_Name = name;
             }
+            newFormDefinition.DocRefNumber = formTypeCurrentData.DocRefNumber;
+            newFormDefinition.Department = formTypeCurrentData.Department;
+            _context.Add(newFormDefinition);
+            _context.SaveChanges();
 
-            containerData.formDefinitionConfirm = true;
+            //data stays the same but we set FormDefinition Id to Default 
+            containerData.FormTypeId = newFormDefinition.Id;
+
+
+            //clear signatures
+            containerData.issuer_Name = "";
+            containerData.checkerTL_Name = "";
+            containerData.checkerSV_Name = "";
+            containerData.issuer_Signature_Timestamp = null;
+            containerData.checkerTL_Signature_Timestamp = null;
+            containerData.checkerSV_Signature_Timestamp = null;
 
             _context.Update(containerData);
             _context.SaveChanges();
@@ -675,34 +896,86 @@ namespace PalletLoading.Controllers
             return RedirectToAction("Details", "Containers2", new { id = formTypeCurrentData.ContainerId });
         }
 
-        [HttpGet]
-        public ActionResult OperatorSign(int id)
-        {
-            string username = this._context.User.Where(c => c.Username.Equals(User.Identity.Name.Replace("MMRMAKITA\\", ""))).Select(c => c.Username).FirstOrDefault();
 
-            var containerData = _context.Containers
-                .Where(l => l.Id == id)
+        public IActionResult ShowFormDataModal(int id1)
+        {
+            var formDataId = _context.Containers
+                .Where(l => l.Id == id1)
+                .Select(l => l.FormDataId)
                 .FirstOrDefault();
 
-            containerData.operatorName = username;
+            if (formDataId == null)
+            {
+                FormData newData = new FormData();
+                _context.Add(newData);
+                _context.SaveChanges();
+                formDataId = newData.id;
+            }
+
+            var formTypeData = _context.FormDatas
+                .Where(l => l.id == formDataId)
+                .FirstOrDefault();
+            formTypeData.ContainerId = id1;
+
+            var containerData = _context.Containers
+                .Where(l => l.Id == id1)
+                .FirstOrDefault();
+            containerData.FormDataId = formDataId;
             _context.Update(containerData);
             _context.SaveChanges();
 
-            return RedirectToAction("Details", "Containers2", new { id = id });
+
+            return View("SelectFormDataModal", formTypeData);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> EditFormData([Bind("id,rampaNr,oraIntrare,start,stop,oraIesire,nrCamion,nrContainer,nrPaletiPickPeTemp," +
+            "nrPalScanner,nrAviz,nrSigiliu,numeStivuitorist,ContainerId")] FormData formDataCurrentData)
+        {
+
+            var containerData = _context.Containers
+                .Where(l => l.Id == formDataCurrentData.ContainerId)
+                .FirstOrDefault();
+
+            //clear signatures
+            containerData.issuer_Name = "";
+            containerData.checkerTL_Name = "";
+            containerData.checkerSV_Name = "";
+            containerData.issuer_Signature_Timestamp = null;
+            containerData.checkerTL_Signature_Timestamp = null;
+            containerData.checkerSV_Signature_Timestamp = null;
+
+            _context.Update(containerData);
+            _context.Update(formDataCurrentData);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", "Containers2", new { id = formDataCurrentData.ContainerId });
+        }
+
+
         [HttpGet]
-        public ActionResult ForklifterSign(int id)
+        public ActionResult IssuerSign(int id)
         {
             string username = this._context.User.Where(c => c.Username.Equals(User.Identity.Name.Replace("MMRMAKITA\\", ""))).Select(c => c.Username).FirstOrDefault();
 
-            var containerData = _context.Containers
-                .Where(l => l.Id == id)
+            string name = _context.User
+                .Where(l => l.Username == username)
+                .Select(l => l.FullName)
                 .FirstOrDefault();
 
-            containerData.forklifterName = username;
-            _context.Update(containerData);
-            _context.SaveChanges();
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                var containerData = _context.Containers
+                    .Where(l => l.Id == id)
+                    .FirstOrDefault();
+
+                containerData.issuer_Name = name;
+                containerData.issuer_Signature_Timestamp = DateTime.Now;
+                _context.Update(containerData);
+                _context.SaveChanges();
+            }
+
 
             return RedirectToAction("Details", "Containers2", new { id = id });
         }
@@ -712,13 +985,22 @@ namespace PalletLoading.Controllers
         {
             string username = this._context.User.Where(c => c.Username.Equals(User.Identity.Name.Replace("MMRMAKITA\\", ""))).Select(c => c.Username).FirstOrDefault();
 
-            var containerData = _context.Containers
-                .Where(l => l.Id == id)
+            string name = _context.User
+                .Where(l => l.Username == username)
+                .Select(l => l.FullName)
                 .FirstOrDefault();
 
-            containerData.tlName = username;
-            _context.Update(containerData);
-            _context.SaveChanges();
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                var containerData = _context.Containers
+                    .Where(l => l.Id == id)
+                    .FirstOrDefault();
+
+                containerData.checkerTL_Name = name;
+                containerData.checkerTL_Signature_Timestamp = DateTime.Now;
+                _context.Update(containerData);
+                _context.SaveChanges();
+            }
 
             return RedirectToAction("Details", "Containers2", new { id = id });
         }
@@ -728,13 +1010,47 @@ namespace PalletLoading.Controllers
         {
             string username = this._context.User.Where(c => c.Username.Equals(User.Identity.Name.Replace("MMRMAKITA\\", ""))).Select(c => c.Username).FirstOrDefault();
 
-            var containerData = _context.Containers
-                .Where(l => l.Id == id)
+            string name = _context.User
+                .Where(l => l.Username == username)
+                .Select(l => l.FullName)
                 .FirstOrDefault();
 
-            containerData.svName = username;
-            _context.Update(containerData);
-            _context.SaveChanges();
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                var containerData = _context.Containers
+                    .Where(l => l.Id == id)
+                    .FirstOrDefault();
+
+                containerData.checkerSV_Name = name;
+                containerData.checkerSV_Signature_Timestamp = DateTime.Now;
+                _context.Update(containerData);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Details", "Containers2", new { id = id });
+        }
+
+        [HttpGet]
+        public ActionResult ManagerSign(int id)
+        {
+            string username = this._context.User.Where(c => c.Username.Equals(User.Identity.Name.Replace("MMRMAKITA\\", ""))).Select(c => c.Username).FirstOrDefault();
+
+            string name = _context.User
+                .Where(l => l.Username == username)
+                .Select(l => l.FullName)
+                .FirstOrDefault();
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                var containerData = _context.Containers
+                    .Where(l => l.Id == id)
+                    .FirstOrDefault();
+
+                containerData.approval_Name = name;
+                containerData.approval_Signature_Timestamp = DateTime.Now;
+                _context.Update(containerData);
+                _context.SaveChanges();
+            }
 
             return RedirectToAction("Details", "Containers2", new { id = id });
         }
@@ -780,16 +1096,16 @@ namespace PalletLoading.Controllers
 
             foreach (var data in pallets)
             {
-                if (data.PalletImportData != null )
+                if (data.PalletImportData != null)
                 {
                     if (data.PalletImportData.salse_part != "PC Pallet")
                     {
                         //Tools
                         totalTools += data.PalletImportData.picking_qty;
                         totalExportPallets++;
-                        if (!clients.Contains(data.PalletImportData.consignee_code))
+                        if (!clients.Contains("Tools " + data.PalletImportData.consignee_code))
                         {
-                            clients.Add(data.PalletImportData.consignee_code);
+                            clients.Add("Tools " + data.PalletImportData.consignee_code);
                         }
                     }
                     else
@@ -797,9 +1113,9 @@ namespace PalletLoading.Controllers
                         //Spares
                         totalSpares += data.PalletImportData.picking_qty;
                         totalPartCenterPallets++;
-                        if (!clients.Contains("PC"))
+                        if (!clients.Contains("Spares " + data.PalletImportData.consignee_code))
                         {
-                            clients.Add("PC");
+                            clients.Add("Spares " + data.PalletImportData.consignee_code);
                         }
                     }
                 }
@@ -810,9 +1126,9 @@ namespace PalletLoading.Controllers
                         //Tools
                         totalTools += data.PalletImportDataHistory.picking_qty;
                         totalExportPallets++;
-                        if (!clients.Contains(data.PalletImportDataHistory.consignee_code))
+                        if (!clients.Contains("Tools " + data.PalletImportDataHistory.consignee_code))
                         {
-                            clients.Add(data.PalletImportDataHistory.consignee_code);
+                            clients.Add("Tools " + data.PalletImportDataHistory.consignee_code);
                         }
                     }
                     else
@@ -820,9 +1136,9 @@ namespace PalletLoading.Controllers
                         //Spares
                         totalSpares += data.PalletImportDataHistory.picking_qty;
                         totalPartCenterPallets++;
-                        if (!clients.Contains("PC"))
+                        if (!clients.Contains("Spares " + data.PalletImportDataHistory.consignee_code))
                         {
-                            clients.Add("PC");
+                            clients.Add("Spares " + data.PalletImportDataHistory.consignee_code);
                         }
                     }
                 }
@@ -856,8 +1172,8 @@ namespace PalletLoading.Controllers
 
                     if (data.PalletImportData != null)
                     {
-                        if ((client.name == "PC" && data.PalletImportData.salse_part == "PC Pallet") ||
-                            (data.PalletImportData.consignee_code == client.name && data.PalletImportData.salse_part != "PC Pallet"))
+                        if (("Spares " + data.PalletImportData.consignee_code == client.name && data.PalletImportData.salse_part == "PC Pallet") ||
+                            ("Tools "  + data.PalletImportData.consignee_code == client.name && data.PalletImportData.salse_part != "PC Pallet"))
                         {
                             client.quantity += Decimal.ToInt32(data.PalletImportData.picking_qty);
                             client.pallets += 1;
@@ -865,8 +1181,8 @@ namespace PalletLoading.Controllers
                     }
                     else if (data.PalletImportDataHistory != null)
                     {
-                        if ((client.name == "PC" && data.PalletImportDataHistory.salse_part == "PC Pallet") ||
-                            (data.PalletImportDataHistory.consignee_code == client.name && data.PalletImportDataHistory.salse_part != "PC Pallet"))
+                        if (("Spares " + data.PalletImportDataHistory.consignee_code == client.name && data.PalletImportDataHistory.salse_part == "PC Pallet") ||
+                            ("Tools "  + data.PalletImportDataHistory.consignee_code == client.name && data.PalletImportDataHistory.salse_part != "PC Pallet"))
                         {
                             client.quantity += Decimal.ToInt32(data.PalletImportDataHistory.picking_qty);
                             client.pallets += 1;
@@ -880,124 +1196,133 @@ namespace PalletLoading.Controllers
 
             int i = 1;
             int limit = pallets.Count;
-            foreach (var client in clientsData) 
+            int operation = 1;
+            while (operation < 3)
             {
-                i = 1;
-                foreach (var data in pallets) 
+                foreach (var client in clientsData)
                 {
-                    if (client.name == "PC")
+                    i = 1;
+                    foreach (var data in pallets)
                     {
-                        //Spares
-                        if (data.PalletImportData != null)
+                        if (client.name.Contains("Spares") && operation == 2)
                         {
-                            if (data.PalletImportData.salse_part == "PC Pallet")
+                            //Spares
+                            if (data.PalletImportData != null)
                             {
-                                PalletForPDFViewModel rowToAdd = new PalletForPDFViewModel();
-                                rowToAdd.orderNo = data.OrderNo.ToString();
-                                rowToAdd.consigneAndContainer = data.PalletImportData.consignee_code + " - " + data.PalletImportData.container_no;
-                                rowToAdd.salesPart = data.PalletImportData.salse_part;
-                                rowToAdd.pallet_no = Convert.ToInt32(data.PalletImportData.pallet_no).ToString();
-                                rowToAdd.serial_from = Convert.ToInt32(data.PalletImportData.serial_from).ToString();
-                                rowToAdd.serial_to = Convert.ToInt32(data.PalletImportData.serial_to).ToString();
-                                rowToAdd.picking_qty = Convert.ToInt32(data.PalletImportData.picking_qty).ToString();
-                                rowToAdd.weight = data.PalletImportData.weight.ToString();
-                                sortedPalletsWithTotals.Add(rowToAdd);
+                                if (client.name.Trim() == "Spares " + data.PalletImportData.consignee_code && data.PalletImportData.salse_part == "PC Pallet")
+                                {
+                                    PalletForPDFViewModel rowToAdd = new PalletForPDFViewModel();
+                                    rowToAdd.orderNo = data.OrderNo.ToString();
+                                    rowToAdd.consigneAndContainer = data.PalletImportData.consignee_code + " - " + data.PalletImportData.container_no;
+                                    rowToAdd.salesPart = data.PalletImportData.salse_part;
+                                    rowToAdd.pallet_no = Convert.ToInt32(data.PalletImportData.pallet_no).ToString();
+                                    rowToAdd.serial_from = Convert.ToInt32(data.PalletImportData.serial_from).ToString();
+                                    rowToAdd.serial_to = Convert.ToInt32(data.PalletImportData.serial_to).ToString();
+                                    rowToAdd.picking_qty = Convert.ToInt32(data.PalletImportData.picking_qty).ToString();
+                                    rowToAdd.weight = data.PalletImportData.weight.ToString();
+                                    sortedPalletsWithTotals.Add(rowToAdd);
+                                }
+                            }
+                            if (data.PalletImportDataHistory != null)
+                            {
+                                if (client.name.Trim() == "Spares " + data.PalletImportDataHistory.consignee_code && data.PalletImportDataHistory.salse_part == "PC Pallet")
+                                {
+                                    PalletForPDFViewModel rowToAdd = new PalletForPDFViewModel();
+                                    rowToAdd.orderNo = data.OrderNo.ToString();
+                                    rowToAdd.consigneAndContainer = data.PalletImportDataHistory.consignee_code + " - " + data.PalletImportDataHistory.container_no;
+                                    rowToAdd.salesPart = data.PalletImportDataHistory.salse_part;
+                                    rowToAdd.pallet_no = Convert.ToInt32(data.PalletImportDataHistory.pallet_no).ToString();
+                                    rowToAdd.serial_from = Convert.ToInt32(data.PalletImportDataHistory.serial_from).ToString();
+                                    rowToAdd.serial_to = Convert.ToInt32(data.PalletImportDataHistory.serial_to).ToString();
+                                    rowToAdd.picking_qty = Convert.ToInt32(data.PalletImportDataHistory.picking_qty).ToString();
+                                    rowToAdd.weight = data.PalletImportDataHistory.weight.ToString();
+                                    sortedPalletsWithTotals.Add(rowToAdd);
+                                }
                             }
                         }
-                        if (data.PalletImportDataHistory != null)
+                        else if (client.name.Contains("Tools") && operation == 1)
                         {
-                            if (data.PalletImportDataHistory.salse_part == "PC Pallet")
+                            //Tools
+                            if (data.PalletImportData != null)
                             {
-                                PalletForPDFViewModel rowToAdd = new PalletForPDFViewModel();
-                                rowToAdd.orderNo = data.OrderNo.ToString();
-                                rowToAdd.consigneAndContainer = data.PalletImportDataHistory.consignee_code + " - " + data.PalletImportDataHistory.container_no;
-                                rowToAdd.salesPart = data.PalletImportDataHistory.salse_part;
-                                rowToAdd.pallet_no = Convert.ToInt32(data.PalletImportDataHistory.pallet_no).ToString();
-                                rowToAdd.serial_from = Convert.ToInt32(data.PalletImportDataHistory.serial_from).ToString();
-                                rowToAdd.serial_to = Convert.ToInt32(data.PalletImportDataHistory.serial_to).ToString();
-                                rowToAdd.picking_qty = Convert.ToInt32(data.PalletImportDataHistory.picking_qty).ToString();
-                                rowToAdd.weight = data.PalletImportDataHistory.weight.ToString();
-                                sortedPalletsWithTotals.Add(rowToAdd);
+                                if (client.name.Trim() == "Tools " + data.PalletImportData.consignee_code && data.PalletImportData.salse_part != "PC Pallet")
+                                {
+                                    PalletForPDFViewModel rowToAdd = new PalletForPDFViewModel();
+                                    rowToAdd.orderNo = data.OrderNo.ToString();
+                                    rowToAdd.consigneAndContainer = data.PalletImportData.consignee_code + " - " + data.PalletImportData.container_no;
+                                    rowToAdd.salesPart = data.PalletImportData.salse_part;
+                                    rowToAdd.pallet_no = Convert.ToInt32(data.PalletImportData.pallet_no).ToString();
+                                    rowToAdd.serial_from = Convert.ToInt32(data.PalletImportData.serial_from).ToString();
+                                    rowToAdd.serial_to = Convert.ToInt32(data.PalletImportData.serial_to).ToString();
+                                    rowToAdd.picking_qty = Convert.ToInt32(data.PalletImportData.picking_qty).ToString();
+                                    rowToAdd.weight = data.PalletImportData.weight.ToString();
+                                    sortedPalletsWithTotals.Add(rowToAdd);
+                                }
+                            }
+                            if (data.PalletImportDataHistory != null)
+                            {
+                                if (client.name.Trim() == "Tools " + data.PalletImportDataHistory.consignee_code && data.PalletImportDataHistory.salse_part != "PC Pallet")
+                                {
+                                    PalletForPDFViewModel rowToAdd = new PalletForPDFViewModel();
+                                    rowToAdd.orderNo = data.OrderNo.ToString();
+                                    rowToAdd.consigneAndContainer = data.PalletImportDataHistory.consignee_code + " - " + data.PalletImportDataHistory.container_no;
+                                    rowToAdd.salesPart = data.PalletImportDataHistory.salse_part;
+                                    rowToAdd.pallet_no = Convert.ToInt32(data.PalletImportDataHistory.pallet_no).ToString();
+                                    rowToAdd.serial_from = Convert.ToInt32(data.PalletImportDataHistory.serial_from).ToString();
+                                    rowToAdd.serial_to = Convert.ToInt32(data.PalletImportDataHistory.serial_to).ToString();
+                                    rowToAdd.picking_qty = Convert.ToInt32(data.PalletImportDataHistory.picking_qty).ToString();
+                                    rowToAdd.weight = data.PalletImportDataHistory.weight.ToString();
+                                    sortedPalletsWithTotals.Add(rowToAdd);
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        //Tools
-                        if (data.PalletImportData != null)
-                        {
-                            if (client.name.Trim() == data.PalletImportData.consignee_code && data.PalletImportData.salse_part != "PC Pallet")
-                            {
-                                PalletForPDFViewModel rowToAdd = new PalletForPDFViewModel();
-                                rowToAdd.orderNo = data.OrderNo.ToString();
-                                rowToAdd.consigneAndContainer = data.PalletImportData.consignee_code + " - " + data.PalletImportData.container_no;
-                                rowToAdd.salesPart = data.PalletImportData.salse_part;
-                                rowToAdd.pallet_no = Convert.ToInt32(data.PalletImportData.pallet_no).ToString();
-                                rowToAdd.serial_from = Convert.ToInt32(data.PalletImportData.serial_from).ToString();
-                                rowToAdd.serial_to = Convert.ToInt32(data.PalletImportData.serial_to).ToString();
-                                rowToAdd.picking_qty = Convert.ToInt32(data.PalletImportData.picking_qty).ToString();
-                                rowToAdd.weight = data.PalletImportData.weight.ToString();
-                                sortedPalletsWithTotals.Add(rowToAdd);
-                            }
-                        }
-                        if (data.PalletImportDataHistory != null)
-                        {
-                            if (client.name.Trim() == data.PalletImportDataHistory.consignee_code && data.PalletImportDataHistory.salse_part != "PC Pallet")
-                            {
-                                PalletForPDFViewModel rowToAdd = new PalletForPDFViewModel();
-                                rowToAdd.orderNo = data.OrderNo.ToString();
-                                rowToAdd.consigneAndContainer = data.PalletImportDataHistory.consignee_code + " - " + data.PalletImportDataHistory.container_no;
-                                rowToAdd.salesPart = data.PalletImportDataHistory.salse_part;
-                                rowToAdd.pallet_no = Convert.ToInt32(data.PalletImportDataHistory.pallet_no).ToString();
-                                rowToAdd.serial_from = Convert.ToInt32(data.PalletImportDataHistory.serial_from).ToString();
-                                rowToAdd.serial_to = Convert.ToInt32(data.PalletImportDataHistory.serial_to).ToString();
-                                rowToAdd.picking_qty = Convert.ToInt32(data.PalletImportDataHistory.picking_qty).ToString();
-                                rowToAdd.weight = data.PalletImportDataHistory.weight.ToString();
-                                sortedPalletsWithTotals.Add(rowToAdd);
-                            }
-                        }
-                    }
-                    
-                    if (i == pallets.Count) 
-                    {
-                        //Total insert
-                        PalletForPDFViewModel lineRow = new PalletForPDFViewModel();
-                        lineRow.orderNo = "Line";
-                        lineRow.consigneAndContainer = "";
-                        lineRow.salesPart = "";
-                        lineRow.pallet_no = "";
-                        lineRow.serial_from = "";
-                        lineRow.serial_to = "";
-                        lineRow.picking_qty = "";
-                        lineRow.weight = "";
-                        sortedPalletsWithTotals.Add(lineRow);
-                        PalletForPDFViewModel rowToAdd = new PalletForPDFViewModel();
-                        rowToAdd.orderNo = "New";
-                        rowToAdd.consigneAndContainer = "Total " + client.name;
-                        rowToAdd.salesPart = "";
-                        rowToAdd.pallet_no = /*"Total Pallets:" +*/ client.pallets.ToString();
-                        rowToAdd.serial_from = "";
-                        rowToAdd.serial_to = "";
-                        rowToAdd.picking_qty = /*"Total Qty:" +*/ client.quantity.ToString();
-                        rowToAdd.weight = "";
-                        sortedPalletsWithTotals.Add(rowToAdd);
-                        PalletForPDFViewModel emptyRow = new PalletForPDFViewModel();
-                        emptyRow.orderNo = "Empty";
-                        emptyRow.consigneAndContainer = "";
-                        emptyRow.salesPart = "";
-                        emptyRow.pallet_no = "";
-                        emptyRow.serial_from = "";
-                        emptyRow.serial_to = "";
-                        emptyRow.picking_qty = "";
-                        emptyRow.weight = "";
-                        sortedPalletsWithTotals.Add(emptyRow);
-                        sortedPalletsWithTotals.Add(emptyRow);
-                        sortedPalletsWithTotals.Add(emptyRow);
-                    }
 
-                    i++;
+                        if (i == pallets.Count)
+                        {
+                            if ((client.name.Contains("Tools") && operation == 1) || client.name.Contains("Spares") && operation == 2)
+                            {
+                                //Total insert
+                                PalletForPDFViewModel lineRow = new PalletForPDFViewModel();
+                                lineRow.orderNo = "Line";
+                                lineRow.consigneAndContainer = "";
+                                lineRow.salesPart = "";
+                                lineRow.pallet_no = "";
+                                lineRow.serial_from = "";
+                                lineRow.serial_to = "";
+                                lineRow.picking_qty = "";
+                                lineRow.weight = "";
+                                sortedPalletsWithTotals.Add(lineRow);
+                                PalletForPDFViewModel rowToAdd = new PalletForPDFViewModel();
+                                rowToAdd.orderNo = "New";
+                                rowToAdd.consigneAndContainer = "Total " + client.name;
+                                rowToAdd.salesPart = "";
+                                rowToAdd.pallet_no = /*"Total Pallets:" +*/ client.pallets.ToString();
+                                rowToAdd.serial_from = "";
+                                rowToAdd.serial_to = "";
+                                rowToAdd.picking_qty = /*"Total Qty:" +*/ client.quantity.ToString();
+                                rowToAdd.weight = "";
+                                sortedPalletsWithTotals.Add(rowToAdd);
+                                PalletForPDFViewModel emptyRow = new PalletForPDFViewModel();
+                                emptyRow.orderNo = "Empty";
+                                emptyRow.consigneAndContainer = "";
+                                emptyRow.salesPart = "";
+                                emptyRow.pallet_no = "";
+                                emptyRow.serial_from = "";
+                                emptyRow.serial_to = "";
+                                emptyRow.picking_qty = "";
+                                emptyRow.weight = "";
+                                sortedPalletsWithTotals.Add(emptyRow);
+                                sortedPalletsWithTotals.Add(emptyRow);
+                                sortedPalletsWithTotals.Add(emptyRow);
+                            }
+                        }
+
+                        i++;
+                    }
                 }
+                operation++;
             }
+            
 
 
             List<string> totalClients2 = new List<string>();
@@ -1034,7 +1359,15 @@ namespace PalletLoading.Controllers
             LoadingType loadingTypeData = _context.LoadingTypes
                 .Where(l => l.Id == container.LoadingTypeId)
                 .FirstOrDefault();
-            string loadingType = loadingTypeData.Abbreviation + "-" + loadingTypeData.Name;
+            string loadingType = "";
+            if (loadingTypeData == null)
+            {
+                loadingType = "";
+            }
+            else
+            {
+                loadingType = loadingTypeData.Abbreviation + "-" + loadingTypeData.Name;
+            }
 
             //get form data
             FormDefinition formDefinition = _context.FormDefinitions
@@ -1043,8 +1376,15 @@ namespace PalletLoading.Controllers
 
             //securing load data
             SecuringLoad securingLoad = _context.SecuringLoads
-                .Where(l => l.Id == container.securingLoadId)
+                .Where(l => l.Id == container.SecuringLoadId)
                 .FirstOrDefault();
+
+
+            //Form Data Remaining
+            FormData formData = _context.FormDatas
+                .Where(l => l.id == container.FormDataId)
+                .FirstOrDefault();
+
 
 
             var viewModel = new ContainerDetailsViewModel
@@ -1065,6 +1405,7 @@ namespace PalletLoading.Controllers
                 loadingType = loadingType,
                 FormDefinition = formDefinition,
                 SecuringLoad = securingLoad,
+                FormData = formData,
             };
 
 
@@ -1087,6 +1428,276 @@ namespace PalletLoading.Controllers
 
         }
 
+        [HttpPost]
+        public IActionResult ManagerBulkSign(List<int> ids, string searchString, int? pageNumber,
+            string currentdatetimepickerStartDate, string currentdatetimepickerEndDate, string datetimepickerStartDate, string datetimepickerEndDate)
+        {
+            string username = this._context.User.Where(c => c.Username.Equals(User.Identity.Name.Replace("MMRMAKITA\\", ""))).Select(c => c.Username).FirstOrDefault();
+
+            string name = _context.User
+                .Where(l => l.Username == username)
+                .Select(l => l.FullName)
+                .FirstOrDefault();
+
+            foreach (var item in ids)
+            {
+                var containerData = _context.Containers
+                    .Where(l => l.Id == item)
+                    .FirstOrDefault();
+
+                containerData.approval_Name = name;
+                _context.Update(containerData);
+            }
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Containers2", new { searchString = searchString, pageNumber = pageNumber, currentdatetimepickerStartDate = currentdatetimepickerStartDate,
+                currentdatetimepickerEndDate = currentdatetimepickerEndDate, datetimepickerStartDate = datetimepickerStartDate, datetimepickerEndDate = datetimepickerEndDate});
+            //return Json(new { success = true });
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitFiles( IFormFile[] file,string containerId, string? ListofFiles)
+        {
+
+            string numberString = Regex.Replace(containerId, @"\D", "");
+            int id = Int32.Parse(numberString);
+
+
+            //delete files
+            List<UploadModel> originalListOffiles = _context.UploadModelTabel
+                .Where(l => l.ContainerId == id)
+                .ToList();
+            List<string>? FileList = JsonConvert.DeserializeObject<List<string>>(ListofFiles);
+
+            List<string> files = new List<string>();
+            foreach (var fileindividual in FileList)
+            {
+                if (fileindividual != "removed")
+                {
+                    Uri myUri = new Uri(fileindividual.ToString());
+                    string param1 = HttpUtility.ParseQueryString(myUri.Query).Get("fileName");
+                    files.Add(param1);
+                }
+            }
+
+            for (int a = 0; a < originalListOffiles.Count; a++)
+            {
+                bool b = files.Any(originalListOffiles[a].fileName.Contains);
+                if (b == false)
+                {
+                    await deleteFileOnSvAsync(originalListOffiles[a], id);
+                }
+            }
+
+
+            foreach (var item in file)
+            {
+                await UploadFile(item, id);
+
+
+
+                if (saveData)
+                {
+                    var pathBase = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("CustomSettings")["FileStoragePath"];
+                    string path = pathBase + "\\" + id + "\\";
+
+                    var uploadModelTable = _context.UploadModelTabel
+                        .Where(l => l.ContainerId == id)
+                        .ToList();
+                    bool isDataAlreadyInDb = false;
+                    foreach (var data in uploadModelTable)
+                    {
+                        if (data.fileName == item.FileName)
+                        {
+                            isDataAlreadyInDb = true;
+                            break;
+                        }
+                    }
+
+                    if (!isDataAlreadyInDb)
+                    {
+                        UploadModel fileData = new UploadModel();
+                        fileData.ContainerId = id;
+                        fileData.fileName = item.FileName;
+                        fileData.filePath = path;
+
+                        _context.Add(fileData);
+                        try
+                        {
+                            //trimitei verificarea
+                            await _context.SaveChangesAsync();
+                            //NEED TO DO THIS IN SubmitFiles FUNCTION
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                }
+
+
+            }
+            return RedirectToAction("Details", "Containers2", new { id = id });
+        }
+
+
+
+        public async Task UploadFile(IFormFile file, int containerId)
+        {
+            string path = "";
+            bool uploadData = false;
+
+            try
+            {
+                //int? ProjectId = projectId;
+                //int? requestId = typeId;
+                //path is prjectid/request/requestid/files
+                var pathBase = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("CustomSettings")["FileStoragePath"];
+                path = pathBase + "\\" + containerId + "\\";
+                //path = path + "\\Project-" + ProjectId.ToString();
+                //path = path + "\\" + typeOffile;
+                //path = path + "\\" + typeOffile + "-" + requestId.ToString();
+
+
+                //path is prjectid/request/requestid/files
+                if (await _bufferedFileUploadService.UploadFile(file, path))
+                {
+                    saveData = true;
+                }
+                else
+                {
+                    saveData = false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                //Log ex
+                //upload failed
+            }
+
+
+        }
+
+
+
+        public IActionResult Download([FromQuery] string fileName, [FromQuery] string requestid, [FromQuery] string containerId)
+        {
+            int Projectid = int.Parse(containerId);
+            string typeOffile = "Acceptances";
+            int requestId = int.Parse(requestid);
+            return DownloadThisFileAsync(fileName, typeOffile, Projectid, requestId);
+        }
+
+
+
+
+        public FileStreamResult DownloadThisFileAsync([FromQuery] string fileName, string typeOffile, int projectId, int documentId)
+        {
+            //keep makgin this
+            //project+projectid
+            //typeof document
+            //typeofdocument+-+iddocument
+            //file
+            var pathBase = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("CustomSettings")["FileStoragePath"];
+            string path = pathBase + "\\" + projectId + "\\";
+            //path = path + @"\Project-" + projectId;
+            //path = path + @"\" + typeOffile;
+            //path = path + @"\" + typeOffile + "-" + documentId;
+            //path = Path.GetFullPath(Path.Combine(path, fileName));
+            new FileExtensionContentTypeProvider().TryGetContentType(fileName, out string? contentType);
+            var filePath = path;
+            var fs = new FileStream(filePath + "\\" + fileName, FileMode.Open);
+            if (contentType == null)
+            {
+                contentType = "text";
+            }
+            return File(fs, contentType, fileName);
+            //var file = Path.Combine(path, fileName);
+            //return File(await File.ReadAllBytesAsync(file), "application/pdf", fileName);
+        }
+
+
+        public async Task<bool> deleteFileOnSvAsync(UploadModel idnew, int containerId)
+        {
+            try
+            {
+                string? fileName = idnew.fileName;
+                string typeOfFile = "Acceptances";
+                int requestid = idnew.id;
+
+
+                ////delete Files
+                bool fileDeleted = DeleteFile(fileName, typeOfFile, containerId, requestid, out string result);
+                if (fileDeleted == true)
+                {
+                    //delete file entry
+                    //CHECK THIS CODE DUDE!
+                    var RequestEntry = _context.UploadModelTabel
+                        .Where(m => m.ContainerId == containerId && m.fileName == fileName).ToList();
+                    foreach (var item in RequestEntry)
+                    {
+                        if (item.fileName == fileName)
+                        {
+                            //RequestEntry.Remove(item);
+                            var fileEntry = await _context.UploadModelTabel.Where(m => m.fileName == item.fileName).FirstOrDefaultAsync();
+                            _context.UploadModelTabel.Remove(fileEntry);
+                            await _context.SaveChangesAsync();
+                            break;
+                        }
+                    }
+                }
+
+
+                //retrun message with delete succesful
+                string json = Newtonsoft.Json.JsonConvert.SerializeObject(idnew);
+                return true;
+            }
+            catch (Exception es)
+            {
+                return false;
+            }
+        }
+
+
+        public bool DeleteFile(string fileName, string typeOffile, int projectId, int documentId, out string result)
+        {
+            try
+            {
+                var pathBase = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("CustomSettings")["FileStoragePath"];
+                //string path = pathBase + @"\UploadedFiles";
+                string path = pathBase + "\\" + projectId + "\\";
+                //path = path + @"\Project-" + projectId;
+                //path = path + @"\" + typeOffile;
+                //path = path + @"\" + typeOffile + "-" + documentId;
+                var fileToDelete = path + "\\" + fileName;
+                System.IO.File.Delete(fileToDelete);
+                result = path;
+                return true;
+            }
+            catch (Exception e)
+            {
+                result = e.Message;
+                return false;
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult ManagerUnlock(int id)
+        {
+            var containerData = _context.Containers
+                .Where(l => l.Id == id)
+                .FirstOrDefault();
+
+            containerData.approval_Name = null;
+            containerData.approval_Signature_Timestamp = null;
+            _context.Update(containerData);
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", "Containers2", new { id = id });
+        }
 
     }
 }

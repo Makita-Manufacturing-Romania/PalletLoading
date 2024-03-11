@@ -27,6 +27,13 @@
                 <span asp-validation-for="Abbreviation" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="TypeId" class="control-label">Client Types</label>
+                <select asp-for="TypeId" asp-items="@(new SelectList(ViewBag.CountryTypes, "Id", "Name"))" class="form-control">
+                    <option value="">-- Select Client Type --</option>
+                </select>
+                <span asp-validation-for="TypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -40,3 +47,7 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+
+
+                    

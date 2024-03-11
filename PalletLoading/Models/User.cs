@@ -16,7 +16,7 @@ namespace PalletLoading.Models
         public int UserRightId { get; set; }
         public virtual UserRight UserRight { get; set; }
 
-        public int RoleId {  get; set; }
+        public int? RoleId {  get; set; }
         public Role Role { get; set; }
 
     }
