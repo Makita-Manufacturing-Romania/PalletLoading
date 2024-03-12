@@ -73,7 +73,7 @@ namespace PalletLoading.Controllers
         }
 
         // GET: Countries/Edit/5
-        public async Task<IActionResult> Edit(int? id)//////////NOT WORKING
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {

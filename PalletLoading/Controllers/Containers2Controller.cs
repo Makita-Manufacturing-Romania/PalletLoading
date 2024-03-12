@@ -1595,7 +1595,7 @@ namespace PalletLoading.Controllers
 
         public FileStreamResult DownloadThisFileAsync([FromQuery] string fileName, string typeOffile, int projectId, int documentId)
         {
-            //keep makgin this
+            //keep making this
             //project+projectid
             //typeof document
             //typeofdocument+-+iddocument
@@ -1633,7 +1633,6 @@ namespace PalletLoading.Controllers
                 if (fileDeleted == true)
                 {
                     //delete file entry
-                    //CHECK THIS CODE DUDE!
                     var RequestEntry = _context.UploadModelTabel
                         .Where(m => m.ContainerId == containerId && m.fileName == fileName).ToList();
                     foreach (var item in RequestEntry)
@@ -1650,7 +1649,7 @@ namespace PalletLoading.Controllers
                 }
 
 
-                //retrun message with delete succesful
+                //return message with delete succesful
                 string json = Newtonsoft.Json.JsonConvert.SerializeObject(idnew);
                 return true;
             }
