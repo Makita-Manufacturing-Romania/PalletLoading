@@ -101,6 +101,7 @@ namespace PalletLoading.Controllers
             .Include("ContainerAT.Country")
             .Include("Pallets.PalletImportData")
             .Include("Pallets.PalletImportDataHistory").Where(c => c.CreatedDate >= startDateTemp && c.CreatedDate <= endDateTemp)
+            .Include("Country.Type")
             .OrderByDescending(x => x.Id)
             //.Take(500)
             .ToList();
@@ -121,13 +122,24 @@ namespace PalletLoading.Controllers
                 worksheet.Cells[1, 2].Value = noOrders;
 
                 worksheet.Cells[6, 1].Value = "Nr.Crt";
+                worksheet.Column(1).Width = 8;
                 worksheet.Cells[6, 2].Value = "Container";
+                worksheet.Column(2).Width = 60;
                 worksheet.Cells[6, 3].Value = "Tip container";
+                worksheet.Column(3).Width = 15;
                 worksheet.Cells[6, 4].Value = "Country";
-                worksheet.Cells[6, 5].Value = "Volum";
-                worksheet.Cells[6, 6].Value = "Number of pallets";
+                worksheet.Column(4).Width = 50;
+                worksheet.Cells[6, 5].Value = "EU / NON EU";
+                worksheet.Column(5).Width = 14;
+                worksheet.Cells[6, 6].Value = "Volum";
+                worksheet.Column(6).Width = 30;
+                worksheet.Cells[6, 7].Value = "Number of pallets";
+                worksheet.Column(7).Width = 20;
+                worksheet.Cells[6, 8].Value = "Total Quantity";
+                worksheet.Column(8).Width = 18;
 
                 int c = 7;
+                string countryReference = "";
                 for (c = 7; c < containers.Count + 7; c++)
                 {
                     worksheet.Cells[c, 1].Value = c - 6;
@@ -159,8 +171,54 @@ namespace PalletLoading.Controllers
                     .Join(_context.PartCenterPallets, c => c.PalletImportData.id, c => c.ImportDataId, (c, d) => new { ImportData = c, PartCenterPallets = d })
                     .Sum(c => c.PartCenterPallets.Volume);
                     volumTotal = tempPID + tempPIDH + tempPIDHPC + tempPIDPC;
-                    worksheet.Cells[c, 5].Value = volumTotal.ToString("N2") +"/" + containers[c - 7].Type.volume.ToString("N2")+" ("+ (volumTotal*100 / containers[c - 7].Type.volume).ToString("N2") + "%)";
-                    worksheet.Cells[c, 6].Value = containers[c - 7].Pallets.Count();
+
+                    //get euro or non euro
+                    List<string> euTypes = new List<string>();
+                    List<ContainerAT> dataSelect = containers[c - 7].ContainerAT;
+                    foreach (var item in dataSelect)
+                    {
+                        euTypes.Add(item.Country.Type.Name);
+                    }
+
+                    string euType = "";
+                    bool wasFirstRead = false;
+                    foreach (var type in euTypes)
+                    {
+                        if (wasFirstRead)
+                        {
+                            if (euType != type)
+                            {
+                                euType = "Mixed";
+                                break;
+                            }
+                        }
+                        else
+                        //first entry
+                        {
+                            euType = type;
+                            wasFirstRead = true;
+                        }
+                    }
+
+                    worksheet.Cells[c, 5].Value = euType;
+                    worksheet.Cells[c, 6].Value = volumTotal.ToString("N2") +"/" + containers[c - 7].Type.volume.ToString("N2")+" ("+ (volumTotal*100 / containers[c - 7].Type.volume).ToString("N2") + "%)";
+                    worksheet.Cells[c, 7].Value = containers[c - 7].Pallets.Count();
+
+                    //get total qty
+                    var qtyData = containers[c - 7].Pallets;
+                    decimal totalQty = 0;
+                    foreach (var item in qtyData)
+                    {
+                        if (item.PalletImportData != null)
+                        {
+                            totalQty += item.PalletImportData.picking_qty;
+                        }
+                        else if (item.PalletImportDataHistory != null)
+                        {
+                            totalQty += item.PalletImportDataHistory.picking_qty;
+                        }
+                    }
+                    worksheet.Cells[c, 8].Value = totalQty;
 
                 }
                 package.Save();
