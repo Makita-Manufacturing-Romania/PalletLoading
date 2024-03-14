@@ -235,7 +235,7 @@
                         <td style="text-align:center; vertical-align:middle;">
                             @if (container.dataCheck == true && container.signatureCheck == true && container.fileCheck == true)
                             {
-                                if (ViewBag.UserRightLevel > 1)
+                                if (ViewBag.Role >= 5)
                                 {
                                     <input type="checkbox" class="row-checkbox big-checkbox" style="margin-top:6px;font-size:3vh;" data-id="@container.Id" />
                                 }
@@ -310,8 +310,11 @@
 
     @*  <div style="margin-left:344px"> *@
 @*     <input type="checkbox" class="row-checkbox big-checkbox" style="margin-left:560px; font-size:3vh; vertical-align:central" id="master"> *@
-<input type="checkbox" id="select-all" class="big-checkbox" style="margin-left:560px;font-size:3vh;" />
+@if (ViewBag.Role >= 5)
+{
+    <input type="checkbox" id="select-all" class="big-checkbox" style="margin-left:560px;font-size:3vh;" />
     <button id="submit-changes" style="margin-left:52px;" class="btn btn-primary">Manager Approval</button>
+}
     @*  </div> *@
 
 

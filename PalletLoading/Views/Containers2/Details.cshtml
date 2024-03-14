@@ -464,7 +464,7 @@ else
 
     <a class="previewClass btn-padding1" type="button" asp-action="GeneratePDFNew" asp-controller="Containers2" asp-route-id="@Model.Container.Id" asp-route-actionType="Preview" target="_blank">Preview PDF</a>
 
-     @if (ViewBag.ExportPDFConfirmation == true)
+    @if (ViewBag.ExportPDFConfirmation == true)
     {
         <a class="exportClass btn-padding1" type="button" asp-action="GeneratePDFNew" asp-controller="Containers2" asp-route-id="@Model.Container.Id" asp-route-actionType="Download" target="_blank">Download PDF</a>
     } 
@@ -765,7 +765,7 @@ else
     </div>
 
     @* New Modal Elements *@
-    @if (ViewBag.UserRightLevel > 0)
+    @if (ViewBag.UserRightLevel > 0 && ViewBag.Role >= 2)
     {
         <div style="display: flex; justify-content: center; gap: 20px;">
             @if (!string.IsNullOrEmpty(Model.Container.approval_Name))
@@ -838,88 +838,100 @@ else
 
         <br />
         <div style="display: flex; justify-content: center; gap: 20px;">
-            @if (ViewBag.IssuerSignatureValidation == 2)
+            @if (ViewBag.Role >= 2)
             {
-                <a class="btn-primary-confirm btn-padding1" type="button" asp-action="IssuerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                    Issuer Signature
-                    <br/>
-                    @Model.Container.issuer_Name
-                    <br/>
-                    @Model.Container.issuer_Signature_Timestamp
-                </a>
-            }
-            else if (ViewBag.IssuerSignatureValidation == 1)
-            {
-                <a class="btn-primary-new btn-padding1" type="button" asp-action="IssuerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                    Issuer Signature
-                    <br />
-                    @Model.Container.issuer_Name
-                    <br />
-                    @Model.Container.issuer_Signature_Timestamp
-                </a>
-            }
-
-            @if (ViewBag.TeamLeaderSignatureValidation == 2)
-            {
-                <a class="btn-primary-confirm btn-padding1" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                    Team Leader Signature
-                    <br />
-                    @Model.Container.checkerTL_Name
-                    <br />
-                    @Model.Container.checkerTL_Signature_Timestamp
-                </a>
-            }
-            else if (ViewBag.TeamLeaderSignatureValidation == 1)
-            {
-                <a class="btn-primary-new btn-padding1" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                    Team Leader Signature
-                    <br />
-                    @Model.Container.checkerTL_Name
-                    <br />
-                    @Model.Container.checkerTL_Signature_Timestamp
-                </a>
+                @if (ViewBag.IssuerSignatureValidation == 2)
+                {
+                    <a class="btn-primary-confirm btn-padding1" type="button" asp-action="IssuerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                        Issuer Signature
+                        <br />
+                        @Model.Container.issuer_Name
+                        <br />
+                        @Model.Container.issuer_Signature_Timestamp
+                    </a>
+                }
+                else if (ViewBag.IssuerSignatureValidation == 1)
+                {
+                    <a class="btn-primary-new btn-padding1" type="button" asp-action="IssuerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                        Issuer Signature
+                        <br />
+                        @Model.Container.issuer_Name
+                        <br />
+                        @Model.Container.issuer_Signature_Timestamp
+                    </a>
+                }
             }
 
-            @if (ViewBag.SupervisorSignatureValidation == 2)
+            @if (ViewBag.Role >= 3)
             {
-                <a class="btn-primary-confirm btn-padding1" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                    Supervisor Signature
-                    <br />
-                    @Model.Container.checkerSV_Name
-                    <br/>
-                    @Model.Container.checkerSV_Signature_Timestamp
-                </a>
-            }
-            else if (ViewBag.SupervisorSignatureValidation == 1)
-            {
-                <a class="btn-primary-new btn-padding1" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                    Supervisor Signature
-                    <br />
-                    @Model.Container.checkerSV_Name
-                    <br />
-                    @Model.Container.checkerSV_Signature_Timestamp
-                </a>
+                @if (ViewBag.TeamLeaderSignatureValidation == 2)
+                {
+                    <a class="btn-primary-confirm btn-padding1" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                        Team Leader Signature
+                        <br />
+                        @Model.Container.checkerTL_Name
+                        <br />
+                        @Model.Container.checkerTL_Signature_Timestamp
+                    </a>
+                }
+                else if (ViewBag.TeamLeaderSignatureValidation == 1)
+                {
+                    <a class="btn-primary-new btn-padding1" type="button" asp-action="TeamLeaderSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                        Team Leader Signature
+                        <br />
+                        @Model.Container.checkerTL_Name
+                        <br />
+                        @Model.Container.checkerTL_Signature_Timestamp
+                    </a>
+                }
             }
 
-            @if (ViewBag.ManagerSignatureValidation == 2)
+            @if (ViewBag.Role >= 4)
             {
-                <a class="btn-primary-confirm btn-padding1" type="button" asp-action="ManagerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                    Manager Signature
-                    <br />
-                    @Model.Container.approval_Name
-                    <br/>
-                    @Model.Container.approval_Signature_Timestamp
-                </a>
+                @if (ViewBag.SupervisorSignatureValidation == 2)
+                {
+                    <a class="btn-primary-confirm btn-padding1" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                        Supervisor Signature
+                        <br />
+                        @Model.Container.checkerSV_Name
+                        <br />
+                        @Model.Container.checkerSV_Signature_Timestamp
+                    </a>
+                }
+                else if (ViewBag.SupervisorSignatureValidation == 1)
+                {
+                    <a class="btn-primary-new btn-padding1" type="button" asp-action="SupervisorSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                        Supervisor Signature
+                        <br />
+                        @Model.Container.checkerSV_Name
+                        <br />
+                        @Model.Container.checkerSV_Signature_Timestamp
+                    </a>
+                }
             }
-            else if (ViewBag.ManagerSignatureValidation == 1 && ViewBag.UserRightLevel > 1)
+
+            @if (ViewBag.Role >= 5)
             {
-                <a class="btn-primary-new btn-padding1" type="button" asp-action="ManagerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
-                    Manager Signature
-                    <br />
-                    @Model.Container.approval_Name
-                    <br/>
-                    @Model.Container.approval_Signature_Timestamp
-                </a>
+                @if (ViewBag.ManagerSignatureValidation == 2)
+                {
+                    <a class="btn-primary-confirm btn-padding1" type="button" asp-action="ManagerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                        Manager Signature
+                        <br />
+                        @Model.Container.approval_Name
+                        <br />
+                        @Model.Container.approval_Signature_Timestamp
+                    </a>
+                }
+                else if (ViewBag.ManagerSignatureValidation == 1)
+                {
+                    <a class="btn-primary-new btn-padding1" type="button" asp-action="ManagerSign" asp-controller="Containers2" asp-route-id="@Model.Container.Id">
+                        Manager Signature
+                        <br />
+                        @Model.Container.approval_Name
+                        <br />
+                        @Model.Container.approval_Signature_Timestamp
+                    </a>
+                }
             }
 
         </div>
@@ -1071,9 +1083,8 @@ else
     }
 
 
-    @* Hide upload element after manager signature *@
-    @if (string.IsNullOrEmpty(Model.Container.approval_Name))
-    {
+    
+    
     <form asp-action="SubmitFiles" id="emptyForm" enctype="multipart/form-data">
 
         <span asp-validation-for="Container.Id"></span>
@@ -1093,7 +1104,12 @@ else
                             <div class="row">
                                 <div class="col-sm-12">
                                     <a class=" btn-Link-files btn LabelFiles2" href="@Url.Action("Download", "Containers2", new { fileName = item.fileName, requestid = item.id, containerId=item.ContainerId})">@item.fileName <i class="bi bi-download"></i></a>
-                                    <input type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFileOnSv(this)" />
+
+                                    @if (string.IsNullOrEmpty(Model.Container.approval_Name) && ViewBag.Role >= 2)
+                                    { @* Hide upload element after manager signature *@
+                                        <input type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFileOnSv(this)" />
+                                    }
+
                                     <input type="file" name="uploadfile" id="@idInput" style="display:none;justify-content: space-around;" onchange="clickbtnadd(this)" />
                                 </div>
                                 <hr class="HrFiles">
@@ -1108,7 +1124,11 @@ else
                             <div class="col-sm-12">
                                 <input type="file" name="uploadfile" id="@idInputLast" style="display:none;" onchange="clickbtnadd(this)" />
                                 <label class="LabelFiles" style="display:none;" id="@idLabelLast">FileUploaded</label>
-                                <input style="display:none;justify-content: space-around;" id="@idRemoveLast" type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFiles(this)">
+
+                                @if (string.IsNullOrEmpty(Model.Container.approval_Name) && ViewBag.Role >= 2)
+                                { @* Hide upload element after manager signature *@
+                                     <input style="display:none;justify-content: space-around;" id="@idRemoveLast" type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFiles(this)">
+                                }
                             </div>
                             <hr id="@idhrLast" style="display:none;" class="HrFiles">
                         </div>
@@ -1119,7 +1139,11 @@ else
                             <div class="col-sm-12">
                                 <input type="file" name="uploadfile" id="myfile0" style="display:none;" onchange="clickbtnadd(this)" />
                                 <label class="LabelFiles" style="display:none;" id="myfilelabel0">FileUploaded</label>
-                                <input style="display:none;justify-content: space-around;" id="myfileremove0" type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFiles(this)">
+
+                                @if (string.IsNullOrEmpty(Model.Container.approval_Name) && ViewBag.Role >= 2)
+                                { @* Hide upload element after manager signature *@
+                                    <input style="display:none;justify-content: space-around;" id="myfileremove0" type="button" class="btn-Reject-files btn-Reject" value="Remove" onclick="deleteFiles(this)">
+                                }
                             </div>
                             <hr id="myfilehr0" style="display:none;" class="HrFiles">
                         </div>
@@ -1127,6 +1151,11 @@ else
 
                 </div>
             </div>
+
+
+
+            @if (string.IsNullOrEmpty(Model.Container.approval_Name) && ViewBag.Role >= 2)
+            { @* Hide upload element after manager signature *@
 
             <div class="col-sm-2">
                     @if (@ViewBag.typeOfOperation == "edit")
@@ -1139,13 +1168,16 @@ else
                     <label id="button+" for="myfile0" class="AddButtonFiles">+</label>
                     }
             </div>
+            }
         </div>
 
 
-        <input id="btnSave" type="submit" value="Save" class="btnUploadFiles" />
+        @if (string.IsNullOrEmpty(Model.Container.approval_Name) && ViewBag.Role >= 2)
+        { @* Hide upload element after manager signature *@
+            <input id="btnSave" type="submit" value="Save" class="btnUploadFiles" />
+        }
 
     </form>
-    }
 
 
 

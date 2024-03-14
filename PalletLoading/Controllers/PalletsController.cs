@@ -137,9 +137,11 @@ namespace PalletLoading.Controllers
             {
 
             }
-
             var listOfCountryAbv = containerATs.Select(c => c.Country.Abbreviation.Trim()).ToList();
-            List<ImportDataPalletsLP> idplpList = _context.ImportDataPalletsLP.Where(c => listOfCountryAbv.Contains(c.CustomerCode180P.Trim()) || listOfCountryAbv.Contains(c.CustomerCode250P.Trim())).ToList();
+            //removed bad code ['with' error]
+            List<ImportDataPalletsLP> idplpList = _context.ImportDataPalletsLP.AsEnumerable().Where(c => listOfCountryAbv.Contains(c.CustomerCode180P.Trim()) ||  listOfCountryAbv.Contains(c.CustomerCode250P.Trim())).ToList();
+            
+
             //ImportDataPalletsLP idplp = _context.ImportDataPalletsLP.Where(c => c.CustomerCode180P.Equals(container.Country.Abbreviation) || c.CustomerCode250P.Equals(container.Country.Abbreviation)).FirstOrDefault();
 
             var viewModel = new AddContainerViewModel

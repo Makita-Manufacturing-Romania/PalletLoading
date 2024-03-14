@@ -65,6 +65,10 @@
                 <select asp-for="UserRightId" class="form-control" asp-items="ViewBag.UserRightId"></select>
             </div>
             <div class="form-group">
+                <label asp-for="RoleId" class="control-label">Role</label>
+                <select asp-for="RoleId" class="form-control" asp-items="ViewBag.UserRole"></select>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -72,7 +76,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

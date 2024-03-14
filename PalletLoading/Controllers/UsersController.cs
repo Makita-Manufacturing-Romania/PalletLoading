@@ -22,7 +22,7 @@ namespace PalletLoading.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            var palletLoadingContext = _context.User.Include(u => u.UserRight);
+            var palletLoadingContext = _context.User.Include(u => u.UserRight).Include(u => u.Role);
             return View(await palletLoadingContext.ToListAsync());
         }
         public IActionResult UserSearch(string user)
@@ -90,6 +90,7 @@ namespace PalletLoading.Controllers
         public IActionResult Create()
         {
             ViewData["UserRightId"] = new SelectList(_context.UserRight, "Id", "Right");
+            ViewData["UserRole"] = new SelectList(_context.Role, "Id", "Name");
             return View();
         }
 
@@ -98,11 +99,10 @@ namespace PalletLoading.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Username,FullName,Usermail,UserRightId")] User user)
+        public async Task<IActionResult> Create([Bind("Id,Username,FullName,Usermail,UserRightId,UserRole,RoleId")] User user)
         {
             if (ModelState.IsValid)
             {    
-                user.RoleId = 1;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -125,6 +125,7 @@ namespace PalletLoading.Controllers
                 return NotFound();
             }
             ViewData["UserRightId"] = new SelectList(_context.UserRight, "Id", "Right", user.UserRightId);
+            ViewData["UserRole"] = new SelectList(_context.Role, "Id", "Name");
             return View(user);
         }
 
@@ -133,7 +134,7 @@ namespace PalletLoading.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,FullName,Usermail,UserRightId")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,FullName,Usermail,UserRightId,UserRole,RoleId")] User user)
         {
             if (id != user.Id)
             {
@@ -144,7 +145,6 @@ namespace PalletLoading.Controllers
             {
                 try
                 {
-                    user.RoleId = 1;
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
@@ -175,6 +175,7 @@ namespace PalletLoading.Controllers
 
             var user = await _context.User
                 .Include(u => u.UserRight)
+                .Include(u => u.Role)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {

@@ -354,6 +354,14 @@ namespace PalletLoading.Controllers
             var paginedList = await PaginatedList<PalletLoading.Models.Container>.CreateAsync(containers, pageNumber ?? 1, pageSize);
 
 
+
+            string username = this._context.User.Where(c => c.Username.Equals(User.Identity.Name.Replace("MMRMAKITA\\", ""))).Select(c => c.Username).FirstOrDefault();
+            int userRole = _context.User
+                .Where(l => l.Username == username)
+                .Select(l => Convert.ToInt32(l.Role.accessLevel))
+                .FirstOrDefault();
+            ViewBag.Role = userRole;
+
             return View(paginedList);
         }
 
@@ -637,10 +645,14 @@ namespace PalletLoading.Controllers
 
             viewModel.UploadModel = uploadedFilesData;
             
-                ViewBag.typeOfOperation = "edit";
+            ViewBag.typeOfOperation = "edit";
 
-
-
+            string username = this._context.User.Where(c => c.Username.Equals(User.Identity.Name.Replace("MMRMAKITA\\", ""))).Select(c => c.Username).FirstOrDefault();
+            int userRole = _context.User
+                .Where(l => l.Username == username)
+                .Select(l => Convert.ToInt32(l.Role.accessLevel))
+                .FirstOrDefault();
+            ViewBag.Role = userRole;
 
             return View(viewModel);
         }
