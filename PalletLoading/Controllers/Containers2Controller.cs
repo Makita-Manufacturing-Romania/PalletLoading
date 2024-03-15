@@ -92,7 +92,7 @@ namespace PalletLoading.Controllers
             var countOrders = 0;
             var cultureGB = new CultureInfo("en-GB");
             var startDateTemp = DateTime.Parse(sdate, cultureGB).Date;
-            var endDateTemp = DateTime.Parse(edate, cultureGB).AddDays(1).Date;
+            var endDateTemp = DateTime.Parse(edate, cultureGB)/*.AddDays(1)*/.Date;
 
             List<PalletLoading.Models.Container> containers = _context.Containers
             .Include(c => c.Type)
@@ -123,20 +123,39 @@ namespace PalletLoading.Controllers
 
                 worksheet.Cells[6, 1].Value = "Nr.Crt";
                 worksheet.Column(1).Width = 8;
-                worksheet.Cells[6, 2].Value = "Container";
-                worksheet.Column(2).Width = 60;
+                worksheet.Cells[6, 2].Value = "Country";
+                worksheet.Column(2).Width = 50;
                 worksheet.Cells[6, 3].Value = "Tip container";
                 worksheet.Column(3).Width = 15;
-                worksheet.Cells[6, 4].Value = "Country";
-                worksheet.Column(4).Width = 50;
+                worksheet.Cells[6, 4].Value = "Container";
+                worksheet.Column(4).Width = 60;
                 worksheet.Cells[6, 5].Value = "EU / NON EU";
                 worksheet.Column(5).Width = 14;
-                worksheet.Cells[6, 6].Value = "Volum";
-                worksheet.Column(6).Width = 30;
-                worksheet.Cells[6, 7].Value = "Number of pallets";
-                worksheet.Column(7).Width = 20;
+                worksheet.Cells[6, 6].Value = "Number of pallets";
+                worksheet.Column(6).Width = 20;
+                worksheet.Cells[6, 7].Value = "Volum";
+                worksheet.Column(7).Width = 30;
                 worksheet.Cells[6, 8].Value = "Total Quantity";
                 worksheet.Column(8).Width = 18;
+                worksheet.Cells[6, 9].Value = "Created Date";
+                worksheet.Column(9).Width = 15;
+
+                //worksheet.Cells[6, 1].Value = "Nr.Crt";
+                //worksheet.Column(1).Width = 8;
+                //worksheet.Cells[6, 2].Value = "Container";
+                //worksheet.Column(2).Width = 60;
+                //worksheet.Cells[6, 3].Value = "Tip container";
+                //worksheet.Column(3).Width = 15;
+                //worksheet.Cells[6, 4].Value = "Country";
+                //worksheet.Column(4).Width = 50;
+                //worksheet.Cells[6, 5].Value = "EU / NON EU";
+                //worksheet.Column(5).Width = 14;
+                //worksheet.Cells[6, 6].Value = "Volum";
+                //worksheet.Column(6).Width = 30;
+                //worksheet.Cells[6, 7].Value = "Number of pallets";
+                //worksheet.Column(7).Width = 20;
+                //worksheet.Cells[6, 8].Value = "Total Quantity";
+                //worksheet.Column(8).Width = 18;
 
                 int c = 7;
                 string countryReference = "";
@@ -157,9 +176,9 @@ namespace PalletLoading.Controllers
                         templistContainer = String.Join(", ", listNames);
                         templistCountry = String.Join(", ", listNamesCountry);
                     }
-                    worksheet.Cells[c, 2].Value = templistContainer;
+                    worksheet.Cells[c, 2].Value = templistCountry;
                     worksheet.Cells[c, 3].Value = containers[c - 7].Type.Name;
-                    worksheet.Cells[c, 4].Value = templistCountry;
+                    worksheet.Cells[c, 4].Value = templistContainer;
 
                     decimal volumTotal = 0;
                     var tempPID = containers[c - 7].Pallets.Where(c => c.PalletImportData != null && c.PalletImportData.serial_from != 0).Sum(c => c.PalletImportData.volume * c.PalletImportData.picking_qty);
@@ -188,7 +207,7 @@ namespace PalletLoading.Controllers
                         {
                             if (euType != type)
                             {
-                                euType = "Mixed";
+                                euType = "MIXED";
                                 break;
                             }
                         }
@@ -201,9 +220,9 @@ namespace PalletLoading.Controllers
                     }
 
                     worksheet.Cells[c, 5].Value = euType;
-                    worksheet.Cells[c, 6].Value = volumTotal.ToString("N2") +"/" + containers[c - 7].Type.volume.ToString("N2")+" ("+ (volumTotal*100 / containers[c - 7].Type.volume).ToString("N2") + "%)";
-                    worksheet.Cells[c, 7].Value = containers[c - 7].Pallets.Count();
-
+                    worksheet.Cells[c, 6].Value = containers[c - 7].Pallets.Count();
+                    worksheet.Cells[c, 7].Value = volumTotal.ToString("N2") +"/" + containers[c - 7].Type.volume.ToString("N2")+" ("+ (volumTotal*100 / containers[c - 7].Type.volume).ToString("N2") + "%)";
+                    
                     //get total qty
                     var qtyData = containers[c - 7].Pallets;
                     decimal totalQty = 0;
@@ -219,6 +238,7 @@ namespace PalletLoading.Controllers
                         }
                     }
                     worksheet.Cells[c, 8].Value = totalQty;
+                    worksheet.Cells[c, 9].Value = containers[c - 7].CreatedDate.ToShortDateString();
 
                 }
                 package.Save();
@@ -262,7 +282,7 @@ namespace PalletLoading.Controllers
                 datetimepickerEndDate = DateTime.Now.ToString("dd-MM-yyyy");
             }
             var startDateTemp = DateTime.ParseExact(datetimepickerStartDate, "dd-MM-yyyy", cultureGB);
-            var endDateTemp = DateTime.ParseExact(datetimepickerEndDate, "dd-MM-yyyy", cultureGB).AddDays(1);
+            var endDateTemp = DateTime.ParseExact(datetimepickerEndDate, "dd-MM-yyyy", cultureGB)/*.AddDays(1)*/;
             ViewBag.currentdatetimepickerStartDate = datetimepickerStartDate;
             ViewBag.currentdatetimepickerEndDate = datetimepickerEndDate;
             ViewBag.currentSearch = "";
@@ -670,11 +690,27 @@ namespace PalletLoading.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,TypeId,CountryId")] PalletLoading.Models.Container container)
+        public async Task<IActionResult> Create(string Name, int TypeId, int CountryId)
         {
-            if (ModelState.IsValid)
-            {
+            PalletLoading.Models.Container container = new();
+            container.Id = 0;
+            container.Name = Name.Trim();
+            container.TypeId = TypeId;
+            container.CountryId = CountryId;
+
+            var checkForExistingContainer = _context.Containers
+                    .Where(l => l.Name == container.Name.Trim())
+                    .FirstOrDefault();
+
+
+                var jsonData = new Dictionary<string, object>();
+                if (checkForExistingContainer != null)
+                {
+                    //container already exist
+                    jsonData["returnConfirm"] = "No";
+                    return Json(jsonData);
+                }
+
                 ContainerType type = _context.ContainerTypes.First(x => x.Id == container.TypeId);
                 container.NoOfRows = type.Width / 100;
                 container.NoOfColumns = type.Length / 100;
@@ -687,8 +723,10 @@ namespace PalletLoading.Controllers
                 containerAT.ContainerName = container.Name;
                 _context.ContainerATs.Add(containerAT);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "Pallets", new { id = container.Id });
-            }
+                jsonData["returnConfirm"] = "Yes";
+                jsonData["id"] = container.Id;
+                return Json(jsonData);
+                //return RedirectToAction("Create", "Pallets", new { id = container.Id });
 
             ViewData["CountryId"] = new SelectList(_context.Countries.OrderBy(c => c.Abbreviation), "Id", "Id", container.CountryId);
             ViewData["TypeId"] = new SelectList(_context.ContainerTypes, "Id", "Name");

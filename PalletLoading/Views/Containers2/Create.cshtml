@@ -170,7 +170,9 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Create" id="createBtn" class="btn btn-primary" />
+                @* <input type="submit" value="Create" id="createBtn" class="btn btn-primary" /> *@
+                <button id="createBtn" class="btn btn-success">Add</button>
+
             </div>
         </form>
     </div>
@@ -182,16 +184,56 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        $("#createBtn").click(function () {
-            if ($("#clientName").val() == '' || $("#clientName").val() == null) {
-                alert("Plese type the name of client!")
-                $("#clientName").focus();
-                return false;
-            }
-            $("#loader-1").show()
-            $(this).attr("disabled", "true");
-            $("#submitForm").submit();
+        // $("#createBtn").click(function () {
+        //     if ($("#clientName").val() == '' || $("#clientName").val() == null) {
+        //         alert("Plese type the name of client!")
+        //         $("#clientName").focus();
+        //         return false;
+        //     }
+        //     $("#loader-1").show()
+        //     $(this).attr("disabled", "true");
+        //     $("#submitForm").submit();
+        // });
+
+        document.getElementById('createBtn').addEventListener('click', function (event) {
+            // Prevent the form from submitting normally
+            event.preventDefault();
+            // Get the values from the form
+            var name = document.getElementById('clientName').value;
+            console.log(name);
+            var typeId = document.querySelector('select[name="TypeId"]').value;
+            console.log(typeId);
+            var countryId = document.querySelector('select[name="CountryId"]').value;
+            console.log(countryId);
+
+            $.ajax({
+                url: '/Containers2/Create',
+                type: 'POST',
+                data: {
+
+                    Name: name,
+                    TypeId: typeId,
+                    CountryId: countryId
+                },
+                dataType: "json", // Expect JSON response
+                success: function (data) {
+                    // Handle the response from the server
+                    if (data.returnConfirm === "Yes")
+                    {
+                        window.location.href = '/Pallets/Create/' + data.id;
+                    }
+                    else if (data.returnConfirm === "No") 
+                    {
+                        alert('Container Already Exist!')
+                    }
+                },
+                error: function (error) {
+                    // Handle any errors
+                }
+            });
         });
+
+
 
     </script>
 

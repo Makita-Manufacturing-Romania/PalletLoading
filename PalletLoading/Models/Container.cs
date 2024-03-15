@@ -23,6 +23,7 @@ namespace PalletLoading.Models
         public int? CountryId { get; set; }
         public int NoOfRows { get; set; }
         public int NoOfColumns { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime CreatedDate { get; set; }
         public virtual List<ContainerAT> ContainerAT { get; set; }
         public virtual List<Pallet> Pallets { get; set; }
