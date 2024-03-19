@@ -63,7 +63,6 @@ namespace PalletLoading.Controllers
                     pallet = palletsCheck.First(x => x.PalletImportData.IPPLNO != "          ");
                 newCmr.PackingList = pallet.PalletImportData.IPPLNO;
             }
-
             else
             {
                 //Check parent for null value
@@ -82,8 +81,17 @@ namespace PalletLoading.Controllers
                     noOfSpr = (int)palletsCheck.Where(x => x.PalletImportDataHistory.serial_from == 0).Sum(x => x.PalletImportDataHistory.picking_qty);
                 }
                 if (palletsCheck.Any(x => x.PalletImportDataHistory.IPPLNO != "          "))
+                {
                     pallet = palletsCheck.First(x => x.PalletImportDataHistory.IPPLNO != "          ");
-                newCmr.PackingList = pallet.PalletImportDataHistory.IPPLNO;
+                }
+                if (pallet.PalletImportDataHistory != null)
+                {
+                    newCmr.PackingList = pallet.PalletImportDataHistory.IPPLNO;
+                }
+                else
+                {
+                    //it should not be null
+                }
             }
             //client address
             var details = _context.CountryDescriptionImportData.First(x => x.CCODE.Equals(container.Country.Abbreviation));

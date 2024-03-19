@@ -615,12 +615,12 @@ else
     function drop(ev) {
         ev.preventDefault();
         var draggedPallet = ev.dataTransfer.getData("drag");
-        ev.target.appendChild(document.getElementById(draggedPallet));
+            ev.target.appendChild(document.getElementById(draggedPallet));
 
         var idContainer = $('#container').val();
         var droppedPallet = ev.target.id;
         var droppedPalletValue = ev.target.value;
-        var draggedPalletValue = $("#" + draggedPallet).val();
+            var draggedPalletValue = $("#" + draggedPallet).val();
 
         $("#switchTable").append('<tr><td width="100%" align="center">' +
             '' + droppedPalletValue + ' <-> ' + draggedPalletValue + '' +
@@ -640,12 +640,20 @@ else
 
             cache: false,
             success: function (data) {
+                alert('pallets swapped');
                 //alert("why")
                 $(".dinamicTable").empty();
                 $(".dinamicTable").html(data);
+                //$(".newtable").empty();
+                //$(".newtable").html(data.secoundelement);
+                //empty 10,replace 18
+                //empty 18 put 10
                 //console.log(data)
+                location.reload(true);
             },
             error: function (data) {
+
+                alert('drag and drop fail');
                 console.log(data);
             }
         });
@@ -797,24 +805,29 @@ else
         @*var path = '@Url.Action("RemoveRow")' + "?idContainer=" + idContainer;
                                 window.location.href = path;*@
 
-        $.ajax({
-            url: "/Pallets/RemoveRow",
 
-            data: {
-                idContainer: idContainer
-            },
+            var confirmation = confirm("Are you sure you want to remove this row?");
+            if (confirmation == true) {
+                $.ajax({
+                    url: "/Pallets/RemoveRow",
 
-            cache: false,
-            success: function (data) {
-                //alert("why")
-                $(".dinamicTable").empty();
-                $(".dinamicTable").html(data);
-                //console.log(data)
-            },
-            error: function (data) {
-                console.log(data);
+                    data: {
+                        idContainer: idContainer
+                    },
+
+                    cache: false,
+                    success: function (data) {
+                        //alert("why")
+                        $(".dinamicTable").empty();
+                        $(".dinamicTable").html(data);
+                        //console.log(data)
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
             }
-        });
+
 
     });
 
@@ -843,22 +856,28 @@ else
     $(document).on('click', "#removeColumn",function () {
         var idContainer = $('#container').val();
 
-        $.ajax({
-            url: "/Pallets/RemoveColumn",
 
-            data: {
-                idContainer: idContainer
-            },
+            var confirmation = confirm("Are you sure you want to remove this column?");
+            if (confirmation == true) {
 
-            cache: false,
-            success: function (data) {
-                $(".dinamicTable").empty();
-                $(".dinamicTable").html(data);
-            },
-            error: function (data) {
-                console.log(data);
+                $.ajax({
+                    url: "/Pallets/RemoveColumn",
+
+                    data: {
+                        idContainer: idContainer
+                    },
+
+                    cache: false,
+                    success: function (data) {
+                        $(".dinamicTable").empty();
+                        $(".dinamicTable").html(data);
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
             }
-        });
+
     });
 
     $(document).on('click', ".addBtn",function () {
@@ -886,32 +905,33 @@ else
         });
     });
 
-    $(document).on('click', ".removeBtn",function () {
-        var palletId = this.id;
-        var idContainer = $('#container').val();
+        $(document).on('click', ".removeBtn", function () {
+            var palletId = this.id;
+            var idContainer = $('#container').val();
         @*var path = '@Url.Action("RemovePallet")' + "?idContainer=" + idContainer + "&palletId=" + palletId;
-                                window.location.href = path;*@
+            window.location.href = path;*@
 
-        $.ajax({
-            url: "/Pallets/RemovePallet",
-
-            data: {
-                idContainer: idContainer, palletId: palletId
-            },
-
-            cache: false,
-            success: function (data) {
-                //alert("why")
-                $(".dinamicTable").empty();
-                $(".dinamicTable").html(data);
-                //console.log(data)
-            },
-            error: function (data) {
-                console.log(data);
+            var confirmation = confirm("Are you sure you want to remove this pallet?");
+            if (confirmation == true) {
+                $.ajax({
+                    url: "/Pallets/RemovePallet",
+                    data: {
+                        idContainer: idContainer, palletId: palletId
+                    },
+                    cache: false,
+                    success: function (data) {
+                        //alert("why")
+                        $(".dinamicTable").empty();
+                        $(".dinamicTable").html(data);
+                        //console.log(data)
+                    },
+                    error: function (data) {
+                        console.log(data);
+                    }
+                });
             }
         });
 
-    });
 </script>
 }
 

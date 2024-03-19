@@ -539,6 +539,7 @@ else
         var widthContainer = Model.Container.NoOfRows;
         var totalLayer = lengthContainer * widthContainer;
         var palletsAux = Model.Pallets;
+        string pixels = "0px";
     }
 
     <br />
@@ -553,7 +554,12 @@ else
         }
         Html.EndForm();
         }*@
-    <div style="width:100%; padding-bottom:120px; overflow-x:auto; position:relative;">
+
+    @if (widthContainer <= 1)
+    {
+        pixels = "120px";
+    }
+    <div style="width:100%; padding-bottom:120px; padding-top:@pixels; overflow-x:auto; position:relative;">
         <img src="~/unnamed2.png" style="position:absolute; z-index:-1; bottom:0;left:0;" min-width="900px" width="1800px" />
         <table border="1" class="table-bordered" style="border:2px solid; border-right-style:dotted; max-width:1106px; margin-left:370px; float:left;  text-align: center; align-content: center;">
             <tbody>
