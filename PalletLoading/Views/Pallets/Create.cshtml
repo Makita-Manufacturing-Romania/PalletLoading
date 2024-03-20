@@ -145,8 +145,19 @@
             transform: rotate(360deg); /* Firefox 16+, IE 10+, Opera */
         }
     }
+
+    .btn-Ghost {
+        color: #ffff;
+        background-color: #ffffff !important;
+    }
+
+
 </style>
 
+
+@{
+    int ghostPalCnt = 0;
+}
 
 
 
@@ -193,10 +204,10 @@
                     string virgula = ", ";
                     foreach (var country in Model.ContainerAT)
                     {
-                            @country.Country.Name
+                                            @country.Country.Name
                         if (country.Id != Model.ContainerAT.Last().Id)
                         {
-                                @virgula
+                                                @virgula
                         }
                     }
                 }
@@ -210,10 +221,10 @@
 
                     foreach (var country in Model.ContainerAT)
                     {
-                            @country.ContainerName
+                                            @country.ContainerName
                         if (country.Id != Model.ContainerAT.Last().Id)
                         {
-                                @virgula
+                                                @virgula
                         }
                     }
                 }
@@ -330,106 +341,132 @@ else
             @{
                 var colNo = 1;
                 var currentRow = 1;
-                    @for (int row = 0; row < widthContainer; row++)
+                                @for (int row = 0; row < widthContainer; row++)
                 {
                     var heightCustom = 100;
-                        <tr style="width:200px; height:@heightCustom.ToString()px; vertical-align: top">
-                            @for (int col = 0; col < lengthContainer; col++)
+                                    <tr style="width:200px; height:@heightCustom.ToString()px; vertical-align: top">
+                                        @for (int col = 0; col < lengthContainer; col++)
                         {
                             string idPallet = row.ToString() + "," + col.ToString();
                             var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
 
                             if (currentPallets != null)
                             {
-                                    @*@if (currentPallets.Count() == 1)
-                                    {*@
-                                    <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px;position:relative; vertical-align: top;  padding-bottom:10px;">
-                                        @if (currentRow == 1)
+                                                @*@if (currentPallets.Count() == 1)
+                {*@
+                                                <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px;position:relative; vertical-align: top;  padding-bottom:10px;">
+                                                    @if (currentRow == 1)
                                     {
-                                            <p style="font-size:25px">@colNo</p>
+                                                        <p style="font-size:25px">@colNo</p>
                                         colNo++;
                                     }
                                     else
                                     {
-                                            <br />
+                                                        <br />
                                     }
-                                        <input type="button" id="@idPallet" value="Add" style=" width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
-                                        @foreach (var palet in currentPallets)
+                                                    <input type="button" id="@idPallet" value="Add" style=" width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
+                                                    @if (currentPallets.Count() == 0)
                                     {
-                                            <div style="height:@heightCustom.ToString()px;  "> </div>
+                                                        <div style="height:@heightCustom.ToString()px;  "> </div>
                                     }
-                                        <div style="position:absolute;bottom:0; margin-bottom:10px; width:98%; ">
-                                            @{
+                                    else
+                                    {
+                                        foreach (var palet in currentPallets)
+                                        {
+                                            if (ghostPalCnt == 0)
+                                            {
+                                                                <div style="height:@heightCustom.ToString()px;  "> </div>
+                                                ghostPalCnt = 1;
+                                            }
+                                                            <div style="height:@heightCustom.ToString()px;  "> </div>
+                                        }
+                                    }
+                                                    <div style="position:absolute;bottom:0; margin-bottom:10px; width:98%; ">
+                                                        @{
                                             var pallet = currentPallets.FirstOrDefault();
 
-                                                    @foreach (var palet in currentPallets)
+
+                                                                            @if (currentPallets.Count() == 0)
                                             {
-                                                        <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@palet.OrderNo" row="@palet.Row" column="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                                                                                <input type="button" id="0" value="0" rowx="@row" columnx="@col" style="width:100%; height:@heightCustom.ToString()px;" class="btn-Ghost">
                                             }
+                                            else
+                                            {
+                                                                @foreach (var palet in currentPallets)
+                                                {
+                                                    if (ghostPalCnt == 1)
+                                                    {
+                                                                        <input type="button" id="0" value="0" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="btn-Ghost">
+                                                        ghostPalCnt = 2;
+                                                    }
+                                                                    <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@palet.OrderNo" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                                                }
+                                                ghostPalCnt = 0;
                                             }
-                                            <br />
-                                        </div>
+                                                        }
+                                                        <br />
+                                                    </div>
 
-                                    </td>
+                                                </td>
 
-                                    @*}
-                                    else
-                                    {
-                                    <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px; padding-bottom:10px; height:@heightCustom.ToString()px;  vertical-align: top;">
+                                                @*}
+                else
+                {
+                <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px; padding-bottom:10px; height:@heightCustom.ToString()px;  vertical-align: top;">
 
-                                    @if (currentRow == 1)
-                                    {
+                @if (currentRow == 1)
+                {
 
-                                    <p style="font-size:25px">@colNo</p>
-                                    colNo++;
-                                    }
-                                    else
-                                    {
-                                    <br />
-                                    }
-                                    <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
-                                    @foreach (var palet in currentPallets)
-                                    {
-                                    <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
-                                    }
-                                    </td>
-                                    }*@
-                                    @*<td style="width:200px; height:@heightCustom.ToString()px; text-align:center; table-layout:fixed; margin-top: 0;">
-                                    <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="addBtn btn-secondary">
-                                    @foreach (var palet in currentPallets)
-                                    {
-                                    <input type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="removeBtn btn-danger">
-                                    }
-                                    </td>*@
+                <p style="font-size:25px">@colNo</p>
+                colNo++;
+                }
+                else
+                {
+                <br />
+                }
+                <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
+                @foreach (var palet in currentPallets)
+                {
+                <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                }
+                </td>
+                }*@
+                                                @*<td style="width:200px; height:@heightCustom.ToString()px; text-align:center; table-layout:fixed; margin-top: 0;">
+                <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="addBtn btn-secondary">
+                @foreach (var palet in currentPallets)
+                {
+                <input type="button" id="@palet.Id" value="@palet.OrderNo" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="removeBtn btn-danger">
+                }
+                </td>*@
                             }
                             else
                             {
-                                    <input type="button" id="@idPallet" value="Add" style=" width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
+                                                <input type="button" id="@idPallet" value="Add" style=" width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
                             }
 
 
 
-                                @*                if (pallet != null)
-                                {
-                                <td style="width:200px; height:200px; text-align:center">
-                                <0form><input type="button" id="@idPallet" value="Add" text-align: center class="btn-secondary addBtn"></form>
-                                <br />
-                                <form><input type="button" id="@idPallet" value="@pallet.OrderNo" style="width:100%; height:100%; text-align:center" class="removeBtn btn-danger"></form>
-                                </td>
-                                }
-                                else
-                                {
-                                <td style="color: white; width: 200px; height: 200px; text-align:center">
-                                <form><input type="button" id="@idPallet" value="Add" style="width:100%; height:100%; text-align:center" class="addBtn btn-secondary"></form>
-                                </td>
-                                }
+                                            @*                if (pallet != null)
+                {
+                <td style="width:200px; height:200px; text-align:center">
+                <0form><input type="button" id="@idPallet" value="Add" text-align: center class="btn-secondary addBtn"></form>
+                <br />
+                <form><input type="button" id="@idPallet" value="@pallet.OrderNo" style="width:100%; height:100%; text-align:center" class="removeBtn btn-danger"></form>
+                </td>
+                }
+                else
+                {
+                <td style="color: white; width: 200px; height: 200px; text-align:center">
+                <form><input type="button" id="@idPallet" value="Add" style="width:100%; height:100%; text-align:center" class="addBtn btn-secondary"></form>
+                </td>
+                }
 
-                                palletsAux.Remove(pallet);*@
+                palletsAux.Remove(pallet);*@
                         }
-                            @{
+                                        @{
                             currentRow++;
-                            }
-                        </tr>
+                                        }
+                                    </tr>
                 }
             }
         </tbody>
@@ -581,21 +618,21 @@ else
 <div id="content" class="html-content">
     @{
 
-            <table align="center" width="100%" id="switchTable">
-                @foreach (var ceva in Model.SwitchedPallets)
+                            <table align="center" width="100%" id="switchTable">
+                                @foreach (var ceva in Model.SwitchedPallets)
             {
-                    <tr>
+                                    <tr>
 
-                        <td width="100%" align="center">
-                            @ceva.FirstPallet <->
-                                @ceva.SecondPallet
-                                <hr />
-                        </td>
+                                        <td width="100%" align="center">
+                                            @ceva.FirstPallet <->
+                                                @ceva.SecondPallet
+                                                <hr />
+                                        </td>
 
-                    </tr>
+                                    </tr>
 
             }
-            </table>
+                            </table>
     }
 </div>
 @section Scripts {
@@ -612,60 +649,83 @@ else
         ev.dataTransfer.setData("drag", ev.target.id);
     }
 
-    function drop(ev) {
-        ev.preventDefault();
-        var draggedPallet = ev.dataTransfer.getData("drag");
+        function drop(ev) {
+            ev.preventDefault();
+            var draggedPallet = ev.dataTransfer.getData("drag");
             ev.target.appendChild(document.getElementById(draggedPallet));
 
-        var idContainer = $('#container').val();
-        var droppedPallet = ev.target.id;
-        var droppedPalletValue = ev.target.value;
+            var idContainer = $('#container').val();
+            var droppedPallet = ev.target.id;
+            var droppedPalletValue = ev.target.value;
             var draggedPalletValue = $("#" + draggedPallet).val();
 
-        $("#switchTable").append('<tr><td width="100%" align="center">' +
-            '' + droppedPalletValue + ' <-> ' + draggedPalletValue + '' +
-            '<hr />' +
-            '</td></tr>');
+            var droppedPalletRow = ev.target.getAttribute('rowx');
+            var droppedPalletColumn = ev.target.getAttribute('columnx');
 
 
-            if (droppedPallet === null || droppedPallet == "")
-            {
-                alert(draggedPallet + ' / ');
-            }
-            else {
-        @*var path = '@Url.Action("SwitchPallets")' + "?idContainer=" + idContainer + "&draggedPallet=" + draggedPallet + "&droppedPallet=" + droppedPallet;
-                window.location.href = path;*@
-
+            $("#switchTable").append('<tr><td width="100%" align="center">' +
+                '' + droppedPalletValue + ' <-> ' + draggedPalletValue + '' +
+                '<hr />' +
+                '</td></tr>');
+            if (droppedPalletRow != null && droppedPalletColumn != null) {
+                if (droppedPallet == 0) {
                     $.ajax({
-                        url: "/Pallets/SwitchPallets",
+                        url: "/Pallets/ChangePosition",
 
-                        data: {
-                            idContainer: idContainer, draggedPallet: draggedPallet, droppedPallet: droppedPallet
+                        data:
+                        {
+                            idContainer: idContainer, draggedPallet: draggedPallet, droppedPalletRow: droppedPalletRow, droppedPalletColumn: droppedPalletColumn
                         },
 
                         cache: false,
                         success: function (data) {
-                            alert('pallets swapped');
-                            //alert("why")
-                            $(".dinamicTable").empty();
-                            $(".dinamicTable").html(data);
-                            //$(".newtable").empty();
-                            //$(".newtable").html(data.secoundelement);
-                            //empty 10,replace 18
-                            //empty 18 put 10
-                            //console.log(data)
+                            //alert('pallets moved');
                             location.reload(true);
                         },
                         error: function (data) {
 
-                            alert('drag and drop fail');
-                            console.log(data);
+                            alert('move fail');
                         }
                     });
+                }
+                else if (droppedPallet > 0) {
+        @*var path = '@Url.Action("SwitchPallets")' + "?idContainer=" + idContainer + "&draggedPallet=" + draggedPallet + "&droppedPallet=" + droppedPallet;
+                    window.location.href = path;*@
+
+                        $.ajax({
+                            url: "/Pallets/SwitchPallets",
+
+                            data: {
+                                idContainer: idContainer, draggedPallet: draggedPallet, droppedPallet: droppedPallet
+                            },
+
+                            cache: false,
+                            success: function (data) {
+                                //alert('pallets swapped');
+                                //alert("why")
+                                $(".dinamicTable").empty();
+                                $(".dinamicTable").html(data);
+                                //$(".newtable").empty();
+                                //$(".newtable").html(data.secoundelement);
+                                //empty 10,replace 18
+                                //empty 18 put 10
+                                //console.log(data)
+                                location.reload(true);
+                            },
+                            error: function (data) {
+
+                                alert('drag and drop fail');
+                                console.log(data);
+                            }
+                        });
+                }
+            }
+            else {
+                location.reload(true);
             }
 
 
-    }
+        }
 
      $(document).on('click', "#newRow",function () {
         var idContainer = $('#container').val();
@@ -686,6 +746,7 @@ else
                 $(".dinamicTable").empty();
                 $(".dinamicTable").html(data);
                 //console.log(data)
+                        location.reload(true);
             },
             error: function (data) {
                 console.log(data);
@@ -724,6 +785,7 @@ else
                         $("#p250-" + data.importLP[i].customerCode180P).text("" + data.importLP[i].pickeD250);
                         $("#p180-" + data.importLP[i].customerCode180P).text("" + data.importLP[i].pickeD180);
                     }
+                    location.reload(true);
                 }
             });
         });
@@ -828,6 +890,7 @@ else
                         $(".dinamicTable").empty();
                         $(".dinamicTable").html(data);
                         //console.log(data)
+                        location.reload(true);
                     },
                     error: function (data) {
                         console.log(data);
@@ -852,6 +915,8 @@ else
             success: function (data) {
                 $(".dinamicTable").empty();
                 $(".dinamicTable").html(data);
+
+                    location.reload(true);
             },
             error: function (data) {
                 console.log(data);
@@ -878,6 +943,8 @@ else
                     success: function (data) {
                         $(".dinamicTable").empty();
                         $(".dinamicTable").html(data);
+
+                        location.reload(true);
                     },
                     error: function (data) {
                         console.log(data);
@@ -905,6 +972,7 @@ else
                 $(".dinamicTable").empty();
                 $(".dinamicTable").html(data);
                 //console.log(data)
+                    location.reload(true);
             },
             error: function (data) {
                 console.log(data);
@@ -931,6 +999,7 @@ else
                         $(".dinamicTable").empty();
                         $(".dinamicTable").html(data);
                         //console.log(data)
+                        location.reload(true);
                     },
                     error: function (data) {
                         console.log(data);

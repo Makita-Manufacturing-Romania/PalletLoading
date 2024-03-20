@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using PalletLoading.Data;
@@ -115,6 +117,22 @@ namespace PalletLoading.Controllers
             //    var country = _context.Countries.First(x => x.Id == containerAT.CountryId);
             //    countries.Add(country);
             //}
+
+
+
+            if (pallets.Count == 0)
+            {
+                for (int i = 0; i < container.NoOfColumns; i++)
+                {
+                    AddPallet(id.ToString(), "0," + i, null);
+                    AddPallet(id.ToString(), "0," + i, null);
+                    AddPallet(id.ToString(), "1," + i, null);
+                    AddPallet(id.ToString(), "1," + i, null);
+                }
+                return RedirectToAction("Create", "Pallets", new { id = id });
+            }
+
+
             try
             {
                 using (var cmd = _context.Database.GetDbConnection().CreateCommand())
@@ -466,7 +484,7 @@ namespace PalletLoading.Controllers
                 int row = Convert.ToInt32(rowAux);
                 int col = Convert.ToInt32(colAux);
 
-                Container container = _context.Containers.First(x => x.Id == idContainer);
+                PalletLoading.Models.Container container = _context.Containers.First(x => x.Id == idContainer);
                 //container.PalletId = pallet.Id;
 
                 /*                ICollection<Container> ContainerList = new Collection<Container>();
@@ -568,7 +586,7 @@ namespace PalletLoading.Controllers
         public ActionResult AddPallet(string idContainer, string position, string palletName)
         {
             int containerId = Convert.ToInt32(idContainer);
-            Container container = _context.Containers.First(x => x.Id == containerId);
+            PalletLoading.Models.Container container = _context.Containers.First(x => x.Id == containerId);
             string rowAux = position.Split(",").First();
             string colAux = position.Split(",").Last();
             int row = Convert.ToInt32(rowAux);
@@ -616,7 +634,7 @@ namespace PalletLoading.Controllers
         public ActionResult RemovePallet(string idContainer, string palletId)
         {
             int containerId = Convert.ToInt32(idContainer);
-            Container container = _context.Containers.First(x => x.Id == containerId);
+            PalletLoading.Models.Container container = _context.Containers.First(x => x.Id == containerId);
 
             int idPallet = Convert.ToInt32(palletId);
             Pallet pallet = _context.Pallets.First(x => x.Id == idPallet);
@@ -631,7 +649,7 @@ namespace PalletLoading.Controllers
         public ActionResult AddRow(string idContainer)
         {
             int containerId = Convert.ToInt32(idContainer);
-            Container container = _context.Containers.First(x => x.Id == containerId);
+            PalletLoading.Models.Container container = _context.Containers.First(x => x.Id == containerId);
 
             if (container.NoOfRows < 3)
                 container.NoOfRows++;
@@ -642,7 +660,7 @@ namespace PalletLoading.Controllers
         public ActionResult RemoveRow(string idContainer)
         {
             int containerId = Convert.ToInt32(idContainer);
-            Container container = _context.Containers.First(x => x.Id == containerId);
+            PalletLoading.Models.Container container = _context.Containers.First(x => x.Id == containerId);
             List<Pallet> pallets = new();
             var rowToRemove = container.NoOfRows - 1;
             if (_context.Pallets.Any(x => x.Row == rowToRemove && x.Container2Id == containerId))
@@ -660,7 +678,7 @@ namespace PalletLoading.Controllers
         public ActionResult AddColumn(string idContainer)
         {
             int containerId = Convert.ToInt32(idContainer);
-            Container container = _context.Containers.First(x => x.Id == containerId);
+            PalletLoading.Models.Container container = _context.Containers.First(x => x.Id == containerId);
 
             container.NoOfColumns++;
             _context.SaveChanges();
@@ -670,7 +688,7 @@ namespace PalletLoading.Controllers
         public ActionResult RemoveColumn(string idContainer)
         {
             int containerId = Convert.ToInt32(idContainer);
-            Container container = _context.Containers.First(x => x.Id == containerId);
+            PalletLoading.Models.Container container = _context.Containers.First(x => x.Id == containerId);
             List<Pallet> pallets = new();
             var colToRemove = container.NoOfColumns - 1;
             if (_context.Pallets.Any(x => x.Column == colToRemove && x.Container2Id == containerId))
@@ -776,6 +794,45 @@ namespace PalletLoading.Controllers
         private bool PalletExists(int id)
         {
             return _context.Pallets.Any(e => e.Id == id);
+        }
+
+        public ActionResult ChangePosition(string idContainer, string draggedPallet, string droppedPalletRow, string droppedPalletColumn)
+        {
+            int containerId = Convert.ToInt32(idContainer);
+            int idPallet = Convert.ToInt32(draggedPallet);
+            int idRow = Convert.ToInt32(droppedPalletRow);
+            int idColumn = Convert.ToInt32(droppedPalletColumn);
+
+            Pallet pallet = _context.Pallets.First(x => x.Id == idPallet);
+            var pallets = _context.Pallets
+                .Where(l => l.Container2Id == containerId && l.Row == idRow && l.Column == idColumn)
+                .OrderBy(x => x.OrderNo)
+                .ToList();
+            pallets.Add(pallet);
+            if (pallets.Count > 1)
+            {
+                List<int>OrderNumbers = new List<int>();
+                foreach (var pal in pallets)
+                {
+                    OrderNumbers.Add(pal.OrderNo);
+                }
+                OrderNumbers.Sort();
+                int i = 0;
+                foreach (var pal in pallets)
+                {
+                    pal.OrderNo = OrderNumbers[i];
+                    _context.Update(pal);
+                    i++;
+                }
+            }
+
+            pallet.Row = idRow;
+            pallet.Column = idColumn;
+            _context.Update(pallet);
+            _context.SaveChanges();
+
+
+            return RedirectToAction("GetTable", new { id = containerId });
         }
     }
 }
