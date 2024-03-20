@@ -120,17 +120,17 @@ namespace PalletLoading.Controllers
 
 
 
-            if (pallets.Count == 0)
-            {
-                for (int i = 0; i < container.NoOfColumns; i++)
-                {
-                    AddPallet(id.ToString(), "0," + i, null);
-                    AddPallet(id.ToString(), "0," + i, null);
-                    AddPallet(id.ToString(), "1," + i, null);
-                    AddPallet(id.ToString(), "1," + i, null);
-                }
-                return RedirectToAction("Create", "Pallets", new { id = id });
-            }
+            ////if (pallets.Count == 0)
+            ////{
+            ////    for (int i = 0; i < container.NoOfColumns; i++)
+            ////    {
+            ////        AddPallet(id.ToString(), "0," + i, null);
+            ////        AddPallet(id.ToString(), "0," + i, null);
+            ////        AddPallet(id.ToString(), "1," + i, null);
+            ////        AddPallet(id.ToString(), "1," + i, null);
+            ////    }
+            ////    return RedirectToAction("Create", "Pallets", new { id = id });
+            ////}
 
 
             try
