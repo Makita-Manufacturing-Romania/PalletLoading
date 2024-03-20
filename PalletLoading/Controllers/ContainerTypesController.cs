@@ -52,10 +52,19 @@ namespace PalletLoading.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Length,Width,Height,volume")] ContainerType containerType)
+        public async Task<IActionResult> Create(ContainerType containerType)
         {
             if (ModelState.IsValid)
             {
+                if (containerType.Length > 0 && containerType.Width > 0 && containerType.Height > 0)
+                {
+                    containerType.volume = (containerType.Length * containerType.Width * containerType.Height) / 1000000;
+                }
+                else
+                {
+                    containerType.volume = 0;
+                }
+
                 _context.Add(containerType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -84,7 +93,7 @@ namespace PalletLoading.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Length,Width,Height,volume")] ContainerType containerType)
+        public async Task<IActionResult> Edit(int id, ContainerType containerType)
         {
             if (id != containerType.Id)
             {
@@ -95,6 +104,15 @@ namespace PalletLoading.Controllers
             {
                 try
                 {
+                    if (containerType.Length > 0 && containerType.Width > 0 && containerType.Height > 0)
+                    {
+                        containerType.volume = (containerType.Length * containerType.Width * containerType.Height) /1000000;
+                    }
+                    else
+                    {
+                        containerType.volume = 0;
+                    }
+
                     _context.Update(containerType);
                     await _context.SaveChangesAsync();
                 }
@@ -147,5 +165,6 @@ namespace PalletLoading.Controllers
         {
             return _context.ContainerTypes.Any(e => e.Id == id);
         }
+
     }
 }

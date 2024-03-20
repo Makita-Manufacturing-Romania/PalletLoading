@@ -428,7 +428,7 @@ namespace PalletLoading.Controllers
 
                 }
 
-                var listPalletsApp2 = _context.Pallets.Include(x => x.PalletImportDataHistory).Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
+                var listPalletsApp2 = _context.Pallets.Include(x => x.PalletImportDataHistory).AsEnumerable().Where(c => c.Container2Id == containerId).OrderBy(c => c.OrderNo).ToList();
                 List<Pallet> palletsMotrica = null;
                 decimal motricaWeight = 0;
                 if (listPalletsApp2.Any(x => x.Column <= 3))

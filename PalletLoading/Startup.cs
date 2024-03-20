@@ -54,8 +54,9 @@ namespace PalletLoading
             {
                 options.AddPolicy("Manager", policy => policy.Requirements.Add(new RoleRequirement(new string[] { "Manager" })));
                 options.AddPolicy("Supervizor", policy => policy.Requirements.Add(new RoleRequirement(new string[] { "Manager", "Supervizor" })));
-                options.AddPolicy("User", policy => policy.Requirements.Add(new RoleRequirement(new string[] { "Manager", "Supervizor", "User" })));
-                options.AddPolicy("Guest", policy => policy.Requirements.Add(new RoleRequirement(new string[] { "Manager", "Supervizor", "User", "Guest" })));
+                options.AddPolicy("Team Leader", policy => policy.Requirements.Add(new RoleRequirement(new string[] { "Manager", "Supervizor", "Team Leader" })));
+                options.AddPolicy("User", policy => policy.Requirements.Add(new RoleRequirement(new string[] { "Manager", "Supervizor", "Team Leader", "User" })));
+                options.AddPolicy("Guest", policy => policy.Requirements.Add(new RoleRequirement(new string[] { "Manager", "Supervizor", "Team Leader", "User", "Guest" })));
             });
 
             services.AddScoped<IAuthorizationHandler, CustomAuthorization>();
