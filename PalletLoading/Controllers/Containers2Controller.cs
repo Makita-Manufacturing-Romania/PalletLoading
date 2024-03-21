@@ -1736,12 +1736,11 @@ namespace PalletLoading.Controllers
             try
             {
                 string? fileName = idnew.fileName;
-                string typeOfFile = "Acceptances";
                 int requestid = idnew.id;
 
 
                 ////delete Files
-                bool fileDeleted = DeleteFile(fileName, typeOfFile, containerId, requestid, out string result);
+                bool fileDeleted = DeleteFile(fileName, containerId, requestid, out string result);
                 if (fileDeleted == true)
                 {
                     //delete file entry
@@ -1772,7 +1771,7 @@ namespace PalletLoading.Controllers
         }
 
 
-        public bool DeleteFile(string fileName, string typeOffile, int projectId, int documentId, out string result)
+        public bool DeleteFile(string fileName, int projectId, int documentId, out string result)
         {
             try
             {
@@ -1810,5 +1809,32 @@ namespace PalletLoading.Controllers
             return RedirectToAction("Details", "Containers2", new { id = id });
         }
 
+        [HttpPost]
+        public async Task<JsonResult> deleteFileOnSvAsyncExist(string id)
+        {
+            try
+            {
+                //string? fileName = idnew.fileName;
+                var data = _context.UploadModelTabel
+                    .Where(l => l.id == Convert.ToInt32(id))
+                    .FirstOrDefault();
+
+                ////delete Files
+                bool fileDeleted = DeleteFile(data.fileName, data.ContainerId, Convert.ToInt32(id), out string result);
+                if (fileDeleted == true)
+                {
+                    _context.UploadModelTabel.Remove(data);
+                    await _context.SaveChangesAsync();
+                }
+
+
+                ////return message with delete succesful
+                return Json("");
+            }
+            catch (Exception es)
+            {
+                return Json("");
+            }
+        }
     }
 }

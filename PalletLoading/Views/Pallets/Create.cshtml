@@ -341,33 +341,33 @@ else
             @{
                 var colNo = 1;
                 var currentRow = 1;
-                                @for (int row = 0; row < widthContainer; row++)
+                @for (int row = 0; row < widthContainer; row++)
                 {
                     var heightCustom = 100;
-                                    <tr style="width:200px; height:@heightCustom.ToString()px; vertical-align: top">
-                                        @for (int col = 0; col < lengthContainer; col++)
+                    <tr style="width:200px; height:@heightCustom.ToString()px; vertical-align: top">
+                        @for (int col = 0; col < lengthContainer; col++)
                         {
                             string idPallet = row.ToString() + "," + col.ToString();
                             var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
 
                             if (currentPallets != null)
                             {
-                                                @*@if (currentPallets.Count() == 1)
+                                @*@if (currentPallets.Count() == 1)
                 {*@
-                                                <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px;position:relative; vertical-align: top;  padding-bottom:10px;">
-                                                    @if (currentRow == 1)
+                                <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px;position:relative; vertical-align: top;  padding-bottom:10px;">
+                                    @if (currentRow == 1)
                                     {
-                                                        <p style="font-size:25px">@colNo</p>
+                                        <p style="font-size:25px">@colNo</p>
                                         colNo++;
                                     }
                                     else
                                     {
-                                                        <br />
+                                        <br />
                                     }
-                                                    <input type="button" id="@idPallet" value="Add" style=" width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
-                                                    @if (currentPallets.Count() == 0)
+                                    <input type="button" id="@idPallet" value="Add" style=" width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
+                                    @if (currentPallets.Count() == 0)
                                     {
-                                                        <div style="height:@heightCustom.ToString()px;  "> </div>
+                                        <div style="height:@heightCustom.ToString()px;  "> </div>
                                     }
                                     else
                                     {
@@ -375,41 +375,54 @@ else
                                         {
                                             if (ghostPalCnt == 0)
                                             {
-                                                                <div style="height:@heightCustom.ToString()px;  "> </div>
+                                                <div style="height:@heightCustom.ToString()px;  "> </div>
                                                 ghostPalCnt = 1;
                                             }
-                                                            <div style="height:@heightCustom.ToString()px;  "> </div>
+                                            <div style="height:@heightCustom.ToString()px;  "> </div>
                                         }
                                     }
-                                                    <div style="position:absolute;bottom:0; margin-bottom:10px; width:98%; ">
-                                                        @{
+                                    <div style="position:absolute;bottom:0; margin-bottom:10px; width:98%; ">
+                                        @{
                                             var pallet = currentPallets.FirstOrDefault();
 
 
-                                                                            @if (currentPallets.Count() == 0)
+                                            @if (currentPallets.Count() == 0)
                                             {
-                                                                                <input type="button" id="0" value="0" rowx="@row" columnx="@col" style="width:100%; height:@heightCustom.ToString()px;" class="btn-Ghost">
+                                                <input type="button" id="0" value="0" rowx="@row" columnx="@col" style="width:100%; height:@heightCustom.ToString()px;" class="btn-Ghost">
                                             }
                                             else
                                             {
-                                                                @foreach (var palet in currentPallets)
+                                                @foreach (var palet in currentPallets)
                                                 {
                                                     if (ghostPalCnt == 1)
                                                     {
-                                                                        <input type="button" id="0" value="0" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="btn-Ghost">
+                                                        <input type="button" id="0" value="0" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="btn-Ghost">
                                                         ghostPalCnt = 2;
                                                     }
-                                                                    <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@palet.OrderNo" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+
+                                                    if (palet.PalletImportDataId != null)
+                                                    {
+                                                        <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@Convert.ToInt32(palet.PalletImportData.pallet_no)" orderNo="@pallet.OrderNo" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                                                    }
+                                                    else if (palet.PalletImportDataHistoryId != null)
+                                                    {
+                                                        <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@Convert.ToInt32(palet.PalletImportDataHistory.pallet_no)" orderNo="@pallet.OrderNo" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="X" orderNo="@pallet.OrderNo" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                                                    }
+                                                    
                                                 }
                                                 ghostPalCnt = 0;
                                             }
-                                                        }
-                                                        <br />
-                                                    </div>
+                                        }
+                                        <br />
+                                    </div>
 
-                                                </td>
+                                </td>
 
-                                                @*}
+                                @*}
                 else
                 {
                 <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px; padding-bottom:10px; height:@heightCustom.ToString()px;  vertical-align: top;">
@@ -431,7 +444,7 @@ else
                 }
                 </td>
                 }*@
-                                                @*<td style="width:200px; height:@heightCustom.ToString()px; text-align:center; table-layout:fixed; margin-top: 0;">
+                                @*<td style="width:200px; height:@heightCustom.ToString()px; text-align:center; table-layout:fixed; margin-top: 0;">
                 <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="addBtn btn-secondary">
                 @foreach (var palet in currentPallets)
                 {
@@ -441,12 +454,12 @@ else
                             }
                             else
                             {
-                                                <input type="button" id="@idPallet" value="Add" style=" width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
+                                <input type="button" id="@idPallet" value="Add" style=" width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
                             }
 
 
 
-                                            @*                if (pallet != null)
+                            @*                if (pallet != null)
                 {
                 <td style="width:200px; height:200px; text-align:center">
                 <0form><input type="button" id="@idPallet" value="Add" text-align: center class="btn-secondary addBtn"></form>
@@ -463,10 +476,10 @@ else
 
                 palletsAux.Remove(pallet);*@
                         }
-                                        @{
+                        @{
                             currentRow++;
-                                        }
-                                    </tr>
+                        }
+                    </tr>
                 }
             }
         </tbody>
@@ -656,7 +669,7 @@ else
 
             var idContainer = $('#container').val();
             var droppedPallet = ev.target.id;
-            var droppedPalletValue = ev.target.value;
+            var droppedPalletValue = ev.target.orderNo;
             var draggedPalletValue = $("#" + draggedPallet).val();
 
             var droppedPalletRow = ev.target.getAttribute('rowx');
