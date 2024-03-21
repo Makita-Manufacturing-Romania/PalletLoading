@@ -120,17 +120,30 @@ namespace PalletLoading.Controllers
 
 
 
-            ////if (pallets.Count == 0)
-            ////{
-            ////    for (int i = 0; i < container.NoOfColumns; i++)
-            ////    {
-            ////        AddPallet(id.ToString(), "0," + i, null);
-            ////        AddPallet(id.ToString(), "0," + i, null);
-            ////        AddPallet(id.ToString(), "1," + i, null);
-            ////        AddPallet(id.ToString(), "1," + i, null);
-            ////    }
-            ////    return RedirectToAction("Create", "Pallets", new { id = id });
-            ////}
+            if (pallets.Count == 0)
+            {
+                var fillRule = _context.ContainerFillRules
+                    .Where(l => l.Id == container.ContainerFillRule)
+                    .Select(l => l.Name)
+                    .FirstOrDefault();
+                switch (fillRule)
+                {
+                    case "Manual":
+                        //No Auto Fill
+                        break;
+                    case "Auto 2x2":
+                        for (int i = 0; i < container.NoOfColumns; i++)
+                        {
+                            AddPallet(id.ToString(), "0," + i, null);
+                            AddPallet(id.ToString(), "0," + i, null);
+                            AddPallet(id.ToString(), "1," + i, null);
+                            AddPallet(id.ToString(), "1," + i, null);
+                        }
+                        return RedirectToAction("Create", "Pallets", new { id = id });
+                    case "X":
+                        break;
+                }
+            }
 
 
             try
@@ -599,7 +612,8 @@ namespace PalletLoading.Controllers
             pallet.Name = palletName;
             pallet.DataInsert = DateTime.Now;
             pallet.CreatedBy = User.Identity.Name.Replace("MMRMAKITA\\", "");
-            pallet.OrderNo = _context.Pallets.Where(x => x.Container2Id == container.Id).OrderByDescending(c=>c.Id).Select(c=>c.OrderNo).FirstOrDefault() + 1;
+            pallet.OrderNo = _context.Pallets.Where(x => x.Container2Id == container.Id).OrderByDescending(c=>c.OrderNo).Select(c=>c.OrderNo).FirstOrDefault() + 1;
+
             //if (_context.Pallets.Any(x => x.OrderNo == 1) && _context.Pallets.Any(x => x.Container2Id == container.Id))
             //{
 

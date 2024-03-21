@@ -9,7 +9,7 @@ namespace PalletLoading.Data
 {
     public class PalletLoadingContext : DbContext
     {
-        public PalletLoadingContext (DbContextOptions<PalletLoadingContext> options)
+        public PalletLoadingContext(DbContextOptions<PalletLoadingContext> options)
             : base(options)
         {
         }
@@ -41,9 +41,9 @@ namespace PalletLoading.Data
         public DbSet<SecuringLoad> SecuringLoads { get; set; }
         public DbSet<FormDefinition> FormDefinitions { get; set; }
         public DbSet<FormData> FormDatas { get; set; }
-        public DbSet<UploadModel> UploadModelTabel {  get; set; }
+        public DbSet<UploadModel> UploadModelTabel { get; set; }
         public DbSet<ClientType> ClientTypes { get; set; }
-
+        public DbSet<ContainerFillRule> ContainerFillRules {get; set;}
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -683,6 +683,9 @@ namespace PalletLoading.Controllers
             ViewData["CountryId"] = new SelectList(_context.Countries.OrderBy(c=>c.Abbreviation).Select(c => new { Id = c.Id, Name = (c.Name + " - " + c.Abbreviation) }), "Id", "Name");
 
             ViewData["TypeId"] = new SelectList(_context.ContainerTypes, "Id", "Name");
+
+            ViewData["ContainerFillRule"] = new SelectList(_context.ContainerFillRules, "Id", "Name");
+
             return View();
         }
 
@@ -690,13 +693,14 @@ namespace PalletLoading.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Create(string Name, int TypeId, int CountryId)
+        public async Task<IActionResult> Create(string Name, int TypeId, int CountryId, int ContainerFillRule)
         {
             PalletLoading.Models.Container container = new();
             container.Id = 0;
             container.Name = Name.Trim();
             container.TypeId = TypeId;
             container.CountryId = CountryId;
+            container.ContainerFillRule = ContainerFillRule;
 
             var checkForExistingContainer = _context.Containers
                     .Where(l => l.Name == container.Name.Trim())

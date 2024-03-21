@@ -58,5 +58,6 @@ namespace PalletLoading.Models
         public DateTime? checkerTL_Signature_Timestamp { get; set; }
         public DateTime? checkerSV_Signature_Timestamp { get; set; }
         public DateTime? approval_Signature_Timestamp { get; set; }
+        public int? ContainerFillRule { get; set; }
     }
 }

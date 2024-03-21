@@ -168,6 +168,12 @@
                     <select asp-for="CountryId" class="form-control" asp-items="ViewBag.CountryId"></select>
                 </div>
             </div>
+            <div class="form-group">
+                <div align="left">
+                    <label class="control-label">Fill Rule</label>
+                    <select asp-for="ContainerFillRule" class="form-control" asp-items="ViewBag.ContainerFillRule"></select>
+                </div>
+            </div>
 
             <div class="form-group">
                 @* <input type="submit" value="Create" id="createBtn" class="btn btn-primary" /> *@
@@ -205,6 +211,8 @@
             console.log(typeId);
             var countryId = document.querySelector('select[name="CountryId"]').value;
             console.log(countryId);
+            var containerFillRule = document.querySelector('select[name="ContainerFillRule"]').value;
+            console.log(containerFillRule);
 
             $.ajax({
                 url: '/Containers2/Create',
@@ -213,7 +221,8 @@
 
                     Name: name,
                     TypeId: typeId,
-                    CountryId: countryId
+                    CountryId: countryId,
+                    ContainerFillRule: containerFillRule
                 },
                 dataType: "json", // Expect JSON response
                 success: function (data) {
