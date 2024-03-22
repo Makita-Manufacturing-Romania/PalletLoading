@@ -243,7 +243,7 @@ namespace PalletLoading.Controllers
                 catch (Exception ex)
                 {
                     string errorMessage = Convert.ToString(ex);
-                    return Json(new { ex = errorMessage });
+                    //return Json(new { ex = errorMessage });
                 }
 
 

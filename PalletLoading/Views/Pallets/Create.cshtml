@@ -535,6 +535,10 @@ else
         Delete old CMR
     </button>
 }
+
+<button class="btn btn-info" id="refreshPage">Refresh</button>
+
+
 <!-- Button trigger modal -->
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -693,12 +697,12 @@ else
                         cache: false,
                         success: function (data) {
                             //alert('pallets moved');
-                            location.reload(true);
+                            //location.reload(true);
                         },
                         error: function (data) {
 
                             alert('move fail');
-                            location.reload(true);
+                            //location.reload(true);
                         }
                     });
                 }
@@ -724,19 +728,19 @@ else
                                 //empty 10,replace 18
                                 //empty 18 put 10
                                 //console.log(data)
-                                location.reload(true);
+                                //location.reload(true);
                             },
                             error: function (data) {
 
                                 alert('drag and drop fail');
                                 console.log(data);
-                                location.reload(true);
+                                //location.reload(true);
                             }
                         });
                 }
             }
             else {
-                location.reload(true);
+                //location.reload(true);
             }
 
 
@@ -761,7 +765,7 @@ else
                 $(".dinamicTable").empty();
                 $(".dinamicTable").html(data);
                 //console.log(data)
-                        location.reload(true);
+                        //location.reload(true);
             },
             error: function (data) {
                 console.log(data);
@@ -800,7 +804,7 @@ else
                         $("#p250-" + data.importLP[i].customerCode180P).text("" + data.importLP[i].pickeD250);
                         $("#p180-" + data.importLP[i].customerCode180P).text("" + data.importLP[i].pickeD180);
                     }
-                    location.reload(true);
+                    //location.reload(true);
                 }
             });
         });
@@ -881,7 +885,7 @@ else
                         $("#tableSection").append(tableTxt);
                         $("#loader-1").hide();
                         $("#sincData").removeAttr("disabled");
-                        location.reload(true);
+                        //location.reload(true);
                     }
 
                 },
@@ -919,7 +923,7 @@ else
                         $(".dinamicTable").empty();
                         $(".dinamicTable").html(data);
                         //console.log(data)
-                        location.reload(true);
+                        //location.reload(true);
                     },
                     error: function (data) {
                         console.log(data);
@@ -945,7 +949,7 @@ else
                 $(".dinamicTable").empty();
                 $(".dinamicTable").html(data);
 
-                    location.reload(true);
+                    //location.reload(true);
             },
             error: function (data) {
                 console.log(data);
@@ -973,7 +977,7 @@ else
                         $(".dinamicTable").empty();
                         $(".dinamicTable").html(data);
 
-                        location.reload(true);
+                        //location.reload(true);
                     },
                     error: function (data) {
                         console.log(data);
@@ -1001,7 +1005,7 @@ else
                 $(".dinamicTable").empty();
                 $(".dinamicTable").html(data);
                 //console.log(data)
-                    location.reload(true);
+                    ////////////////location.reload(true);
             },
             error: function (data) {
                 console.log(data);
@@ -1028,7 +1032,7 @@ else
                         $(".dinamicTable").empty();
                         $(".dinamicTable").html(data);
                         //console.log(data)
-                        location.reload(true);
+                        //location.reload(true);
                     },
                     error: function (data) {
                         console.log(data);
@@ -1037,7 +1041,16 @@ else
             }
         });
 
+
+
 </script>
+
+
+    <script type="text/javascript">
+        document.getElementById("refreshPage").addEventListener("click", function () {
+            location.reload(true);
+        });
+    </script>
 }
 
 @*<style>

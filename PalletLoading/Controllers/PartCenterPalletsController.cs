@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc; 
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
@@ -13,7 +13,6 @@ using PalletLoading.Models;
 
 namespace PalletLoading.Controllers
 {
-    [Authorize(Policy = "User")]
     public class PartCenterPalletsController : MainController
     {
 

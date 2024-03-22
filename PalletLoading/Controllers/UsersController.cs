@@ -124,8 +124,14 @@ namespace PalletLoading.Controllers
             {
                 return NotFound();
             }
+            string username = this._context.User.Where(c => c.Username.Equals(User.Identity.Name.Replace("MMRMAKITA\\", ""))).Select(c => c.Username).FirstOrDefault();
+            int userRole = _context.User
+                .Where(l => l.Username == username)
+                .Select(l => Convert.ToInt32(l.Role.accessLevel))
+                .FirstOrDefault();
+
             ViewData["UserRightId"] = new SelectList(_context.UserRight, "Id", "Right", user.UserRightId);
-            ViewData["UserRole"] = new SelectList(_context.Role, "Id", "Name");
+            ViewData["UserRole"] = new SelectList(_context.Role.Where(l => l.accessLevel <= userRole), "Id", "Name");
             return View(user);
         }
 
