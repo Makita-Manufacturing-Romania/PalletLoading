@@ -204,10 +204,10 @@
                     string virgula = ", ";
                     foreach (var country in Model.ContainerAT)
                     {
-                                            @country.Country.Name
+                                                @country.Country.Name
                         if (country.Id != Model.ContainerAT.Last().Id)
                         {
-                                                @virgula
+                                                    @virgula
                         }
                     }
                 }
@@ -221,10 +221,10 @@
 
                     foreach (var country in Model.ContainerAT)
                     {
-                                            @country.ContainerName
+                                                @country.ContainerName
                         if (country.Id != Model.ContainerAT.Last().Id)
                         {
-                                                @virgula
+                                                    @virgula
                         }
                     }
                 }
@@ -341,33 +341,33 @@ else
             @{
                 var colNo = 1;
                 var currentRow = 1;
-                @for (int row = 0; row < widthContainer; row++)
+                    @for (int row = 0; row < widthContainer; row++)
                 {
                     var heightCustom = 100;
-                    <tr style="width:200px; height:@heightCustom.ToString()px; vertical-align: top">
-                        @for (int col = 0; col < lengthContainer; col++)
+                        <tr style="width:200px; height:@heightCustom.ToString()px; vertical-align: top">
+                            @for (int col = 0; col < lengthContainer; col++)
                         {
                             string idPallet = row.ToString() + "," + col.ToString();
                             var currentPallets = palletsAux.Where(x => x.Row == row && x.Column == col).OrderByDescending(x => x.OrderNo);
 
                             if (currentPallets != null)
                             {
-                                @*@if (currentPallets.Count() == 1)
+                                    @*@if (currentPallets.Count() == 1)
                 {*@
-                                <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px;position:relative; vertical-align: top;  padding-bottom:10px;">
-                                    @if (currentRow == 1)
+                                    <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px;position:relative; vertical-align: top;  padding-bottom:10px;">
+                                        @if (currentRow == 1)
                                     {
-                                        <p style="font-size:25px">@colNo</p>
+                                            <p style="font-size:25px">@colNo</p>
                                         colNo++;
                                     }
                                     else
                                     {
-                                        <br />
+                                            <br />
                                     }
-                                    <input type="button" id="@idPallet" value="Add" style=" width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
-                                    @if (currentPallets.Count() == 0)
+                                        <input type="button" id="@idPallet" value="Add" style=" width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
+                                        @if (currentPallets.Count() == 0)
                                     {
-                                        <div style="height:@heightCustom.ToString()px;  "> </div>
+                                            <div style="height:@heightCustom.ToString()px;  "> </div>
                                     }
                                     else
                                     {
@@ -375,54 +375,54 @@ else
                                         {
                                             if (ghostPalCnt == 0)
                                             {
-                                                <div style="height:@heightCustom.ToString()px;  "> </div>
+                                                    <div style="height:@heightCustom.ToString()px;  "> </div>
                                                 ghostPalCnt = 1;
                                             }
-                                            <div style="height:@heightCustom.ToString()px;  "> </div>
+                                                <div style="height:@heightCustom.ToString()px;  "> </div>
                                         }
                                     }
-                                    <div style="position:absolute;bottom:0; margin-bottom:10px; width:98%; ">
-                                        @{
+                                        <div style="position:absolute;bottom:0; margin-bottom:10px; width:98%; ">
+                                            @{
                                             var pallet = currentPallets.FirstOrDefault();
 
 
-                                            @if (currentPallets.Count() == 0)
+                                                    @if (currentPallets.Count() == 0)
                                             {
-                                                <input type="button" id="0" value="0" rowx="@row" columnx="@col" style="width:100%; height:@heightCustom.ToString()px;" class="btn-Ghost">
+                                                        <input type="button" id="0" value="0" rowx="@row" columnx="@col" style="width:100%; height:@heightCustom.ToString()px;" class="btn-Ghost">
                                             }
                                             else
                                             {
-                                                @foreach (var palet in currentPallets)
+                                                        @foreach (var palet in currentPallets)
                                                 {
                                                     if (ghostPalCnt == 1)
                                                     {
-                                                        <input type="button" id="0" value="0" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="btn-Ghost">
+                                                                <input type="button" id="0" value="0" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="btn-Ghost">
                                                         ghostPalCnt = 2;
                                                     }
 
                                                     if (palet.PalletImportDataId != null)
                                                     {
-                                                        <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@Convert.ToInt32(palet.PalletImportData.pallet_no)" orderNo="@pallet.OrderNo" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                                                                <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@Convert.ToInt32(palet.PalletImportData.pallet_no)" orderNo="@pallet.OrderNo" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
                                                     }
                                                     else if (palet.PalletImportDataHistoryId != null)
                                                     {
-                                                        <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@Convert.ToInt32(palet.PalletImportDataHistory.pallet_no)" orderNo="@pallet.OrderNo" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                                                                <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="@Convert.ToInt32(palet.PalletImportDataHistory.pallet_no)" orderNo="@pallet.OrderNo" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
                                                     }
                                                     else
                                                     {
-                                                        <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="X" orderNo="@pallet.OrderNo" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
+                                                                <input draggable="true" ondragstart="drag(event)" type="button" id="@palet.Id" value="X" orderNo="@pallet.OrderNo" rowx="@palet.Row" columnx="@palet.Column" style="width:100%; height:@heightCustom.ToString()px;" class="removeBtn btn-danger">
                                                     }
                                                     
                                                 }
                                                 ghostPalCnt = 0;
                                             }
-                                        }
-                                        <br />
-                                    </div>
+                                            }
+                                            <br />
+                                        </div>
 
-                                </td>
+                                    </td>
 
-                                @*}
+                                    @*}
                 else
                 {
                 <td ondrop="drop(event)" ondragover="allowDrop(event)" style="width:200px; padding-bottom:10px; height:@heightCustom.ToString()px;  vertical-align: top;">
@@ -444,7 +444,7 @@ else
                 }
                 </td>
                 }*@
-                                @*<td style="width:200px; height:@heightCustom.ToString()px; text-align:center; table-layout:fixed; margin-top: 0;">
+                                    @*<td style="width:200px; height:@heightCustom.ToString()px; text-align:center; table-layout:fixed; margin-top: 0;">
                 <input type="button" id="@idPallet" value="Add" style="width:100%; height:@heightCustom-5.ToString()px; text-align:center" class="addBtn btn-secondary">
                 @foreach (var palet in currentPallets)
                 {
@@ -454,12 +454,12 @@ else
                             }
                             else
                             {
-                                <input type="button" id="@idPallet" value="Add" style=" width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
+                                    <input type="button" id="@idPallet" value="Add" style=" width:100%; height:@heightCustom.ToString()px;" class="addBtn btn-secondary">
                             }
 
 
 
-                            @*                if (pallet != null)
+                                @*                if (pallet != null)
                 {
                 <td style="width:200px; height:200px; text-align:center">
                 <0form><input type="button" id="@idPallet" value="Add" text-align: center class="btn-secondary addBtn"></form>
@@ -476,10 +476,10 @@ else
 
                 palletsAux.Remove(pallet);*@
                         }
-                        @{
+                            @{
                             currentRow++;
-                        }
-                    </tr>
+                            }
+                        </tr>
                 }
             }
         </tbody>
@@ -631,21 +631,21 @@ else
 <div id="content" class="html-content">
     @{
 
-                            <table align="center" width="100%" id="switchTable">
-                                @foreach (var ceva in Model.SwitchedPallets)
+                                <table align="center" width="100%" id="switchTable">
+                                    @foreach (var ceva in Model.SwitchedPallets)
             {
-                                    <tr>
+                                        <tr>
 
-                                        <td width="100%" align="center">
-                                            @ceva.FirstPallet <->
-                                                @ceva.SecondPallet
-                                                <hr />
-                                        </td>
+                                            <td width="100%" align="center">
+                                                @ceva.FirstPallet <->
+                                                    @ceva.SecondPallet
+                                                    <hr />
+                                            </td>
 
-                                    </tr>
+                                        </tr>
 
             }
-                            </table>
+                                </table>
     }
 </div>
 @section Scripts {
@@ -806,77 +806,91 @@ else
         });
 
 
-    $("#sincData").click(function () {
-        var idContainer = $('#container').val();
-        var containerName = "@containerName";
-        var countryName = "@countryName";
-        var thisBtn = $(this);
-        $("#loader-1").show()
-        $(this).attr('disabled','true')
+        $("#sincData").click(function () {
+            var idContainer = $('#container').val();
+            var containerName = "@containerName";
+            var countryName = "@countryName";
+            var thisBtn = $(this);
+            $("#loader-1").show()
+            $(this).attr('disabled', 'true')
 
-        $.ajax({
-            url: "/Pallets/GetPallets",
+            $.ajax({
+                url: "/Pallets/GetPallets",
 
-            data: {
-               containerId: idContainer
-            },
+                data: {
+                    containerId: idContainer
+                },
 
-            cache: false,
-            contentType: "application/json;charset=UTF-8",
-            dataType: "json",
-            success: function (data) {
-                var noPallets = data.listPallets.length;
-                var tableTxt = "<table class='table' style='margin-top:25px;'><tr><th>Order no</th><th>Container</th><th>Sales part</th><th>Pallet no</th><th>Serial from</th><th>Serial to</th><th>Quantity</th><th>Weight</th><th>Volume</th></tr>"
-                var motrica = data.motrica;
-                var volumOcupat = data.volumOcupat;
-                $("#motrica").text(motrica+"");
-                $("#volumOcupat").text(volumOcupat +"(m3) / "+ @containerVolume.ToString("N2") +"(m3) (" + volumOcupat*@containerVolume.ToString("N2")/100 +"%)");
+                cache: false,
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (data)
+                {
+                    if (data.ex != null) 
+                    {
+                        console.log(data.ex);
+                        alert(data.ex);
+                    }
+                    else {
+                        var noPallets = data.listPallets.length;
+                        var tableTxt = "<table class='table' style='margin-top:25px;'><tr><th>Order no</th><th>Container</th><th>Sales part</th><th>Pallet no</th><th>Serial from</th><th>Serial to</th><th>Quantity</th><th>Weight</th><th>Volume</th></tr>"
+                        var motrica = data.motrica;
+                        var volumOcupat = data.volumOcupat;
+                        $("#motrica").text(motrica + "");
+                        $("#volumOcupat").text(volumOcupat + "(m3) / " + @containerVolume.ToString("N2") +"(m3) (" + volumOcupat * @containerVolume.ToString("N2")/100 +"%)");
 
-                for (var i = 0; i < noPallets; i++) {
-                    var orderNo = data.listPallets[i].orderNoApp;
-                    if (orderNo == -1) orderNo = "N/A"
-                    /*console.log(data.listPallets[i].palletMapHistory)*/
-                    if (data.listPallets[i].palletMapHistory == null) {
-                       var test =  data.listPallets[i].palletMap.volume * data.listPallets[i].palletMap.picking_qty
-                            if(data.listPallets[i].palletMap.serial_from == 0){
-                                test =  data.listPallets[i].volumPcPallet;
+                                                for (var i = 0; i < noPallets; i++) {
+                            var orderNo = data.listPallets[i].orderNoApp;
+                            if (orderNo == -1) orderNo = "N/A"
+                            /*console.log(data.listPallets[i].palletMapHistory)*/
+                            if (data.listPallets[i].palletMapHistory == null) {
+                                var test = data.listPallets[i].palletMap.volume * data.listPallets[i].palletMap.picking_qty
+                                if (data.listPallets[i].palletMap.serial_from == 0) {
+                                    test = data.listPallets[i].volumPcPallet;
+                                }
+
+                                tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMap.consignee_code + " - " + data.listPallets[i].palletMap.container_no + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMap.salse_part + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMap.pallet_no + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMap.serial_from + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMap.serial_to + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMap.picking_qty + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMap.weight + "</td>"
+                                    + "<td>" + Number.parseFloat(test).toFixed(2).replace(/\.0+$/, '') + " (m3)</td></tr>"
+                            } else {
+                                var test = data.listPallets[i].palletMapHistory.volume * data.listPallets[i].palletMapHistory.picking_qty
+                                console.log(data.listPallets[i])
+                                if (data.listPallets[i].palletMapHistory.serial_from == 0) {
+                                    test = data.listPallets[i].volumPcPallet;
+                                }
+                                tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMapHistory.consignee_code + " - " + data.listPallets[i].palletMapHistory.container_no + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMapHistory.salse_part + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMapHistory.pallet_no + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMapHistory.serial_from + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMapHistory.serial_to + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMapHistory.picking_qty + "</td>"
+                                    + "<td>" + data.listPallets[i].palletMapHistory.weight + "</td>"
+                                    + "<td>" + Number.parseFloat(test).toFixed(2).replace(/\.0+$/, '') + " (m3)</td></tr>"
                             }
 
-                        tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
-                            + "<td>" + data.listPallets[i].palletMap.consignee_code + " - " + data.listPallets[i].palletMap.container_no + "</td>"
-                            + "<td>" + data.listPallets[i].palletMap.salse_part + "</td>"
-                            + "<td>" + data.listPallets[i].palletMap.pallet_no + "</td>"
-                            + "<td>" + data.listPallets[i].palletMap.serial_from + "</td>"
-                            + "<td>" + data.listPallets[i].palletMap.serial_to + "</td>"
-                            + "<td>" + data.listPallets[i].palletMap.picking_qty + "</td>"
-                            + "<td>" + data.listPallets[i].palletMap.weight + "</td>"
-                            + "<td>" + Number.parseFloat(test).toFixed(2).replace(/\.0+$/,'')+ " (m3)</td></tr>"
-                    } else {
-                       var test = data.listPallets[i].palletMapHistory.volume *data.listPallets[i].palletMapHistory.picking_qty
-                            console.log(data.listPallets[i])
-                            if(data.listPallets[i].palletMapHistory.serial_from == 0){
-                                test =  data.listPallets[i].volumPcPallet;
-                            }
-                       tableTxt = tableTxt + "<tr><td>" + orderNo + "</td>"
-                           + "<td>" + data.listPallets[i].palletMapHistory.consignee_code + " - " + data.listPallets[i].palletMapHistory.container_no + "</td>"
-                           + "<td>" + data.listPallets[i].palletMapHistory.salse_part + "</td>"
-                           + "<td>" + data.listPallets[i].palletMapHistory.pallet_no + "</td>"
-                           + "<td>" + data.listPallets[i].palletMapHistory.serial_from + "</td>"
-                           + "<td>" + data.listPallets[i].palletMapHistory.serial_to + "</td>"
-                           + "<td>" + data.listPallets[i].palletMapHistory.picking_qty + "</td>"
-                           + "<td>" + data.listPallets[i].palletMapHistory.weight + "</td>"
-                           + "<td>" + Number.parseFloat(test).toFixed(2).replace(/\.0+$/,'')+ " (m3)</td></tr>"
+                        }
+                        tableTxt = tableTxt + "</table>"
+                        $("#tableSection").empty();
+                        $("#tableSection").append(tableTxt);
+                        $("#loader-1").hide();
+                        $("#sincData").removeAttr("disabled");
+                        location.reload(true);
                     }
 
+                },
+                error: function (data) {
+                    console.log(data.ex);
+                    alert(data.ex);
                 }
-                tableTxt = tableTxt + "</table>"
-                $("#tableSection").empty();
-                $("#tableSection").append(tableTxt);
-                $("#loader-1").hide();
-                $("#sincData").removeAttr("disabled");
-            }
-        });
-    })
+            });
+        })
 
     $("#details").click(function () {
         var idContainer = $('#container').val();

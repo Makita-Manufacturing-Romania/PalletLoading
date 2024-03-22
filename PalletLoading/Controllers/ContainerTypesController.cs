@@ -151,14 +151,27 @@ namespace PalletLoading.Controllers
         }
 
         // POST: ContainerTypes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var containerType = await _context.ContainerTypes.FindAsync(id);
-            _context.ContainerTypes.Remove(containerType);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var containersLinked = _context.Containers
+                .Where(l => l.TypeId == id)
+                .FirstOrDefault();
+
+            var jsonData = new Dictionary<string, string>();
+            if (containersLinked == null)
+            {
+                _context.ContainerTypes.Remove(containerType);
+                await _context.SaveChangesAsync();
+                jsonData["message"] = "_";
+            }
+            else
+            {
+                jsonData["message"] = "Cannot delete Type because it's linked to created Containers";
+            }
+            return Json(jsonData);
+            //return RedirectToAction(nameof(Index));
         }
 
         private bool ContainerTypeExists(int id)

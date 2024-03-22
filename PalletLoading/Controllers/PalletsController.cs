@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.JSInterop;
 using PalletLoading.Data;
 using PalletLoading.Models;
 using PalletLoading.ViewModels;
@@ -234,7 +235,16 @@ namespace PalletLoading.Controllers
                 if (cmd.Connection.State != ConnectionState.Open)
                     cmd.Connection.Open();
                 cmd.CommandTimeout = 120;
-                cmd.ExecuteReader();
+
+                try
+                {
+                    cmd.ExecuteReader();
+                }
+                catch (Exception ex)
+                {
+                    string errorMessage = Convert.ToString(ex);
+                    return Json(new { ex = errorMessage });
+                }
 
 
                 cmd.Connection.Close();
