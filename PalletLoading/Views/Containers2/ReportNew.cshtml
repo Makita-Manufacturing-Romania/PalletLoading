@@ -49,7 +49,8 @@ Layout=null;
     <table border="1">
 
         @if (Model.FormData != null)
-        {<tr>
+        {
+        <tr>
             <td colspan="3" style="font-size: 25px;">
                 DATA: @Model.loadingData
             </td>
@@ -649,13 +650,28 @@ Layout=null;
                                                     @if (currentRow == 1)
                                                     {
                                                     <div style="width:100%; margin-top:120px; margin-bottom:0px; border-radius:5px; height:65px; text-align:center">
-                                                        <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.PalletImportData.pallet_no" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                        <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@Convert.ToInt32(palet.PalletImportData.pallet_no)" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
                                                     </div>
                                                     }
                                                     else
                                                     {
                                                     <div style="width:100%; margin-top:94px; margin-bottom:0px; border-radius:5px; height:65px; text-align:center">
-                                                        <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.PalletImportData.pallet_no" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                        <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@Convert.ToInt32(palet.PalletImportData.pallet_no)" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                    </div>
+                                                    }
+                                                }
+                                                else if (palet.PalletImportDataHistory != null)
+                                                {
+                                                    @if (currentRow == 1)
+                                                    {
+                                                    <div style="width:90%; margin-top:120px; margin-bottom:0px; border-radius:5px; height:65px; text-align:center">
+                                                        <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@Convert.ToInt32(palet.PalletImportDataHistory.pallet_no)" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                    </div>
+                                                    }
+                                                    else
+                                                    {
+                                                    <div style="width:90%; margin-top:94px; margin-bottom:0px; border-radius:5px; height:65px; text-align:center">
+                                                        <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@Convert.ToInt32(palet.PalletImportDataHistory.pallet_no)" style="width:80%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
                                                     </div>
                                                     }
                                                 }
@@ -691,12 +707,17 @@ Layout=null;
                                             {
                                                 if (palet.PalletImportData != null)
                                                 {
-                                                    <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@palet.PalletImportData.pallet_no" style="width:75%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                    <input type="button" data-sales="@palet.PalletImportData.salse_part" data-palletno="@palet.PalletImportData.pallet_no" data-serialto="@palet.PalletImportData.serial_to" data-serialfrom="@palet.PalletImportData.serial_from" id="@palet.Id" data-orderno="@palet.OrderNo" data-qty="@palet.PalletImportData.picking_qty" data-weight="@palet.PalletImportData.weight" value="@Convert.ToInt32(palet.PalletImportData.pallet_no)" style="width:75%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                }
+                                                else if (palet.PalletImportDataHistory != null)
+                                                {
+                                                    <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@Convert.ToInt32(palet.PalletImportDataHistory.pallet_no)" style="width:75%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
                                                 }
                                                 else
                                                 {
-                                                    <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width:75%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
+                                                     <input type="button" data-sales="" data-palletno="" data-serialto="" data-serialfrom="" id="@palet.Id" data-orderno="" data-qty="" data-weight="" value="@palet.OrderNo" style="width:75%; margin-top:5px; margin-bottom:5px; border-radius:5px; height:65px; text-align:center" class="detailsBtn btn-info">
                                                 }
+                                                
                                             }
                                         </td>
                                     }
