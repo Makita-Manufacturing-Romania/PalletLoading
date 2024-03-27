@@ -35,27 +35,27 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usermail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserRight.Right)
+            <tr>
+                <td style="padding-top:18px">
+                    @Html.DisplayFor(modelItem => item.Username)
                 </td>
-                <td>
+                <td style="padding-top:18px">
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td style="padding-top:18px">
+                    @Html.DisplayFor(modelItem => item.Usermail)
+                </td>
+                <td style="padding-top:18px">
+                    @Html.DisplayFor(modelItem => item.UserRight.Right)
+                </td>
+                <td style="padding-top:18px">
                     @Html.DisplayFor(modelItem => item.Role.Name)
                 </td>
-            <td>
-                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+                <td>
+                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
 }
     </tbody>
 </table>

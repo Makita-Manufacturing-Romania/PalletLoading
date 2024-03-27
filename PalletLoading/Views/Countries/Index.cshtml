@@ -29,22 +29,22 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Abbreviation)
-            </td>
-            <td>
+            <tr>
+                <td style="padding-top:18px">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td style="padding-top:18px">
+                    @Html.DisplayFor(modelItem => item.Abbreviation)
+                </td>
+                <td style="padding-top:18px">
                     @Html.DisplayFor(modelItem => item.Type.Name)
-            </td>
-            <td>
-                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
-          @*       <a class="btn btn-success" asp-action="Details" asp-route-id="@item.Id">Details</a>  *@
-                <a class="btn btn-danger"  asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+                </td>
+                <td>
+                    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    @*       <a class="btn btn-success" asp-action="Details" asp-route-id="@item.Id">Details</a>  *@
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
 }
     </tbody>
 </table>

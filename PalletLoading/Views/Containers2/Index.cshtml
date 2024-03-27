@@ -123,31 +123,40 @@
     }
 </div>
 
+
+
+
+@{
+    var prevDisabled = Model.PageIndex - 1 == 0 ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th style="text-align:center; vertical-align:middle;">
                 Name
             </th>
-            <th>
+            <th style="text-align:center; vertical-align:middle;">
                 Date
             </th>
-            <th>
+            <th style="text-align:center; vertical-align:middle;">
                 Type
             </th>
-            <th>
+            <th style="text-align:center; vertical-align:middle;">
                 Country
             </th>
-            <th>
+            <th style="text-align:center; vertical-align:middle;">
                 Volume (mc3)
             </th>
-            <th style="width:150px;">
+            <th style="width:150px; text-align:center; vertical-align:middle;">
                 Actions
             </th>
-            <th style="width:50px;">
+            <th style="width:50px; text-align:center; vertical-align:middle;">
                 Manager Approval
             </th>
-            <th style="width:200px;">
+            <th style="width:200px; text-align:center; vertical-align:middle;">
                 Information Check
             </th>
         </tr>
@@ -270,7 +279,7 @@
                     else
                     {
                         <td style="width:100px;text-align:center; vertical-align:middle;">
-                            <i class="fas fa-check" style="font-size:3vh;"></i>
+                             <i class="fas fa-check" style="font-size:3vh;"></i> 
                         </td>
                         <td style="text-align:center; vertical-align:middle;">
                         </td>
@@ -284,45 +293,48 @@
                 }
             </tr>
         }
+        <tr>
+            <td colspan="4">
+
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex - 1)"
+                   asp-route-datetimepickerEndDate="@(Model.PageIndex - 1)"
+                   class=" @prevDisabled btn btn-secondary"
+                   id="prevBtn"
+                   onclick="redirectToContainers()">
+                    Previous
+                </a>
+
+                <input style="width:50px;" type="text" id="pageText" value="@Model.PageIndex" />
+                / @Model.TotalPages
+                <input type="button" value="Go to" onclick="redirectToContainers()" id="btnGoTo" />
+
+
+                <a asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   class=" @nextDisabled btn btn-secondary"
+                   id="nextBtn"
+                   onclick="redirectToContainers()">
+                    Next
+                </a>
+            </td>
+            <td colspan="2"></td>
+                @*  <div style="margin-left:344px"> *@
+                @*     <input type="checkbox" class="row-checkbox big-checkbox" style="margin-left:560px; font-size:3vh; vertical-align:central" id="master"> *@
+                @if (ViewBag.Role >= 5)
+                {
+                <td style="width:100px;text-align:center; vertical-align:middle;">
+                    <input type="checkbox" id="select-all" class="big-checkbox" style="margin-top:6px;font-size:3vh;" />
+                    </td>
+                <td style="text-align:center; vertical-align:middle;">
+                    <button id="submit-changes" class="btn btn-primary">Manager Approval</button>
+                    </td>
+                }
+                @*  </div> *@
+        </tr>
     </tbody>
 </table>
 
-
-
-    @{
-        var prevDisabled = Model.PageIndex - 1 == 0 ? "disabled" : "";
-        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-    }
-
-    <a asp-action="Index"
-       asp-route-pageNumber="@(Model.PageIndex - 1)"
-       asp-route-datetimepickerEndDate="@(Model.PageIndex - 1)"
-       class=" @prevDisabled btn btn-secondary"
-       id="prevBtn"
-       onclick="redirectToContainers()">
-        Previous
-    </a>
-
-    <input style="width:50px;" type="text" id="pageText" value="@Model.PageIndex" />  / @Model.TotalPages
-    <input type="button" value="Go to" onclick="redirectToContainers()" id="btnGoTo" />
-
-
-    <a asp-action="Index"
-       asp-route-pageNumber="@(Model.PageIndex + 1)"
-       class=" @nextDisabled btn btn-secondary"
-       id="nextBtn"
-       onclick="redirectToContainers()">
-        Next
-    </a>
-
-    @*  <div style="margin-left:344px"> *@
-@*     <input type="checkbox" class="row-checkbox big-checkbox" style="margin-left:560px; font-size:3vh; vertical-align:central" id="master"> *@
-@if (ViewBag.Role >= 5)
-{
-    <input type="checkbox" id="select-all" class="big-checkbox" style="margin-left:560px;font-size:3vh;" />
-    <button id="submit-changes" style="margin-left:52px;" class="btn btn-primary">Manager Approval</button>
-}
-    @*  </div> *@
 
 
 
