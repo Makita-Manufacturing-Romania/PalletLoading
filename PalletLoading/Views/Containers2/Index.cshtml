@@ -238,7 +238,14 @@
                         //    }
                         //}
                     }
-                    @(volumTotal.ToString("N2") +"/" +container.Type.volume.ToString("N2")+" ("+ (volumTotal*100 / container.Type.volume).ToString("N2") + "%)")
+                    @if (volumTotal > container.Type.volume)
+                    {
+                        <span style="color: red;">@(volumTotal.ToString("N2") + "/" + container.Type.volume.ToString("N2") + " (" + (volumTotal * 100 / container.Type.volume).ToString("N2") + "%)")</span>
+                    }
+                    else
+                    {
+                        @(volumTotal.ToString("N2") + "/" + container.Type.volume.ToString("N2") + " (" + (volumTotal * 100 / container.Type.volume).ToString("N2") + "%)")
+                    }
                 </td>
                 @if (ViewBag.UserRightLevel > 0)
                 {
