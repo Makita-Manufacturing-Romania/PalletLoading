@@ -1307,22 +1307,22 @@ else
         $(".detailsBtn").click(function () {
             var palletId = this.id;
             var tmpVolume = ($(this).attr("data-volume") * $(this).attr("data-qty")).toFixed(2);
-
             console.log($(this).attr("data-serialfrom") + " " + $(this).attr("data-volume"))
-            if ($(this).attr("data-serialfrom") == "0") {
+            if ($(this).attr("data-serialfrom") == "0" || $(this).attr("data-serialfrom") == "0.00")
+            {
                 tmpVolume = $(this).attr("data-volume");
-
             }
 
             var palletTxt = "<div align='left'> <span style='float:left;font-weight:bold;'>Loading no:</span> <span style='float: right'> " + $(this).attr("data-orderNo") + "</span></div ></br> "
                 + "<div align='left'><span style='float:left;font-weight:bold;'> Container:</span> <span style='float: right'> " + $(this).attr("data-consignee") + ' - ' + $(this).attr("data-container") + "</span></div></br>"
                 + "<div align='left'><span style='float:left;font-weight:bold;'> Sales part:</span> <span style='float: right'> " + $(this).attr("data-sales") + "</span></div></br>"
-                + "<div align='left'> <span style='float:left;font-weight:bold;'>Pallet no:</span> <span style='float: right'> " + $(this).attr("data-palletno") + "</span></div ></br> "
-                + "<div align='left'><span style='float:left;font-weight:bold;'> Serial from:</span> <span style='float: right'> " + $(this).attr("data-serialfrom") + "</span></div > </br>"
-                + "<div align='left'> <span style='float:left;font-weight:bold;'>Serial to:</span> <span style='float: right'> " + $(this).attr("data-serialto") + "</span></div > </br>"
-                + "<div align='left'><span style='float:left;font-weight:bold;'> Quantity: </span><span style='float: right'> " + $(this).attr("data-qty") + "</span></div ></br> "
+                + "<div align='left'> <span style='float:left;font-weight:bold;'>Pallet no:</span> <span style='float: right'> " + Math.floor($(this).attr("data-palletno")) + "</span></div ></br> "
+                + "<div align='left'><span style='float:left;font-weight:bold;'> Serial from:</span> <span style='float: right'> " + Math.floor($(this).attr("data-serialfrom")) + "</span></div > </br>"
+                + "<div align='left'> <span style='float:left;font-weight:bold;'>Serial to:</span> <span style='float: right'> " + Math.floor($(this).attr("data-serialto")) + "</span></div > </br>"
+                + "<div align='left'><span style='float:left;font-weight:bold;'> Quantity: </span><span style='float: right'> " + Math.floor($(this).attr("data-qty")) + "</span></div ></br> "
                 + "<div align='left'><span style='float:left;font-weight:bold;'> Weight: </span><span style='float: right'> " + $(this).attr("data-weight") + "</span></div > </br>"
-                + "<div align='left'><span style='float:left;font-weight:bold;'> Volume: </span><span style='float: right'> " + tmpVolume + "</span></div > </br>"
+                + "<div align='left'><span style='float:left;font-weight:bold;'> Volume: </span><span style='float: right'> " + tmpVolume + "</span></div > </br>";
+
             $("#palletContent").empty();
             $("#palletContent").append(palletTxt)
             //console.log($(this).attr("data-serialto"))
