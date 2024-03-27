@@ -81,34 +81,34 @@
                 @*            <td>
             @Html.DisplayFor(modelItem => item.Container_no)
             </td>*@
-                <td style="padding-top:18px">
+                <td style="text-align:center; vertical-align:middle;">
                     @Html.DisplayFor(modelItem => item.Destination)
                 </td>
-                <td style="padding-top:18px">
+                <td style="text-align:center; vertical-align:middle;">
                     @Html.DisplayFor(modelItem => item.Pallet_number)
                 </td>
-                <td style="padding-top:18px">
+                <td style="text-align:center; vertical-align:middle;">
                     @Html.DisplayFor(modelItem => item.Mass)
                 </td>
-                <td style="padding-top:18px">
+                <td style="text-align:center; vertical-align:middle;">
                     @item.LoadDate.ToString("dd-MM-yyyy")
                 </td>
-                <td style="transform: scale(2); padding-top:19px">
+                <td style="transform: scale(2); padding-top:19px; padding-left:36px">
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 @if (item.Volume > 12)
                 {
-                    <td style="padding-top:18px; color:red">
+                    <td style="text-align:center; vertical-align:middle; color:red">
                         @Html.DisplayFor(modelItem => item.Volume)
                     </td>
                 }
                 else
                 {
-                    <td style="padding-top:18px">
+                    <td style="text-align:center; vertical-align:middle;">
                         @Html.DisplayFor(modelItem => item.Volume)
                     </td>
                 }
-                <td style="padding-top:18px">
+                <td style="text-align:center; vertical-align:middle;">
                     @item.InputTimestamp.ToString("dd-MM-yyyy")
                 </td>
 
